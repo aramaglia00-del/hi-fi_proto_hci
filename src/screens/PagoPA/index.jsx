@@ -268,7 +268,7 @@ function StepDatiPagamento({ onBack, onNext }) {
           <ArrowLeft size={16} />
         </button>
         <button onClick={onNext} style={{ flex: 2, padding: '14px', borderRadius: '14px', border: 'none', background: 'linear-gradient(135deg, #1A9E8F 0%, #147A6E 100%)', fontFamily: 'Nunito, sans-serif', fontSize: '14px', fontWeight: 800, color: 'white', cursor: 'pointer', boxShadow: '0 4px 16px rgba(26,158,143,0.3)' }}>
-          Vai al pagamento →
+          Vai al pagamento 
         </button>
       </div>
     </div>
