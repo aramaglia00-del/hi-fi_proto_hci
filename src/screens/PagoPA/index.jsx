@@ -196,7 +196,7 @@ function StepSceltaMetodo({ onQR, onBack }) {
       </div>
       <div style={{ display: 'flex', gap: '10px', marginTop: 'auto', paddingTop: '20px' }}>
         <button onClick={onBack} style={{ flex: 1, padding: '14px', borderRadius: '14px', border: '2px solid #E8E8E8', background: 'white', fontFamily: 'Nunito, sans-serif', fontSize: '14px', fontWeight: 700, color: '#6B7280', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}>
-          <ArrowLeft size={16} /> Indietro
+          <ArrowLeft size={16} />
         </button>
       </div>
     </div>
@@ -225,10 +225,10 @@ function StepInquadraQR({ onNext, onBack }) {
       </div>
       <div style={{ display: 'flex', gap: '10px', marginTop: '20px' }}>
         <button onClick={onBack} style={{ flex: 1, padding: '14px', borderRadius: '14px', border: '2px solid #E8E8E8', background: 'white', fontFamily: 'Nunito, sans-serif', fontSize: '14px', fontWeight: 700, color: '#6B7280', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}>
-          <ArrowLeft size={16} /> Indietro
+          <ArrowLeft size={16} />
         </button>
         <button onClick={onNext} style={{ flex: 2, padding: '14px', borderRadius: '14px', border: 'none', background: 'linear-gradient(135deg, #1A9E8F 0%, #147A6E 100%)', fontFamily: 'Nunito, sans-serif', fontSize: '14px', fontWeight: 800, color: 'white', cursor: 'pointer', boxShadow: '0 4px 16px rgba(26,158,143,0.3)' }}>
-          Simula scansione riuscita →
+          Simula scansione riuscita 
         </button>
       </div>
     </div>
@@ -265,7 +265,7 @@ function StepDatiPagamento({ onBack, onNext }) {
       </div>
       <div style={{ display: 'flex', gap: '10px', marginTop: '20px' }}>
         <button onClick={onBack} style={{ flex: 1, padding: '14px', borderRadius: '14px', border: '2px solid #E8E8E8', background: 'white', fontFamily: 'Nunito, sans-serif', fontSize: '14px', fontWeight: 700, color: '#6B7280', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}>
-          <ArrowLeft size={16} /> Indietro
+          <ArrowLeft size={16} />
         </button>
         <button onClick={onNext} style={{ flex: 2, padding: '14px', borderRadius: '14px', border: 'none', background: 'linear-gradient(135deg, #1A9E8F 0%, #147A6E 100%)', fontFamily: 'Nunito, sans-serif', fontSize: '14px', fontWeight: 800, color: 'white', cursor: 'pointer', boxShadow: '0 4px 16px rgba(26,158,143,0.3)' }}>
           Vai al pagamento →
