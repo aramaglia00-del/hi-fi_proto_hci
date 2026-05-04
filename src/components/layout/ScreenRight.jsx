@@ -1,5 +1,4 @@
 import { CalendarDays, CreditCard, ChevronRight, Info } from 'lucide-react'
-import PointerArrow from '../assistant/PointerArrow'
 import { useApp } from '../../context/AppContext'
 
 export default function ScreenRight() {
@@ -47,26 +46,24 @@ export default function ScreenRight() {
       {/* CTA */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
 
-        {/* Bottone primario CUP */}
+        {/* Bottone CUP */}
         <button
           onClick={() => setState(s => ({ ...s, currentScreen: 'cup', currentStep: 0 }))}
           style={{
             display: 'flex', alignItems: 'center', gap: '12px',
-            padding: '16px', borderRadius: '16px', border: 'none',
-            background: 'linear-gradient(135deg, #1A9E8F 0%, #147A6E 100%)',
-            color: 'white', cursor: 'pointer', position: 'relative',
+            padding: '16px', borderRadius: '16px', border: '2.5px solid #E8E8E8',
+            background: 'white', color: '#2D2D2D', cursor: 'pointer',
             fontFamily: 'Nunito, sans-serif', textAlign: 'left', width: '100%',
           }}
         >
-          <div style={{ width: '44px', height: '44px', borderRadius: '12px', background: 'rgba(255,255,255,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-            <CalendarDays size={22} color="white" />
+          <div style={{ width: '44px', height: '44px', borderRadius: '12px', background: '#E0F5F3', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+            <CalendarDays size={22} color="#1A9E8F" />
           </div>
           <div style={{ flex: 1 }}>
             <span style={{ fontSize: '15px', fontWeight: 800, display: 'block', lineHeight: 1.2 }}>Prenotiamo una Visita</span>
-            <span style={{ fontSize: '11px', color: 'rgba(255,255,255,0.72)', marginTop: '3px', display: 'block', fontWeight: 600 }}>Prenotazione CUP online</span>
+            <span style={{ fontSize: '11px', color: '#6B7280', marginTop: '3px', display: 'block', fontWeight: 600 }}>Prenotazione CUP online</span>
           </div>
-          <ChevronRight size={20} color="rgba(255,255,255,0.5)" />
-          <PointerArrow />
+          <ChevronRight size={20} color="rgba(0,0,0,0.25)" />
         </button>
 
         {/* Bottone secondario PagoPA */}

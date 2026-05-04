@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { QrCode, Keyboard, Building2, FileText, DollarSign, Hash, CreditCard, ChevronRight, ArrowLeft } from 'lucide-react'
+import { useApp } from '../../context/AppContext'
 
 // ── CONFIGURAZIONE STEP ────────────────────────────────────────────
 // highlightZone: { top, left, width, height } in px relativo allo schermo destro (390x740)
@@ -163,7 +164,7 @@ function PanelLeft({ step, rightPanelContent }) {
 }
 
 // ── STEP 0: scelta metodo ──────────────────────────────────────────
-function StepSceltaMetodo({ onQR }) {
+function StepSceltaMetodo({ onQR, onBack }) {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100%', padding: '32px 28px 28px', background: '#FFF8F0' }}>
       <div style={{ marginBottom: '28px' }}>
@@ -191,6 +192,11 @@ function StepSceltaMetodo({ onQR }) {
             <span style={{ fontSize: '11px', color: '#6B7280', marginTop: '3px', display: 'block', fontWeight: 600 }}>Digita manualmente il codice avviso</span>
           </div>
           <ChevronRight size={18} color="#6B7280" />
+        </button>
+      </div>
+      <div style={{ display: 'flex', gap: '10px', marginTop: 'auto', paddingTop: '20px' }}>
+        <button onClick={onBack} style={{ flex: 1, padding: '14px', borderRadius: '14px', border: '2px solid #E8E8E8', background: 'white', fontFamily: 'Nunito, sans-serif', fontSize: '14px', fontWeight: 700, color: '#6B7280', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}>
+          <ArrowLeft size={16} /> Indietro
         </button>
       </div>
     </div>
@@ -272,15 +278,18 @@ function StepDatiPagamento({ onBack, onNext }) {
 // ── SCREEN PRINCIPALE ──────────────────────────────────────────────
 export default function PagoPA() {
   const [step, setStep] = useState(0)
+  const { setState } = useApp()
+
+  const goHome = () => setState(s => ({ ...s, currentScreen: 'home', currentStep: 0 }))
 
   const rightPanelContent = () => {
-    if (step === 0) return <StepSceltaMetodo onQR={() => {}} />
+    if (step === 0) return <StepSceltaMetodo onQR={() => {}} onBack={() => {}} />
     if (step === 1) return <StepInquadraQR onNext={() => {}} onBack={() => {}} />
     if (step === 2) return <StepDatiPagamento onBack={() => {}} onNext={() => {}} />
   }
 
   const rightPanelInteractive = () => {
-    if (step === 0) return <StepSceltaMetodo onQR={() => setStep(1)} />
+    if (step === 0) return <StepSceltaMetodo onQR={() => setStep(1)} onBack={goHome} />
     if (step === 1) return <StepInquadraQR onNext={() => setStep(2)} onBack={() => setStep(0)} />
     if (step === 2) return <StepDatiPagamento onBack={() => setStep(1)} onNext={() => alert('Prossimi step in arrivo!')} />
   }
