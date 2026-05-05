@@ -1,104 +1,88 @@
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { QrCode, Keyboard, Building2, FileText, DollarSign, Hash, CreditCard, ChevronRight, ArrowLeft } from 'lucide-react'
 import { useApp } from '../../context/AppContext'
+import AssistantOverlay from '../../components/AssistantOverlay'
 
 // ── CONFIGURAZIONE STEP ────────────────────────────────────────────
-// highlightZone: { top, left, width, height } in px relativo allo schermo destro (390x740)
-// null = nessun highlight (tutto visibile)
 const assistantSteps = [
   {
     tag: '👆 Fai così',
     text: (<>Tocca <strong style={{ color: '#1A9E8F' }}>Inquadra il codice QR</strong> qui a fianco per iniziare!</>),
-    highlightZone: { top: 170, left: 12, width: 366, height: 92 },
+    highlightSelector: '[data-highlight="qr"]',
   },
   {
     tag: '📷 Come fare',
     text: (<><strong style={{ color: '#1A9E8F' }}>1 —</strong> Punta la fotocamera sul QR<br /><strong style={{ color: '#1A9E8F' }}>2 —</strong> Tocca il link che appare<br /><strong style={{ color: '#1A9E8F' }}>3 —</strong> Sei a posto!</>),
-    highlightZone: { top: 180, left: 48, width: 294, height: 340 },
+    highlightSelector: '[data-highlight="scanner"]',
   },
   {
     tag: '✅ Controlla',
     text: (<>Verifica i dati qui a fianco.<br />Poi tocca <strong style={{ color: '#1A9E8F' }}>VAI AL PAGAMENTO</strong> ↓</>),
-    highlightZone: { top: 624, left: 12, width: 366, height: 80 },
+    highlightSelector: '[data-highlight="cta"]',
+  },
+  {
+    tag: '✉️ Inserisci',
+    text: (<>Tocca il campo <strong style={{ color: '#1A9E8F' }}>Indirizzo email</strong> e scrivi la tua email.<br />Riceverai la ricevuta di pagamento lì!</>),
+    highlightSelector: '[data-highlight="email"]',
+  },
+  {
+    tag: '🔁 Conferma',
+    text: (<>Ora riscrivi la stessa email nel campo <strong style={{ color: '#1A9E8F' }}>Ripeti di nuovo</strong>.<br />Serve per essere sicuri che sia corretta!</>),
+    highlightSelector: '[data-highlight="email-confirm"]',
+  },
+  {
+    tag: '✅ Ottimo!',
+    text: (<>Perfetto! Ora clicca su <strong style={{ color: '#1A9E8F' }}>Continua</strong> per procedere al pagamento.</>),
+    highlightSelector: '[data-highlight="continua"]',
   },
 ]
 
-// ── MASCOT ─────────────────────────────────────────────────────────
-function Mascot() {
-  return (
-    <svg
-      style={{ width: '90px', height: '90px', filter: 'drop-shadow(0 4px 12px rgba(245,166,35,0.3))' }}
-      viewBox="0 0 160 160" fill="none"
-    >
-      <ellipse cx="80" cy="148" rx="36" ry="8" fill="#D4A57A" opacity="0.22"/>
-      <path d="M45 108 Q49 91 80 87 Q111 91 115 108 L115 150 Q115 153 111 153 L49 153 Q45 153 45 150 Z" fill="#1A9E8F"/>
-      <path d="M68 87 L80 101 L92 87" stroke="white" strokeWidth="2" fill="none" strokeLinecap="round"/>
-      <rect x="72" y="79" width="16" height="13" rx="6" fill="#FBBF8C"/>
-      <ellipse cx="80" cy="58" rx="29" ry="31" fill="#FBBF8C"/>
-      <path d="M51 50 Q52 24 80 22 Q108 24 109 50" fill="#4A2C0A"/>
-      <path d="M69 24 Q73 13 80 20" stroke="#4A2C0A" strokeWidth="5.5" strokeLinecap="round" fill="none"/>
-      <path d="M80 20 Q88 11 90 22" stroke="#4A2C0A" strokeWidth="4.5" strokeLinecap="round" fill="none"/>
-      <ellipse cx="51" cy="59" rx="7" ry="9" fill="#FBBF8C"/>
-      <ellipse cx="109" cy="59" rx="7" ry="9" fill="#FBBF8C"/>
-      <ellipse cx="51" cy="59" rx="4" ry="6" fill="#F5A07A"/>
-      <ellipse cx="109" cy="59" rx="4" ry="6" fill="#F5A07A"/>
-      <path d="M62 42 Q68 38 74 41" stroke="#4A2C0A" strokeWidth="2.2" fill="none" strokeLinecap="round"/>
-      <path d="M86 41 Q92 38 98 42" stroke="#4A2C0A" strokeWidth="2.2" fill="none" strokeLinecap="round"/>
-      <ellipse cx="69" cy="53" rx="8" ry="9" fill="white"/>
-      <ellipse cx="91" cy="53" rx="8" ry="9" fill="white"/>
-      <ellipse cx="70" cy="54" rx="5" ry="5.5" fill="#2D6A4F"/>
-      <ellipse cx="92" cy="54" rx="5" ry="5.5" fill="#2D6A4F"/>
-      <ellipse cx="70.5" cy="54.5" rx="3" ry="3.5" fill="#1A1A1A"/>
-      <ellipse cx="92.5" cy="54.5" rx="3" ry="3.5" fill="#1A1A1A"/>
-      <circle cx="72" cy="52.5" r="1.4" fill="white"/>
-      <circle cx="94" cy="52.5" r="1.4" fill="white"/>
-      <path d="M77 64 Q80 68 83 64" stroke="#E8907A" strokeWidth="1.8" fill="none" strokeLinecap="round"/>
-      <path d="M68 74 Q80 84 92 74" stroke="#C0604A" strokeWidth="2.5" fill="none" strokeLinecap="round"/>
-      <ellipse cx="57" cy="70" rx="8" ry="5" fill="#F9A0A0" opacity="0.45"/>
-      <ellipse cx="103" cy="70" rx="8" ry="5" fill="#F9A0A0" opacity="0.45"/>
-      <path d="M45 108 Q33 118 35 131" stroke="#1A9E8F" strokeWidth="13" strokeLinecap="round"/>
-      <path d="M115 108 Q127 118 125 131" stroke="#1A9E8F" strokeWidth="13" strokeLinecap="round"/>
-      <ellipse cx="35" cy="132" rx="10" ry="9" fill="#FBBF8C"/>
-      <ellipse cx="125" cy="132" rx="10" ry="9" fill="#FBBF8C"/>
-      <path d="M131 127 L145 120" stroke="#FBBF8C" strokeWidth="6.5" strokeLinecap="round"/>
-      <ellipse cx="145" cy="120" rx="4" ry="3" fill="#F5A07A" transform="rotate(-22 145 120)"/>
-    </svg>
-  )
-}
-
-// ── BUBBLE ─────────────────────────────────────────────────────────
-function Bubble({ tag, text }) {
-  return (
-    <div style={{ position: 'relative', marginBottom: '8px' }}>
-      <div style={{ background: 'white', borderRadius: '16px', padding: '12px 14px', boxShadow: '0 4px 20px rgba(0,0,0,0.15)', border: '2px solid rgba(245,166,35,0.3)' }}>
-        <div style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', fontFamily: 'Nunito, sans-serif', fontSize: '9px', fontWeight: 800, letterSpacing: '0.5px', textTransform: 'uppercase', color: '#D4720A', background: '#FFF0E0', borderRadius: '5px', padding: '2px 7px', marginBottom: '6px' }}>
-          {tag}
-        </div>
-        <p style={{ fontFamily: 'Nunito, sans-serif', fontSize: '12px', fontWeight: 600, lineHeight: 1.6, color: '#2D2D2D', margin: 0 }}>
-          {text}
-        </p>
-      </div>
-      {/* Triangolino verso il basso punta alla mascotte */}
-      <div style={{ position: 'absolute', bottom: '-8px', left: '28px', width: 0, height: 0, borderLeft: '8px solid transparent', borderRight: '8px solid transparent', borderTop: '8px solid rgba(245,166,35,0.3)' }} />
-      <div style={{ position: 'absolute', bottom: '-5px', left: '30px', width: 0, height: 0, borderLeft: '6px solid transparent', borderRight: '6px solid transparent', borderTop: '6px solid white' }} />
-    </div>
-  )
-}
-
 // ── PANNELLO SINISTRO con overlay ──────────────────────────────────
-function PanelLeft({ step, rightPanelContent }) {
-  const { tag, text, highlightZone } = assistantSteps[step]
+function PanelLeft({ step, rightPanelContent, rightPanelRef }) {
+  const { tag, text, highlightSelector } = assistantSteps[step]
+  const [highlightZone, setHighlightZone] = useState(null)
+
+  useEffect(() => {
+    const calculate = () => {
+      if (!highlightSelector || !rightPanelRef?.current) {
+        setHighlightZone(null)
+        return
+      }
+      const target = rightPanelRef.current.querySelector(highlightSelector)
+      if (!target) { setHighlightZone(null); return }
+
+      const targetRect = target.getBoundingClientRect()
+      const panelRect = rightPanelRef.current.getBoundingClientRect()
+
+      setHighlightZone({
+        top: targetRect.top - panelRect.top,
+        left: targetRect.left - panelRect.left,
+        width: targetRect.width,
+        height: targetRect.height,
+      })
+    }
+
+    const timer = setTimeout(calculate, 50)
+
+    const observer = new ResizeObserver(calculate)
+    if (rightPanelRef?.current) observer.observe(rightPanelRef.current)
+
+    return () => {
+      clearTimeout(timer)
+      observer.disconnect()
+    }
+  }, [highlightSelector, rightPanelRef])
 
   return (
     <div style={{ width: '390px', height: '740px', flexShrink: 0, position: 'relative', overflow: 'hidden', background: '#FFF8F0' }}>
 
       {/* Replica schermo destro — non interattiva, con blur globale */}
-      <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', filter: 'blur(3px)' }}>
+      <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', filter: 'blur(1.5px)' }}>
         {rightPanelContent}
       </div>
 
-      {/* Overlay scuro pesante su tutto */}
-      <div style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.78)', pointerEvents: 'none', zIndex: 1 }} />
+      {/* Overlay scuro su tutto */}
+      <div style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.45)', pointerEvents: 'none', zIndex: 1 }} />
 
       {/* Zona evidenziata: ritaglia l'overlay con box-shadow trick */}
       {highlightZone && (
@@ -112,7 +96,7 @@ function PanelLeft({ step, rightPanelContent }) {
             zIndex: 2,
             pointerEvents: 'none',
             borderRadius: '16px',
-            boxShadow: '0 0 0 9999px rgba(0,0,0,0.78)',
+            boxShadow: '0 0 0 9999px rgba(0,0,0,0.45)',
             overflow: 'hidden',
           }}>
             {/* Contenuto nitido nella zona — renderizza di nuovo il pannello, clippato */}
@@ -144,20 +128,7 @@ function PanelLeft({ step, rightPanelContent }) {
         </>
       )}
 
-      {/* Avatar + Fumetto in basso */}
-      <div style={{
-        position: 'absolute',
-        bottom: 0, left: 0, right: 0,
-        padding: '0 16px 16px',
-        zIndex: 10,
-        display: 'flex',
-        flexDirection: 'column',
-      }}>
-        <Bubble tag={tag} text={text} />
-        <div style={{ display: 'flex', justifyContent: 'flex-start', paddingLeft: '8px', marginTop: '8px' }}>
-          <Mascot />
-        </div>
-      </div>
+      <AssistantOverlay tag={tag} text={text} highlightZone={highlightZone} />
 
     </div>
   )
@@ -173,7 +144,11 @@ function StepSceltaMetodo({ onQR, onBack }) {
         <p style={{ fontSize: '13px', color: '#6B7280', lineHeight: 1.6, fontWeight: 600 }}>Puoi pagare con carta, conto e app di pagamento</p>
       </div>
       <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-        <button onClick={onQR} style={{ display: 'flex', alignItems: 'center', gap: '14px', padding: '18px 16px', borderRadius: '16px', border: '2.5px solid #E8E8E8', background: 'white', cursor: 'pointer', fontFamily: 'Nunito, sans-serif', textAlign: 'left', width: '100%', position: 'relative', boxShadow: '0 2px 10px rgba(0,0,0,0.05)' }}>
+        <button
+          data-highlight="qr"
+          onClick={onQR}
+          style={{ display: 'flex', alignItems: 'center', gap: '14px', padding: '18px 16px', borderRadius: '16px', border: '2.5px solid #E8E8E8', background: 'white', cursor: 'pointer', fontFamily: 'Nunito, sans-serif', textAlign: 'left', width: '100%', position: 'relative', boxShadow: '0 2px 10px rgba(0,0,0,0.05)' }}
+        >
           <div style={{ width: '48px', height: '48px', borderRadius: '14px', background: '#E0F5F3', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
             <QrCode size={26} color="#1A9E8F" />
           </div>
@@ -183,7 +158,7 @@ function StepSceltaMetodo({ onQR, onBack }) {
           </div>
           <ChevronRight size={18} color="#6B7280" />
         </button>
-        <button disabled style={{ display: 'flex', alignItems: 'center', gap: '14px', padding: '18px 16px', borderRadius: '16px', border: '2.5px solid #E8E8E8', background: 'white', cursor: 'not-allowed', fontFamily: 'Nunito, sans-serif', textAlign: 'left', width: '100%', opacity: 0.45 }}>
+        <button style={{ display: 'flex', alignItems: 'center', gap: '14px', padding: '18px 16px', borderRadius: '16px', border: '2.5px solid #E8E8E8', background: 'white', cursor: 'pointer', fontFamily: 'Nunito, sans-serif', textAlign: 'left', width: '100%' }}>
           <div style={{ width: '48px', height: '48px', borderRadius: '14px', background: '#F5F5F5', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
             <Keyboard size={26} color="#9CA3AF" />
           </div>
@@ -213,7 +188,10 @@ function StepInquadraQR({ onNext, onBack }) {
         <p style={{ fontSize: '13px', color: '#6B7280', lineHeight: 1.6, fontWeight: 600 }}>Assicurati di avere una buona illuminazione</p>
       </div>
       <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        <div style={{ width: '260px', height: '260px', borderRadius: '20px', background: '#1A1A1A', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', overflow: 'hidden', boxShadow: '0 8px 32px rgba(0,0,0,0.2)' }}>
+        <div
+          data-highlight="scanner"
+          style={{ width: '260px', height: '260px', borderRadius: '20px', background: '#1A1A1A', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', overflow: 'hidden', boxShadow: '0 8px 32px rgba(0,0,0,0.2)' }}
+        >
           <div style={{ position: 'absolute', top: '20px', left: '20px', width: '36px', height: '36px', borderTop: '4px solid #1A9E8F', borderLeft: '4px solid #1A9E8F', borderRadius: '4px 0 0 0' }} />
           <div style={{ position: 'absolute', top: '20px', right: '20px', width: '36px', height: '36px', borderTop: '4px solid #1A9E8F', borderRight: '4px solid #1A9E8F', borderRadius: '0 4px 0 0' }} />
           <div style={{ position: 'absolute', bottom: '20px', left: '20px', width: '36px', height: '36px', borderBottom: '4px solid #1A9E8F', borderLeft: '4px solid #1A9E8F', borderRadius: '0 0 0 4px' }} />
@@ -228,7 +206,7 @@ function StepInquadraQR({ onNext, onBack }) {
           <ArrowLeft size={16} />
         </button>
         <button onClick={onNext} style={{ flex: 2, padding: '14px', borderRadius: '14px', border: 'none', background: 'linear-gradient(135deg, #1A9E8F 0%, #147A6E 100%)', fontFamily: 'Nunito, sans-serif', fontSize: '14px', fontWeight: 800, color: 'white', cursor: 'pointer', boxShadow: '0 4px 16px rgba(26,158,143,0.3)' }}>
-          Simula scansione riuscita 
+          Simula scansione riuscita →
         </button>
       </div>
     </div>
@@ -267,8 +245,112 @@ function StepDatiPagamento({ onBack, onNext }) {
         <button onClick={onBack} style={{ flex: 1, padding: '14px', borderRadius: '14px', border: '2px solid #E8E8E8', background: 'white', fontFamily: 'Nunito, sans-serif', fontSize: '14px', fontWeight: 700, color: '#6B7280', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}>
           <ArrowLeft size={16} />
         </button>
-        <button onClick={onNext} style={{ flex: 2, padding: '14px', borderRadius: '14px', border: 'none', background: 'linear-gradient(135deg, #1A9E8F 0%, #147A6E 100%)', fontFamily: 'Nunito, sans-serif', fontSize: '14px', fontWeight: 800, color: 'white', cursor: 'pointer', boxShadow: '0 4px 16px rgba(26,158,143,0.3)' }}>
-          Vai al pagamento 
+        <button
+          data-highlight="cta"
+          onClick={onNext}
+          style={{ flex: 2, padding: '14px', borderRadius: '14px', border: 'none', background: 'linear-gradient(135deg, #1A9E8F 0%, #147A6E 100%)', fontFamily: 'Nunito, sans-serif', fontSize: '14px', fontWeight: 800, color: 'white', cursor: 'pointer', boxShadow: '0 4px 16px rgba(26,158,143,0.3)' }}
+        >
+          Vai al pagamento →
+        </button>
+      </div>
+    </div>
+  )
+}
+
+// ── STEP 3–5: inserimento email ────────────────────────────────────
+const isValidEmail = val => val.includes('@') && val.includes('.') && val.length > 5
+
+function StepInserisciEmail({ onBack, onNext, onStepChange }) {
+  const [email, setEmail] = useState('')
+  const [emailConfirm, setEmailConfirm] = useState('')
+  const [isFocused, setIsFocused] = useState(false)
+  const [isConfirmFocused, setIsConfirmFocused] = useState(false)
+  const [email1Touched, setEmail1Touched] = useState(false)
+  const [confirmTouched, setConfirmTouched] = useState(false)
+
+  const isValid = isValidEmail(email) && emailConfirm === email
+  const email1Error = email1Touched && !isValidEmail(email)
+  const confirmError = confirmTouched && emailConfirm !== email
+
+  const inputBase = {
+    background: '#FFFFFF',
+    color: '#2D2D2D',
+    borderRadius: '12px',
+    padding: '14px 16px',
+    fontSize: '15px',
+    fontFamily: 'Nunito, sans-serif',
+    fontWeight: 600,
+    width: '100%',
+    outline: 'none',
+    WebkitAppearance: 'none',
+    appearance: 'none',
+    boxSizing: 'border-box',
+  }
+
+  const errStyle = { color: '#E8543A', fontSize: '11px', marginTop: '4px', fontWeight: 600, fontFamily: 'Nunito, sans-serif' }
+
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', height: '100%', padding: '32px 28px 28px', background: '#FFF8F0' }}>
+      <style>{`input::placeholder { color: #9CA3AF; font-weight: 400; }`}</style>
+      <div style={{ marginBottom: '28px' }}>
+        <p style={{ fontFamily: 'Nunito, sans-serif', fontSize: '12px', fontWeight: 700, color: '#1A9E8F', letterSpacing: '0.8px', textTransform: 'uppercase', marginBottom: '6px' }}>PagoPA</p>
+        <h1 style={{ fontFamily: 'Nunito, sans-serif', fontSize: '26px', fontWeight: 900, color: '#2D2D2D', letterSpacing: '-0.8px', lineHeight: 1.15, marginBottom: '8px' }}>Inserisci la<br />tua email</h1>
+        <p style={{ fontSize: '13px', color: '#6B7280', lineHeight: 1.6, fontWeight: 600 }}>Riceverai la ricevuta di pagamento a questo indirizzo</p>
+      </div>
+
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+        <div>
+          <input
+            data-highlight="email"
+            type="email"
+            placeholder="Indirizzo email"
+            value={email}
+            onChange={e => {
+              setEmail(e.target.value)
+              onStepChange?.(3)
+            }}
+            onFocus={() => setIsFocused(true)}
+            onBlur={() => {
+              setIsFocused(false)
+              setEmail1Touched(true)
+              if (isValidEmail(email)) onStepChange?.(4)
+            }}
+            style={{ ...inputBase, border: isFocused ? '2px solid #1A9E8F' : email1Error ? '2px solid #E8543A' : '2px solid #E8E8E8' }}
+          />
+          {email1Error && <p style={errStyle}>Inserisci un indirizzo email valido</p>}
+        </div>
+
+        <div>
+          <input
+            data-highlight="email-confirm"
+            type="email"
+            placeholder="Ripeti di nuovo"
+            value={emailConfirm}
+            onChange={e => {
+              const val = e.target.value
+              setEmailConfirm(val)
+              setConfirmTouched(true)
+              if (isValidEmail(email) && val === email) onStepChange?.(5)
+              else if (isValidEmail(email)) onStepChange?.(4)
+            }}
+            onFocus={() => setIsConfirmFocused(true)}
+            onBlur={() => setIsConfirmFocused(false)}
+            style={{ ...inputBase, border: isConfirmFocused ? '2px solid #1A9E8F' : confirmError ? '2px solid #E8543A' : '2px solid #E8E8E8' }}
+          />
+          {confirmError && <p style={errStyle}>Le email non corrispondono</p>}
+        </div>
+      </div>
+
+      <div style={{ display: 'flex', gap: '10px', marginTop: 'auto', paddingTop: '20px' }}>
+        <button onClick={onBack} style={{ flex: 1, padding: '14px', borderRadius: '14px', border: '2px solid #E8E8E8', background: 'white', fontFamily: 'Nunito, sans-serif', fontSize: '14px', fontWeight: 700, color: '#6B7280', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <ArrowLeft size={16} />
+        </button>
+        <button
+          data-highlight="continua"
+          onClick={isValid ? onNext : undefined}
+          style={{ flex: 2, padding: '14px', borderRadius: '14px', border: 'none', background: 'linear-gradient(135deg, #1A9E8F 0%, #147A6E 100%)', fontFamily: 'Nunito, sans-serif', fontSize: '14px', fontWeight: 800, color: 'white', boxShadow: isValid ? '0 4px 16px rgba(26,158,143,0.3)' : 'none', opacity: isValid ? 1 : 0.5, cursor: isValid ? 'pointer' : 'not-allowed' }}
+        >
+          Continua →
         </button>
       </div>
     </div>
@@ -279,6 +361,7 @@ function StepDatiPagamento({ onBack, onNext }) {
 export default function PagoPA() {
   const [step, setStep] = useState(0)
   const { setState } = useApp()
+  const rightPanelRef = useRef(null)
 
   const goHome = () => setState(s => ({ ...s, currentScreen: 'home', currentStep: 0 }))
 
@@ -286,25 +369,33 @@ export default function PagoPA() {
     if (step === 0) return <StepSceltaMetodo onQR={() => {}} onBack={() => {}} />
     if (step === 1) return <StepInquadraQR onNext={() => {}} onBack={() => {}} />
     if (step === 2) return <StepDatiPagamento onBack={() => {}} onNext={() => {}} />
+    if (step >= 3 && step <= 5) return <StepInserisciEmail onBack={() => {}} onNext={() => {}} onStepChange={() => {}} />
   }
 
   const rightPanelInteractive = () => {
     if (step === 0) return <StepSceltaMetodo onQR={() => setStep(1)} onBack={goHome} />
     if (step === 1) return <StepInquadraQR onNext={() => setStep(2)} onBack={() => setStep(0)} />
-    if (step === 2) return <StepDatiPagamento onBack={() => setStep(1)} onNext={() => alert('Prossimi step in arrivo!')} />
+    if (step === 2) return <StepDatiPagamento onBack={() => setStep(1)} onNext={() => setStep(3)} />
+    if (step >= 3 && step <= 5) return (
+      <StepInserisciEmail
+        onBack={() => setStep(2)}
+        onNext={() => alert('Prossimi step in arrivo!')}
+        onStepChange={(i) => setStep(i)}
+      />
+    )
   }
 
   return (
     <div style={{ display: 'flex', flexDirection: 'row', height: '740px' }}>
 
       {/* Pannello sinistro: replica con overlay */}
-      <PanelLeft step={step} rightPanelContent={rightPanelContent()} />
+      <PanelLeft step={step} rightPanelContent={rightPanelContent()} rightPanelRef={rightPanelRef} />
 
       {/* Banda nera */}
       <div style={{ width: '20px', background: '#1A1A1A', flexShrink: 0 }} />
 
       {/* Pannello destro: interattivo */}
-      <div style={{ width: '390px', height: '740px', flexShrink: 0, overflow: 'hidden' }}>
+      <div ref={rightPanelRef} style={{ width: '390px', height: '740px', flexShrink: 0, overflow: 'hidden' }}>
         {rightPanelInteractive()}
       </div>
 
