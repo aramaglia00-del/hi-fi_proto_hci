@@ -93,8 +93,121 @@ function Mascot() {
   )
 }
 
-export default function AssistantOverlay({ tag, text, highlightZone }) {
-  const atTop = highlightZone && highlightZone.top > 370
+function ScrollGesture() {
+  return (
+    <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: '6px', margin: '8px 0' }}>
+      <style>{`
+        @keyframes scrollUp {
+          0%   { transform: translateY(18px); opacity: 0; }
+          18%  { opacity: 1; }
+          78%  { opacity: 1; }
+          100% { transform: translateY(-18px); opacity: 0; }
+        }
+        @keyframes chvFade {
+          0%,100% { opacity: 0.15; }
+          50%     { opacity: 1; }
+        }
+      `}</style>
+
+      {/* Mano swipe-up */}
+      <div style={{ animation: 'scrollUp 1.5s ease-in-out infinite', display: 'flex' }}>
+        <svg width="48" height="60" viewBox="0 0 48 60" fill="none">
+          {/* Polso */}
+          <rect x="14" y="48" width="20" height="10" rx="5" fill="#FBBF8C"/>
+          {/* Palmo */}
+          <rect x="8"  y="24" width="32" height="26" rx="11" fill="#FBBF8C"/>
+          <rect x="8"  y="34" width="32" height="16" rx="8"  fill="#F5A07A" opacity="0.45"/>
+          {/* Dito indice esteso */}
+          <rect x="19" y="4"  width="10" height="26" rx="5"  fill="#FBBF8C"/>
+          <rect x="19" y="4"  width="10" height="12" rx="5"  fill="#F5A07A" opacity="0.5"/>
+          {/* Unghia indice */}
+          <rect x="21" y="5"  width="6"  height="8"  rx="3"  fill="#F0C4A0"/>
+          {/* Dita chiuse — sinistra */}
+          <rect x="8"  y="26" width="9"  height="18" rx="4.5" fill="#FBBF8C"/>
+          {/* Dita chiuse — destra */}
+          <rect x="31" y="26" width="9"  height="18" rx="4.5" fill="#FBBF8C"/>
+          {/* Dito medio */}
+          <rect x="13" y="22" width="9"  height="20" rx="4.5" fill="#FBBF8C"/>
+          {/* Anulare */}
+          <rect x="26" y="22" width="9"  height="20" rx="4.5" fill="#FBBF8C"/>
+          {/* Nocche */}
+          <circle cx="17" cy="29" r="2.2" fill="#F0A87C"/>
+          <circle cx="24" cy="27" r="2.2" fill="#F0A87C"/>
+          <circle cx="31" cy="29" r="2.2" fill="#F0A87C"/>
+        </svg>
+      </div>
+
+      {/* Chevron verso l'alto con delay sfalsato */}
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1px' }}>
+        {[0.3, 0.15, 0].map((delay, i) => (
+          <svg key={i} width="20" height="13" viewBox="0 0 20 13" fill="none"
+            style={{ animation: `chvFade 1.2s ease-in-out ${delay}s infinite` }}>
+            <polyline points="1 11 10 2 19 11" stroke="#1A9E8F" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
+        ))}
+        <span style={{
+          fontFamily: 'Nunito, sans-serif', fontSize: '9px', fontWeight: 800,
+          color: '#1A9E8F', letterSpacing: '0.8px', textTransform: 'uppercase',
+          marginTop: '3px',
+        }}>Scorri su</span>
+      </div>
+    </div>
+  )
+}
+
+function BubbleCard({ tag, text }) {
+  return (
+    <div style={{
+      background: 'white', borderRadius: '16px', padding: '12px 14px',
+      border: '2px solid rgba(245,166,35,0.3)', boxShadow: '0 4px 20px rgba(0,0,0,0.15)',
+    }}>
+      <div style={{
+        display: 'inline-flex', alignItems: 'center', gap: '4px',
+        fontFamily: 'Nunito, sans-serif', fontSize: '9px', fontWeight: 800,
+        letterSpacing: '0.5px', textTransform: 'uppercase',
+        color: '#D4720A', background: '#FFF0E0',
+        borderRadius: '5px', padding: '2px 7px', marginBottom: '6px',
+      }}>{tag}</div>
+      <p style={{
+        fontFamily: 'Nunito, sans-serif', fontSize: '12px', fontWeight: 600,
+        lineHeight: 1.6, color: '#2D2D2D', margin: 0,
+      }}>{text}</p>
+    </div>
+  )
+}
+
+export default function AssistantOverlay({ tag, text, highlightZone, showGesture, forceTop }) {
+  const atTop = forceTop || (highlightZone && highlightZone.top > 370)
+
+  if (showGesture) {
+    return (
+      <div style={{
+        position: 'absolute',
+        top: 12, bottom: 'auto',
+        left: 0, right: 0,
+        padding: '12px',
+        zIndex: 10,
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'stretch',
+        gap: '0px',
+        background: 'transparent',
+      }}>
+        {/* Fumetto — in alto */}
+        <BubbleCard tag={tag} text={text} />
+
+        {/* Gesture — al centro */}
+        <div style={{ display: 'flex', justifyContent: 'center' }}>
+          <ScrollGesture />
+        </div>
+
+        {/* Avatar — in basso */}
+        <div style={{ display: 'flex', justifyContent: 'center' }}>
+          <Mascot />
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div style={{
@@ -114,9 +227,8 @@ export default function AssistantOverlay({ tag, text, highlightZone }) {
         <Mascot />
       </div>
 
-      {/* Fumetto */}
+      {/* Fumetto con triangolino verso l'avatar */}
       <div style={{ flex: 1, paddingRight: '12px', position: 'relative' }}>
-        {/* Triangolino — punta verso sinistra (verso l'avatar) */}
         <div style={{
           position: 'absolute', top: '50%', left: '-10px',
           transform: 'translateY(-50%)',
@@ -133,31 +245,7 @@ export default function AssistantOverlay({ tag, text, highlightZone }) {
           borderBottom: '6px solid transparent',
           borderRight: '8px solid white',
         }} />
-
-        <div style={{
-          background: 'white',
-          borderRadius: '16px',
-          padding: '12px 14px',
-          border: '2px solid rgba(245,166,35,0.3)',
-          boxShadow: '0 4px 20px rgba(0,0,0,0.15)',
-        }}>
-          <div style={{
-            display: 'inline-flex', alignItems: 'center', gap: '4px',
-            fontFamily: 'Nunito, sans-serif', fontSize: '9px', fontWeight: 800,
-            letterSpacing: '0.5px', textTransform: 'uppercase',
-            color: '#D4720A', background: '#FFF0E0',
-            borderRadius: '5px', padding: '2px 7px', marginBottom: '6px',
-          }}>
-            {tag}
-          </div>
-          <p style={{
-            fontFamily: 'Nunito, sans-serif',
-            fontSize: '12px', fontWeight: 600,
-            lineHeight: 1.6, color: '#2D2D2D', margin: 0,
-          }}>
-            {text}
-          </p>
-        </div>
+        <BubbleCard tag={tag} text={text} />
       </div>
     </div>
   )

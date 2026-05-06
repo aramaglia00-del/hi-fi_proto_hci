@@ -6,6 +6,7 @@ export function AppProvider({ children }) {
   const [state, setState] = useState({
     currentScreen: 'home',
     currentStep: 0,
+    email: '',
   })
 
   return (
