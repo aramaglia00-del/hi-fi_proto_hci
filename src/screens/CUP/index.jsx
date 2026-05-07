@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react'
 import { 
   CalendarDays, Building2, Info, Newspaper, Phone, 
   FileText, ArrowLeft, PlusCircle, Download, List, 
-  ChevronRight, CheckCircle2, Stethoscope, MapPin, Clock, User
+  ChevronRight, CheckCircle2 
 } from 'lucide-react'
 import { useApp } from '../../context/AppContext'
 import AssistantOverlay from '../../components/AssistantOverlay'
@@ -68,6 +68,31 @@ const assistantSteps = [
   }
 ]
 
+// ── COMPONENTE PULSANTE BACK (Standard) ───────────────────────────
+const CustomBackButton = ({ onBack, flex = 1 }) => (
+  <button 
+    onClick={onBack} 
+    style={{ 
+      flex: flex, 
+      padding: '14px', 
+      borderRadius: '14px', 
+      border: '2px solid #E8E8E8', 
+      background: 'white', 
+      fontFamily: 'Nunito, sans-serif', 
+      fontSize: '14px', 
+      fontWeight: 700, 
+      color: '#6B7280', 
+      cursor: 'pointer', 
+      display: 'flex', 
+      alignItems: 'center', 
+      justifyContent: 'center', 
+      gap: '6px' 
+    }}
+  >
+    <ArrowLeft size={16} />
+  </button>
+)
+
 // ── PANNELLO SINISTRO (Logica Sync) ──────────────────────────────────
 function PanelLeft({ step, rightPanelContent, rightPanelRef }) {
   const currentStep = assistantSteps[step] || assistantSteps[0]
@@ -124,7 +149,7 @@ function PanelLeft({ step, rightPanelContent, rightPanelRef }) {
 
 // ── SCHERMATE DELL'APP ──────────────────────────────────────────────
 
-function StepMenu({ onPrenotazioni }) {
+function StepMenu({ onPrenotazioni, onBack }) {
   const voci = [
     { icon: <CalendarDays size={38} />, label: 'Prenotazioni', highlight: true },
     { icon: <Building2 size={38} />, label: 'Strutture' },
@@ -134,9 +159,9 @@ function StepMenu({ onPrenotazioni }) {
     { icon: <FileText size={38} />, label: 'Modulistica' },
   ]
   return (
-    <div style={{ height: '100%', background: 'white', display: 'flex', flexDirection: 'column', textAlign: 'center' }}>
+    <div style={{ height: '100%', background: 'white', display: 'flex', flexDirection: 'column', textAlign: 'center', padding: '0 20px 20px' }}>
       <h1 style={{ padding: '40px 0 20px', fontSize: '28px', fontWeight: 900 }}>Sanità pubblica</h1>
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', padding: '20px' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', flex: 1 }}>
         {voci.map((v, i) => (
           <div key={i} data-highlight={v.highlight ? "prenotazioni" : null} onClick={v.highlight ? onPrenotazioni : null} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px', cursor: v.highlight ? 'pointer' : 'default' }}>
             <div style={{ color: '#2D2D2D' }}>{v.icon}</div>
@@ -144,23 +169,28 @@ function StepMenu({ onPrenotazioni }) {
           </div>
         ))}
       </div>
+      <div style={{ display: 'flex', gap: '10px', marginTop: 'auto', paddingTop: '20px' }}>
+        <CustomBackButton onBack={onBack} />
+      </div>
     </div>
   )
 }
 
 function StepOptions({ onNext, onBack }) {
   return (
-    <div style={{ height: '100%', background: 'white', padding: '20px' }}>
+    <div style={{ height: '100%', background: 'white', padding: '20px', display: 'flex', flexDirection: 'column' }}>
       <div style={{ display: 'flex', alignItems: 'center', marginBottom: '40px' }}>
-        <ArrowLeft onClick={onBack} style={{ cursor: 'pointer' }} />
         <h2 style={{ flex: 1, textAlign: 'center', fontWeight: 800 }}>Prenotazioni</h2>
       </div>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '15px', flex: 1 }}>
         <button data-highlight="aggiungi" onClick={onNext} style={{ display: 'flex', alignItems: 'center', gap: '15px', padding: '18px', border: '2px solid black', borderRadius: '12px', background: 'white', fontWeight: 800, textAlign: 'left', cursor: 'pointer' }}>
           <PlusCircle /> Aggiungi Prenotazione
         </button>
         <button disabled style={{ display: 'flex', alignItems: 'center', gap: '15px', padding: '18px', border: '1px solid #E8E8E8', borderRadius: '12px', background: 'white', color: '#ccc', textAlign: 'left' }}><Download /> Recupera Prenotazione</button>
         <button disabled style={{ display: 'flex', alignItems: 'center', gap: '15px', padding: '18px', border: '1px solid #E8E8E8', borderRadius: '12px', background: 'white', color: '#ccc', textAlign: 'left' }}><List /> Elenca prenotazioni</button>
+      </div>
+      <div style={{ display: 'flex', gap: '10px', marginTop: 'auto', paddingTop: '20px' }}>
+        <CustomBackButton onBack={onBack} />
       </div>
     </div>
   )
@@ -173,14 +203,14 @@ function StepTutorialScreen({ onNext }) {
       <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
         <div style={{ fontSize: '100px' }}>👇</div>
       </div>
-      <button data-highlight="continua" onClick={onNext} style={{ width: '100%', padding: '18px', background: '#1A1A1A', color: 'white', border: 'none', borderRadius: '8px', fontWeight: 900, fontSize: '16px', cursor: 'pointer' }}>
+      <button data-highlight="continua" onClick={onNext} style={{ width: '100%', padding: '18px', background: '#1A1A1A', color: 'white', border: 'none', borderRadius: '14px', fontWeight: 900, fontSize: '16px', cursor: 'pointer' }}>
         CONTINUA
       </button>
     </div>
   )
 }
 
-function StepFormScreen({ currentStep, setStep, onNext }) {
+function StepFormScreen({ currentStep, setStep, onNext, onBack }) {
   const [valSx, setValSx] = useState('')
   const [valDx, setValDx] = useState('')
   const [valCf, setValCf] = useState('')
@@ -202,10 +232,27 @@ function StepFormScreen({ currentStep, setStep, onNext }) {
   })
 
   return (
-    <div style={{ height: '100%', background: 'white', padding: '20px' }}>
-      <h3 style={{ textAlign: 'center', marginBottom: '30px', fontWeight: 800 }}>Aggiungi Prenotazione</h3>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
-        
+    <div style={{ height: '100%', background: 'white', padding: '20px', display: 'flex', flexDirection: 'column' }}>
+      {/* HEADER CON BACK PICCOLO A SINISTRA */}
+      <div style={{ display: 'flex', alignItems: 'center', marginBottom: '30px', position: 'relative' }}>
+        <button 
+          onClick={onBack} 
+          style={{ 
+            background: 'none', 
+            border: 'none', 
+            cursor: 'pointer', 
+            padding: '5px', 
+            color: '#6B7280',
+            position: 'absolute',
+            left: 0
+          }}
+        >
+          <ArrowLeft size={20} />
+        </button>
+        <h3 style={{ flex: 1, textAlign: 'center', fontWeight: 800, margin: 0 }}>Aggiungi Prenotazione</h3>
+      </div>
+
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '15px', flex: 1 }}>
         <div data-highlight="nre-sx" style={fieldStyle(currentStep === 3)}>
           <label style={{ fontSize: '11px', fontWeight: 800, color: '#666', display: 'block', marginBottom: '5px' }}>CODICE NRE SINISTRA</label>
           <input 
@@ -216,7 +263,6 @@ function StepFormScreen({ currentStep, setStep, onNext }) {
             style={{ width: '100%', border: 'none', fontSize: '18px', outline: 'none', fontWeight: 700 }} 
           />
         </div>
-
         <div data-highlight="nre-dx" style={fieldStyle(currentStep === 4)}>
           <label style={{ fontSize: '11px', fontWeight: 800, color: '#666', display: 'block', marginBottom: '5px' }}>CODICE NRE DESTRA</label>
           <input 
@@ -227,7 +273,6 @@ function StepFormScreen({ currentStep, setStep, onNext }) {
             style={{ width: '100%', border: 'none', fontSize: '18px', outline: 'none', fontWeight: 700 }} 
           />
         </div>
-
         <div data-highlight="cf" style={fieldStyle(currentStep === 5)}>
           <label style={{ fontSize: '11px', fontWeight: 800, color: '#666', display: 'block', marginBottom: '5px' }}>CODICE FISCALE</label>
           <input 
@@ -238,12 +283,14 @@ function StepFormScreen({ currentStep, setStep, onNext }) {
             style={{ width: '100%', border: 'none', fontSize: '18px', outline: 'none', fontWeight: 700 }} 
           />
         </div>
+      </div>
 
+      <div style={{ marginTop: 'auto', paddingTop: '20px' }}>
         <button 
           data-highlight="richiedi-btn"
           onClick={valCf.length === 16 ? onNext : undefined}
           style={{ 
-            marginTop: '20px', padding: '16px', borderRadius: '12px', border: 'none',
+            width: '100%', padding: '16px', borderRadius: '14px', border: 'none',
             background: valCf.length === 16 ? '#1A1A1A' : '#E8E8E8',
             color: valCf.length === 16 ? 'white' : '#9CA3AF',
             fontWeight: 800, cursor: valCf.length === 16 ? 'pointer' : 'default'
@@ -256,7 +303,7 @@ function StepFormScreen({ currentStep, setStep, onNext }) {
   )
 }
 
-function StepResults({ onNext }) {
+function StepResults({ onNext, onBack }) {
   const sedi = [
     { h: 'Ospedale Molinette', s: 'Via San Maurizio - Torino', d: '11/07/2026 - 12:30' },
     { h: 'Ospedale Santa Maria', s: 'Corso Vercelli - Torino', d: '29/06/2026 - 18:30' },
@@ -264,9 +311,9 @@ function StepResults({ onNext }) {
     { h: 'Ospedale Santa Agata', s: 'Via Verdi - Vercelli', d: '13/07/2026 - 09:30' },
   ]
   return (
-    <div style={{ height: '100%', background: 'white' }}>
+    <div style={{ height: '100%', background: 'white', display: 'flex', flexDirection: 'column', padding: '0 0 20px 0' }}>
       <h3 style={{ textAlign: 'center', padding: '20px', fontWeight: 800 }}>Prime Disponibilità</h3>
-      <div style={{ overflowY: 'auto' }}>
+      <div style={{ overflowY: 'auto', flex: 1 }}>
         {sedi.map((s, i) => (
           <div 
             key={i} 
@@ -284,13 +331,16 @@ function StepResults({ onNext }) {
           </div>
         ))}
       </div>
+      <div style={{ display: 'flex', gap: '10px', padding: '0 20px' }}>
+        <CustomBackButton onBack={onBack} />
+      </div>
     </div>
   )
 }
 
-function StepConfirm({ onNext }) {
+function StepConfirm({ onNext, onBack }) {
   return (
-    <div style={{ height: '100%', background: 'white', padding: '32px 28px', display: 'flex', flexDirection: 'column' }}>
+    <div style={{ height: '100%', background: 'white', padding: '32px 28px 20px', display: 'flex', flexDirection: 'column' }}>
       <h3 style={{ textAlign: 'center', marginBottom: '40px', fontWeight: 900, fontSize: '24px' }}>Dettaglio</h3>
       <div style={{ flex: 1, textAlign: 'left' }}>
           <div style={{ display: 'flex', gap: '15px', marginBottom: '25px' }}>
@@ -312,9 +362,12 @@ function StepConfirm({ onNext }) {
             </div>
           </div>
       </div>
-      <button data-highlight="conferma-btn" onClick={onNext} style={{ padding: '18px', background: '#1A1A1A', color: 'white', borderRadius: '12px', fontWeight: 900, border: 'none', cursor: 'pointer', fontSize: '15px' }}>
-        Conferma prenotazione
-      </button>
+      <div style={{ display: 'flex', gap: '10px', marginTop: 'auto' }}>
+        <CustomBackButton onBack={onBack} />
+        <button data-highlight="conferma-btn" onClick={onNext} style={{ flex: 2, padding: '18px', background: '#1A1A1A', color: 'white', borderRadius: '12px', fontWeight: 900, border: 'none', cursor: 'pointer', fontSize: '15px' }}>
+          Conferma
+        </button>
+      </div>
     </div>
   )
 }
@@ -349,15 +402,15 @@ export default function CUP() {
       : { onNext: () => {}, onBack: () => {}, onPrenotazioni: () => {}, onHome: () => {}, currentStep: step, setStep: () => {} }
     
     switch(step) {
-      case 0: return <StepMenu onPrenotazioni={props.onPrenotazioni} />
+      case 0: return <StepMenu onPrenotazioni={props.onPrenotazioni} onBack={goHome} />
       case 1: return <StepOptions onNext={props.onNext} onBack={props.onBack} />
       case 2: return <StepTutorialScreen onNext={props.onNext} />
       case 3: 
       case 4: 
       case 5: 
-      case 6: return <StepFormScreen {...props} />
-      case 7: return <StepResults onNext={props.onNext} />
-      case 8: return <StepConfirm onNext={props.onNext} />
+      case 6: return <StepFormScreen {...props} onBack={() => setStep(2)} /> 
+      case 7: return <StepResults onNext={props.onNext} onBack={() => setStep(3)} /> 
+      case 8: return <StepConfirm onNext={props.onNext} onBack={props.onBack} />
       case 9: return <StepSuccess onHome={props.onHome} />
       default: return null
     }
