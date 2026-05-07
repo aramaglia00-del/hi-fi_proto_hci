@@ -129,9 +129,6 @@ function PanelLeft({ step, rightPanelContent, rightPanelRef }) {
           {rightPanelContent}
         </div>
       )}
-      {!currentStep.isTutorialMode && (
-        <div style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.45)', pointerEvents: 'none', zIndex: 1 }} />
-      )}
       {highlightZone && !currentStep.isTutorialMode && (
         <>
           <div style={{ position: 'absolute', top: highlightZone.top, left: highlightZone.left, width: highlightZone.width, height: highlightZone.height, zIndex: 2, pointerEvents: 'none', borderRadius: '16px', boxShadow: '0 0 0 9999px rgba(0,0,0,0.45)', overflow: 'hidden' }}>
@@ -160,7 +157,7 @@ function StepMenu({ onPrenotazioni, onBack }) {
   ]
   return (
     <div style={{ height: '100%', background: 'white', display: 'flex', flexDirection: 'column', textAlign: 'center', padding: '0 20px 20px' }}>
-      <h1 style={{ padding: '40px 0 20px', fontSize: '28px', fontWeight: 900 }}>Sanità pubblica</h1>
+      <h1 style={{ padding: '40px 0 20px', fontSize: '28px', fontWeight: 900, color: '#2D2D2D' }}>Sanità pubblica</h1>
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', flex: 1 }}>
         {voci.map((v, i) => (
           <div key={i} data-highlight={v.highlight ? "prenotazioni" : null} onClick={v.highlight ? onPrenotazioni : null} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px', cursor: v.highlight ? 'pointer' : 'default' }}>
@@ -180,7 +177,7 @@ function StepOptions({ onNext, onBack }) {
   return (
     <div style={{ height: '100%', background: 'white', padding: '20px', display: 'flex', flexDirection: 'column' }}>
       <div style={{ display: 'flex', alignItems: 'center', marginBottom: '40px' }}>
-        <h2 style={{ flex: 1, textAlign: 'center', fontWeight: 800 }}>Prenotazioni</h2>
+        <h2 style={{ flex: 1, textAlign: 'center', fontWeight: 800, color: '#2D2D2D' }}>Prenotazioni</h2>
       </div>
       <div style={{ display: 'flex', flexDirection: 'column', gap: '15px', flex: 1 }}>
         <button data-highlight="aggiungi" onClick={onNext} style={{ display: 'flex', alignItems: 'center', gap: '15px', padding: '18px', border: '2px solid black', borderRadius: '12px', background: 'white', fontWeight: 800, textAlign: 'left', cursor: 'pointer' }}>
@@ -233,23 +230,16 @@ function StepFormScreen({ currentStep, setStep, onNext, onBack }) {
 
   return (
     <div style={{ height: '100%', background: 'white', padding: '20px', display: 'flex', flexDirection: 'column' }}>
-      {/* HEADER CON BACK PICCOLO A SINISTRA */}
       <div style={{ display: 'flex', alignItems: 'center', marginBottom: '30px', position: 'relative' }}>
         <button 
           onClick={onBack} 
           style={{ 
-            background: 'none', 
-            border: 'none', 
-            cursor: 'pointer', 
-            padding: '5px', 
-            color: '#6B7280',
-            position: 'absolute',
-            left: 0
+            background: 'none', border: 'none', cursor: 'pointer', padding: '5px', color: '#6B7280', position: 'absolute', left: 0
           }}
         >
           <ArrowLeft size={20} />
         </button>
-        <h3 style={{ flex: 1, textAlign: 'center', fontWeight: 800, margin: 0 }}>Aggiungi Prenotazione</h3>
+        <h3 style={{ flex: 1, textAlign: 'center', fontWeight: 800, margin: 0, color: '#2D2D2D' }}>Aggiungi Prenotazione</h3>
       </div>
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: '15px', flex: 1 }}>
@@ -312,7 +302,7 @@ function StepResults({ onNext, onBack }) {
   ]
   return (
     <div style={{ height: '100%', background: 'white', display: 'flex', flexDirection: 'column', padding: '0 0 20px 0' }}>
-      <h3 style={{ textAlign: 'center', padding: '20px', fontWeight: 800 }}>Prime Disponibilità</h3>
+      <h3 style={{ textAlign: 'center', padding: '20px', fontWeight: 800, color: '#2D2D2D' }}>Prime Disponibilità</h3>
       <div style={{ overflowY: 'auto', flex: 1 }}>
         {sedi.map((s, i) => (
           <div 
@@ -341,7 +331,7 @@ function StepResults({ onNext, onBack }) {
 function StepConfirm({ onNext, onBack }) {
   return (
     <div style={{ height: '100%', background: 'white', padding: '32px 28px 20px', display: 'flex', flexDirection: 'column' }}>
-      <h3 style={{ textAlign: 'center', marginBottom: '40px', fontWeight: 900, fontSize: '24px' }}>Dettaglio</h3>
+      <h3 style={{ textAlign: 'center', marginBottom: '40px', fontWeight: 900, fontSize: '24px', color: '#2D2D2D' }}>Dettaglio</h3>
       <div style={{ flex: 1, textAlign: 'left' }}>
           <div style={{ display: 'flex', gap: '15px', marginBottom: '25px' }}>
             <div style={{ width: '40px', height: '40px', background: '#E0F5F3', borderRadius: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -378,7 +368,7 @@ function StepSuccess({ onHome }) {
       <div style={{ width: '90px', height: '90px', borderRadius: '50%', border: '3px solid #1A9E8F', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '30px', color: '#1A9E8F' }}>
         <CheckCircle2 size={50} />
       </div>
-      <h1 style={{ fontSize: '30px', fontWeight: 900, marginBottom: '10px' }}>Prenotazione Effettuata!</h1>
+      <h1 style={{ fontSize: '30px', fontWeight: 900, marginBottom: '10px', color: '#2D2D2D' }}>Prenotazione Effettuata!</h1>
       <p style={{ color: '#6B7280' }}>Ospedale San Pietro<br /><strong>21/07/2026 - 14:00</strong></p>
       <button data-highlight="home-back" onClick={onHome} style={{ marginTop: 'auto', width: '100%', padding: '18px', background: '#1A1A1A', color: 'white', borderRadius: '12px', fontWeight: 800, cursor: 'pointer', border: 'none' }}>
         Torna alla schermata principale
