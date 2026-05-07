@@ -31,7 +31,7 @@ export default function ScreenLeft() {
 
       {/* Titolo */}
       <h1 style={{
-        fontFamily: 'Nunito, sans-serif', fontSize: '26px',
+        fontFamily: 'Nunito, sans-serif', fontSize: '28px',
         fontWeight: 900, color: '#2D2D2D', lineHeight: 1.1,
         letterSpacing: '-0.8px', marginBottom: '0',
       }}>

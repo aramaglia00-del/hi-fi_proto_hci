@@ -163,14 +163,14 @@ function BubbleCard({ tag, text }) {
     }}>
       <div style={{
         display: 'inline-flex', alignItems: 'center', gap: '4px',
-        fontFamily: 'Nunito, sans-serif', fontSize: '9px', fontWeight: 800,
+        fontFamily: 'Nunito, sans-serif', fontSize: '11px', fontWeight: 800,
         letterSpacing: '0.5px', textTransform: 'uppercase',
         color: '#D4720A', background: '#FFF0E0',
-        borderRadius: '5px', padding: '2px 7px', marginBottom: '6px',
+        borderRadius: '5px', padding: '3px 8px', marginBottom: '7px',
       }}>{tag}</div>
       <p style={{
-        fontFamily: 'Nunito, sans-serif', fontSize: '12px', fontWeight: 600,
-        lineHeight: 1.6, color: '#2D2D2D', margin: 0,
+        fontFamily: 'Nunito, sans-serif', fontSize: '14px', fontWeight: 600,
+        lineHeight: 1.65, color: '#2D2D2D', margin: 0,
       }}>{text}</p>
     </div>
   )

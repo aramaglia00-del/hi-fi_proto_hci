@@ -10,14 +10,14 @@ export default function Bubble({ text }) {
       }}>
         <div style={{
           display: 'inline-flex', alignItems: 'center', gap: '4px',
-          fontFamily: 'Nunito, sans-serif', fontSize: '9px', fontWeight: 800,
+          fontFamily: 'Nunito, sans-serif', fontSize: '11px', fontWeight: 800,
           letterSpacing: '0.5px', textTransform: 'uppercase',
           color: '#D4720A', background: '#FFF0E0', borderRadius: '5px',
-          padding: '2px 7px', marginBottom: '7px',
+          padding: '3px 8px', marginBottom: '8px',
         }}>
           💡 Suggerimento
         </div>
-        <p style={{ fontFamily: 'Nunito, sans-serif', fontSize: '13px', fontWeight: 600, lineHeight: 1.6, color: '#2D2D2D' }}>
+        <p style={{ fontFamily: 'Nunito, sans-serif', fontSize: '15px', fontWeight: 600, lineHeight: 1.65, color: '#2D2D2D' }}>
           {text}
         </p>
       </div>

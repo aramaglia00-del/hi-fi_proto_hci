@@ -82,18 +82,50 @@ const assistantSteps = [
   },
 ]
 
+// ── PHASE INDICATOR ────────────────────────────────────────────────
+const PHASES = ['Avviso', 'Email', 'Metodo', 'Carta', 'Conferma']
+
+function getPhase(step) {
+  if (step <= 2) return 0
+  if (step <= 5) return 1
+  if (step <= 7) return 2
+  if (step <= 12) return 3
+  return 4
+}
+
+function PhaseIndicator({ step }) {
+  if (step >= 14) return null
+  const current = getPhase(step)
+  return (
+    <div style={{ display: 'flex', alignItems: 'center', gap: '4px', marginBottom: '14px', marginTop: '2px' }}>
+      {PHASES.map((label, i) => (
+        <div key={i} style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '3px' }}>
+          <div style={{
+            height: '5px', width: '100%', borderRadius: '3px',
+            background: i < current ? '#A8DDD8' : i === current ? '#1A9E8F' : '#E8E8E8',
+            transition: 'background 0.3s',
+          }} />
+          {i === current && (
+            <span style={{ fontSize: '10px', fontWeight: 700, color: '#1A9E8F', fontFamily: 'Nunito, sans-serif', whiteSpace: 'nowrap' }}>
+              {label}
+            </span>
+          )}
+        </div>
+      ))}
+    </div>
+  )
+}
+
 // ── PANNELLO SINISTRO con overlay ──────────────────────────────────
 function PanelLeft({ step, rightPanelContent, rightPanelRef, showGesture, overrideHighlightZone, leftPanelRef, forceTop }) {
   const { tag, text, highlightSelector } = assistantSteps[step]
   const [highlightZone, setHighlightZone] = useState(null)
 
-  // Quando la zona è pre-calcolata (es. step 7), usala direttamente
   useEffect(() => {
     if (overrideHighlightZone === undefined) return
     setHighlightZone(overrideHighlightZone)
   }, [overrideHighlightZone])
 
-  // Calcolo standard per gli step senza override
   useEffect(() => {
     if (overrideHighlightZone !== undefined) return
 
@@ -133,7 +165,7 @@ function PanelLeft({ step, rightPanelContent, rightPanelRef, showGesture, overri
       {/* Overlay scuro su tutto */}
       <div style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.45)', pointerEvents: 'none', zIndex: 1 }} />
 
-      {/* Zona evidenziata: ritaglia l'overlay con box-shadow trick */}
+      {/* Zona evidenziata */}
       {highlightZone && (
         <>
           <div style={{
@@ -148,7 +180,6 @@ function PanelLeft({ step, rightPanelContent, rightPanelRef, showGesture, overri
             boxShadow: '0 0 0 9999px rgba(0,0,0,0.45)',
             overflow: 'hidden',
           }}>
-            {/* Contenuto nitido nella zona — renderizza di nuovo il pannello, clippato */}
             <div style={{
               position: 'absolute',
               top: -highlightZone.top,
@@ -187,40 +218,42 @@ function PanelLeft({ step, rightPanelContent, rightPanelRef, showGesture, overri
 function StepSceltaMetodo({ onQR, onBack }) {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100%', padding: '32px 28px 28px', background: '#FFF8F0' }}>
-      <div style={{ marginBottom: '28px' }}>
-        <p style={{ fontFamily: 'Nunito, sans-serif', fontSize: '12px', fontWeight: 700, color: '#1A9E8F', letterSpacing: '0.8px', textTransform: 'uppercase', marginBottom: '6px' }}>PagoPA</p>
+      <div style={{ marginBottom: '24px' }}>
+        <p style={{ fontFamily: 'Nunito, sans-serif', fontSize: '13px', fontWeight: 700, color: '#1A9E8F', letterSpacing: '0.8px', textTransform: 'uppercase', marginBottom: '6px' }}>PagoPA</p>
+        <PhaseIndicator step={0} />
         <h1 style={{ fontFamily: 'Nunito, sans-serif', fontSize: '26px', fontWeight: 900, color: '#2D2D2D', letterSpacing: '-0.8px', lineHeight: 1.15, marginBottom: '8px' }}>Paga un avviso</h1>
-        <p style={{ fontSize: '13px', color: '#6B7280', lineHeight: 1.6, fontWeight: 600 }}>Puoi pagare con carta, conto e app di pagamento</p>
+        <p style={{ fontSize: '14px', color: '#6B7280', lineHeight: 1.6, fontWeight: 600 }}>Puoi pagare con carta, conto e app di pagamento</p>
       </div>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
         <button
           data-highlight="qr"
           onClick={onQR}
-          style={{ display: 'flex', alignItems: 'center', gap: '14px', padding: '18px 16px', borderRadius: '16px', border: '2.5px solid #E8E8E8', background: 'white', cursor: 'pointer', fontFamily: 'Nunito, sans-serif', textAlign: 'left', width: '100%', position: 'relative', boxShadow: '0 2px 10px rgba(0,0,0,0.05)' }}
+          style={{ display: 'flex', alignItems: 'center', gap: '16px', padding: '20px 18px', borderRadius: '16px', border: '2.5px solid #E8E8E8', background: 'white', cursor: 'pointer', fontFamily: 'Nunito, sans-serif', textAlign: 'left', width: '100%', position: 'relative', boxShadow: '0 2px 10px rgba(0,0,0,0.05)' }}
         >
-          <div style={{ width: '48px', height: '48px', borderRadius: '14px', background: '#E0F5F3', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-            <QrCode size={26} color="#1A9E8F" />
+          <div style={{ width: '52px', height: '52px', borderRadius: '14px', background: '#E0F5F3', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+            <QrCode size={28} color="#1A9E8F" />
           </div>
           <div style={{ flex: 1 }}>
-            <span style={{ fontSize: '15px', fontWeight: 800, display: 'block', color: '#2D2D2D', lineHeight: 1.2 }}>Inquadra il codice QR</span>
-            <span style={{ fontSize: '11px', color: '#6B7280', marginTop: '3px', display: 'block', fontWeight: 600 }}>Usa la tua webcam o fotocamera</span>
+            <span style={{ fontSize: '16px', fontWeight: 800, display: 'block', color: '#2D2D2D', lineHeight: 1.2 }}>Inquadra il codice QR</span>
+            <span style={{ fontSize: '13px', color: '#6B7280', marginTop: '4px', display: 'block', fontWeight: 600 }}>Usa la tua webcam o fotocamera</span>
           </div>
-          <ChevronRight size={18} color="#6B7280" />
+          <ChevronRight size={20} color="#6B7280" />
         </button>
-        <button style={{ display: 'flex', alignItems: 'center', gap: '14px', padding: '18px 16px', borderRadius: '16px', border: '2.5px solid #E8E8E8', background: 'white', cursor: 'pointer', fontFamily: 'Nunito, sans-serif', textAlign: 'left', width: '100%' }}>
-          <div style={{ width: '48px', height: '48px', borderRadius: '14px', background: '#F5F5F5', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-            <Keyboard size={26} color="#9CA3AF" />
+        <button style={{ display: 'flex', alignItems: 'center', gap: '16px', padding: '20px 18px', borderRadius: '16px', border: '2.5px solid #E8E8E8', background: 'white', cursor: 'pointer', fontFamily: 'Nunito, sans-serif', textAlign: 'left', width: '100%' }}>
+          <div style={{ width: '52px', height: '52px', borderRadius: '14px', background: '#F5F5F5', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+            <Keyboard size={28} color="#9CA3AF" />
           </div>
           <div style={{ flex: 1 }}>
-            <span style={{ fontSize: '15px', fontWeight: 800, display: 'block', color: '#2D2D2D', lineHeight: 1.2 }}>Inserisci i tuoi dati</span>
-            <span style={{ fontSize: '11px', color: '#6B7280', marginTop: '3px', display: 'block', fontWeight: 600 }}>Digita manualmente il codice avviso</span>
+            <span style={{ fontSize: '16px', fontWeight: 800, display: 'block', color: '#2D2D2D', lineHeight: 1.2 }}>Inserisci i tuoi dati</span>
+            <span style={{ fontSize: '13px', color: '#6B7280', marginTop: '4px', display: 'block', fontWeight: 600 }}>Digita manualmente il codice avviso</span>
           </div>
-          <ChevronRight size={18} color="#6B7280" />
+          <ChevronRight size={20} color="#6B7280" />
         </button>
       </div>
       <div style={{ display: 'flex', gap: '10px', marginTop: 'auto', paddingTop: '20px' }}>
-        <button onClick={onBack} style={{ flex: 1, padding: '14px', borderRadius: '14px', border: '2px solid #E8E8E8', background: 'white', fontFamily: 'Nunito, sans-serif', fontSize: '14px', fontWeight: 700, color: '#6B7280', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}>
+        <button onClick={onBack} style={{ padding: '14px 18px', borderRadius: '14px', border: '2px solid #E8E8E8', background: 'white', fontFamily: 'Nunito, sans-serif', fontSize: '14px', fontWeight: 700, color: '#6B7280', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px' }}>
           <ArrowLeft size={16} />
+          Indietro
         </button>
       </div>
     </div>
@@ -231,10 +264,11 @@ function StepSceltaMetodo({ onQR, onBack }) {
 function StepInquadraQR({ onNext, onBack }) {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100%', padding: '32px 28px 28px', background: '#FFF8F0' }}>
-      <div style={{ marginBottom: '24px' }}>
-        <p style={{ fontFamily: 'Nunito, sans-serif', fontSize: '12px', fontWeight: 700, color: '#1A9E8F', letterSpacing: '0.8px', textTransform: 'uppercase', marginBottom: '6px' }}>Step 1</p>
+      <div style={{ marginBottom: '20px' }}>
+        <p style={{ fontFamily: 'Nunito, sans-serif', fontSize: '13px', fontWeight: 700, color: '#1A9E8F', letterSpacing: '0.8px', textTransform: 'uppercase', marginBottom: '6px' }}>PagoPA</p>
+        <PhaseIndicator step={1} />
         <h1 style={{ fontFamily: 'Nunito, sans-serif', fontSize: '26px', fontWeight: 900, color: '#2D2D2D', letterSpacing: '-0.8px', lineHeight: 1.15, marginBottom: '8px' }}>Inquadra il<br />codice QR</h1>
-        <p style={{ fontSize: '13px', color: '#6B7280', lineHeight: 1.6, fontWeight: 600 }}>Assicurati di avere una buona illuminazione</p>
+        <p style={{ fontSize: '14px', color: '#6B7280', lineHeight: 1.6, fontWeight: 600 }}>Assicurati di avere una buona illuminazione</p>
       </div>
       <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
         <div
@@ -251,10 +285,11 @@ function StepInquadraQR({ onNext, onBack }) {
         </div>
       </div>
       <div style={{ display: 'flex', gap: '10px', marginTop: '20px' }}>
-        <button onClick={onBack} style={{ flex: 1, padding: '14px', borderRadius: '14px', border: '2px solid #E8E8E8', background: 'white', fontFamily: 'Nunito, sans-serif', fontSize: '14px', fontWeight: 700, color: '#6B7280', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}>
+        <button onClick={onBack} style={{ flex: 1, padding: '14px 12px', borderRadius: '14px', border: '2px solid #E8E8E8', background: 'white', fontFamily: 'Nunito, sans-serif', fontSize: '14px', fontWeight: 700, color: '#6B7280', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}>
           <ArrowLeft size={16} />
+          Indietro
         </button>
-        <button onClick={onNext} style={{ flex: 2, padding: '14px', borderRadius: '14px', border: 'none', background: 'linear-gradient(135deg, #1A9E8F 0%, #147A6E 100%)', fontFamily: 'Nunito, sans-serif', fontSize: '14px', fontWeight: 800, color: 'white', cursor: 'pointer', boxShadow: '0 4px 16px rgba(26,158,143,0.3)' }}>
+        <button onClick={onNext} style={{ flex: 2, padding: '14px', borderRadius: '14px', border: 'none', background: 'linear-gradient(135deg, #1A9E8F 0%, #147A6E 100%)', fontFamily: 'Nunito, sans-serif', fontSize: '15px', fontWeight: 800, color: 'white', cursor: 'pointer', boxShadow: '0 4px 16px rgba(26,158,143,0.3)' }}>
           Simula scansione riuscita →
         </button>
       </div>
@@ -273,31 +308,33 @@ function StepDatiPagamento({ onBack, onNext }) {
   ]
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100%', padding: '32px 28px 28px', background: '#FFF8F0' }}>
-      <div style={{ marginBottom: '20px' }}>
-        <p style={{ fontFamily: 'Nunito, sans-serif', fontSize: '12px', fontWeight: 700, color: '#1A9E8F', letterSpacing: '0.8px', textTransform: 'uppercase', marginBottom: '6px' }}>Riepilogo</p>
+      <div style={{ marginBottom: '16px' }}>
+        <p style={{ fontFamily: 'Nunito, sans-serif', fontSize: '13px', fontWeight: 700, color: '#1A9E8F', letterSpacing: '0.8px', textTransform: 'uppercase', marginBottom: '6px' }}>PagoPA</p>
+        <PhaseIndicator step={2} />
         <h1 style={{ fontFamily: 'Nunito, sans-serif', fontSize: '26px', fontWeight: 900, color: '#2D2D2D', letterSpacing: '-0.8px', lineHeight: 1.15 }}>Dati del<br />pagamento</h1>
       </div>
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
         {rows.map((row, i) => (
-          <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '12px 0', borderBottom: '1px solid #F0F0F0' }}>
-            <div style={{ width: '36px', height: '36px', borderRadius: '10px', background: '#E0F5F3', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+          <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '13px 0', borderBottom: '1px solid #F0F0F0' }}>
+            <div style={{ width: '38px', height: '38px', borderRadius: '10px', background: '#E0F5F3', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
               {row.icon}
             </div>
             <div style={{ flex: 1 }}>
-              <span style={{ fontSize: '10px', color: '#9CA3AF', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.5px', display: 'block' }}>{row.label}</span>
-              <span style={{ fontSize: '14px', fontWeight: 800, color: '#2D2D2D', fontFamily: 'Nunito, sans-serif' }}>{row.value}</span>
+              <span style={{ fontSize: '12px', color: '#9CA3AF', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.5px', display: 'block' }}>{row.label}</span>
+              <span style={{ fontSize: '15px', fontWeight: 800, color: '#2D2D2D', fontFamily: 'Nunito, sans-serif' }}>{row.value}</span>
             </div>
           </div>
         ))}
       </div>
       <div style={{ display: 'flex', gap: '10px', marginTop: '20px' }}>
-        <button onClick={onBack} style={{ flex: 1, padding: '14px', borderRadius: '14px', border: '2px solid #E8E8E8', background: 'white', fontFamily: 'Nunito, sans-serif', fontSize: '14px', fontWeight: 700, color: '#6B7280', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}>
+        <button onClick={onBack} style={{ flex: 1, padding: '14px 12px', borderRadius: '14px', border: '2px solid #E8E8E8', background: 'white', fontFamily: 'Nunito, sans-serif', fontSize: '14px', fontWeight: 700, color: '#6B7280', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}>
           <ArrowLeft size={16} />
+          Indietro
         </button>
         <button
           data-highlight="cta"
           onClick={onNext}
-          style={{ flex: 2, padding: '14px', borderRadius: '14px', border: 'none', background: 'linear-gradient(135deg, #1A9E8F 0%, #147A6E 100%)', fontFamily: 'Nunito, sans-serif', fontSize: '14px', fontWeight: 800, color: 'white', cursor: 'pointer', boxShadow: '0 4px 16px rgba(26,158,143,0.3)' }}
+          style={{ flex: 2, padding: '14px', borderRadius: '14px', border: 'none', background: 'linear-gradient(135deg, #1A9E8F 0%, #147A6E 100%)', fontFamily: 'Nunito, sans-serif', fontSize: '15px', fontWeight: 800, color: 'white', cursor: 'pointer', boxShadow: '0 4px 16px rgba(26,158,143,0.3)' }}
         >
           Vai al pagamento →
         </button>
@@ -326,8 +363,8 @@ function StepInserisciEmail({ onBack, onNext, onStepChange }) {
     background: '#FFFFFF',
     color: '#2D2D2D',
     borderRadius: '12px',
-    padding: '14px 16px',
-    fontSize: '15px',
+    padding: '15px 16px',
+    fontSize: '16px',
     fontFamily: 'Nunito, sans-serif',
     fontWeight: 600,
     width: '100%',
@@ -337,18 +374,19 @@ function StepInserisciEmail({ onBack, onNext, onStepChange }) {
     boxSizing: 'border-box',
   }
 
-  const errStyle = { color: '#E8543A', fontSize: '11px', marginTop: '4px', fontWeight: 600, fontFamily: 'Nunito, sans-serif' }
+  const errStyle = { color: '#E8543A', fontSize: '13px', marginTop: '5px', fontWeight: 600, fontFamily: 'Nunito, sans-serif' }
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100%', padding: '32px 28px 28px', background: '#FFF8F0' }}>
       <style>{`input::placeholder { color: #9CA3AF; font-weight: 400; }`}</style>
-      <div style={{ marginBottom: '28px' }}>
-        <p style={{ fontFamily: 'Nunito, sans-serif', fontSize: '12px', fontWeight: 700, color: '#1A9E8F', letterSpacing: '0.8px', textTransform: 'uppercase', marginBottom: '6px' }}>PagoPA</p>
+      <div style={{ marginBottom: '24px' }}>
+        <p style={{ fontFamily: 'Nunito, sans-serif', fontSize: '13px', fontWeight: 700, color: '#1A9E8F', letterSpacing: '0.8px', textTransform: 'uppercase', marginBottom: '6px' }}>PagoPA</p>
+        <PhaseIndicator step={3} />
         <h1 style={{ fontFamily: 'Nunito, sans-serif', fontSize: '26px', fontWeight: 900, color: '#2D2D2D', letterSpacing: '-0.8px', lineHeight: 1.15, marginBottom: '8px' }}>Inserisci la<br />tua email</h1>
-        <p style={{ fontSize: '13px', color: '#6B7280', lineHeight: 1.6, fontWeight: 600 }}>Riceverai la ricevuta di pagamento a questo indirizzo</p>
+        <p style={{ fontSize: '14px', color: '#6B7280', lineHeight: 1.6, fontWeight: 600 }}>Riceverai la ricevuta di pagamento a questo indirizzo</p>
       </div>
 
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
         <div>
           <input
             data-highlight="email"
@@ -392,13 +430,14 @@ function StepInserisciEmail({ onBack, onNext, onStepChange }) {
       </div>
 
       <div style={{ display: 'flex', gap: '10px', marginTop: 'auto', paddingTop: '20px' }}>
-        <button onClick={onBack} style={{ flex: 1, padding: '14px', borderRadius: '14px', border: '2px solid #E8E8E8', background: 'white', fontFamily: 'Nunito, sans-serif', fontSize: '14px', fontWeight: 700, color: '#6B7280', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <button onClick={onBack} style={{ flex: 1, padding: '14px 12px', borderRadius: '14px', border: '2px solid #E8E8E8', background: 'white', fontFamily: 'Nunito, sans-serif', fontSize: '14px', fontWeight: 700, color: '#6B7280', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}>
           <ArrowLeft size={16} />
+          Indietro
         </button>
         <button
           data-highlight="continua"
           onClick={isValid ? () => { setAppState(s => ({ ...s, email })); onNext?.() } : undefined}
-          style={{ flex: 2, padding: '14px', borderRadius: '14px', border: 'none', background: 'linear-gradient(135deg, #1A9E8F 0%, #147A6E 100%)', fontFamily: 'Nunito, sans-serif', fontSize: '14px', fontWeight: 800, color: 'white', boxShadow: isValid ? '0 4px 16px rgba(26,158,143,0.3)' : 'none', opacity: isValid ? 1 : 0.5, cursor: isValid ? 'pointer' : 'not-allowed' }}
+          style={{ flex: 2, padding: '14px', borderRadius: '14px', border: 'none', background: 'linear-gradient(135deg, #1A9E8F 0%, #147A6E 100%)', fontFamily: 'Nunito, sans-serif', fontSize: '15px', fontWeight: 800, color: 'white', boxShadow: isValid ? '0 4px 16px rgba(26,158,143,0.3)' : 'none', opacity: isValid ? 1 : 0.5, cursor: isValid ? 'pointer' : 'not-allowed' }}
         >
           Continua →
         </button>
@@ -424,7 +463,6 @@ function StepSceltaPagamento({ onBack, onNext, onScrollDetected, onListScroll, i
   const listRef = useRef(null)
   const cartaRef = useRef(null)
 
-  // Callback ref per evitare closure stale nell'IntersectionObserver
   const onScrollDetectedRef = useRef(onScrollDetected)
   useEffect(() => { onScrollDetectedRef.current = onScrollDetected }, [onScrollDetected])
 
@@ -433,7 +471,6 @@ function StepSceltaPagamento({ onBack, onNext, onScrollDetected, onListScroll, i
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting && entry.target === cartaRef.current) {
-          // Passa il BoundingClientRect di carta direttamente — cartaRef è sicuramente non-null qui
           onScrollDetectedRef.current?.(entry.target.getBoundingClientRect())
         }
       },
@@ -454,13 +491,13 @@ function StepSceltaPagamento({ onBack, onNext, onScrollDetected, onListScroll, i
         style={{
           display: 'flex', alignItems: 'center', gap: '16px',
           padding: '16px', borderRadius: '14px', marginBottom: '10px',
-          border: isCarta ? '1.5px solid #1A9E8F' : '1.5px solid #E8E8E8',
+          border: isCarta ? '2px solid #1A9E8F' : '1.5px solid #E8E8E8',
           background: isCarta ? '#E0F5F3' : 'white',
           cursor: isCarta && !isReplica ? 'pointer' : 'default',
           opacity: isCarta ? 1 : 0.7,
         }}
       >
-        <div style={{ width: '40px', height: '40px', borderRadius: '10px', background: m.iconBg, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, fontFamily: 'Nunito, sans-serif' }}>
+        <div style={{ width: '44px', height: '44px', borderRadius: '12px', background: m.iconBg, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, fontFamily: 'Nunito, sans-serif' }}>
           {isCarta ? (
             <svg width="26" height="20" viewBox="0 0 26 20" fill="none">
               <rect x="1" y="1" width="24" height="18" rx="3" stroke="#1A9E8F" strokeWidth="1.5" fill="none"/>
@@ -471,27 +508,27 @@ function StepSceltaPagamento({ onBack, onNext, onScrollDetected, onListScroll, i
             <span style={{ fontSize: '13px', fontWeight: 800, color: m.iconColor }}>{m.icon}</span>
           )}
         </div>
-        <span style={{ fontSize: '14px', fontWeight: 700, color: m.labelColor || '#2D2D2D', fontFamily: 'Nunito, sans-serif' }}>{m.label}</span>
+        <span style={{ fontSize: '15px', fontWeight: 700, color: m.labelColor || '#2D2D2D', fontFamily: 'Nunito, sans-serif' }}>{m.label}</span>
       </div>
     )
   })
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100%', padding: '32px 28px 28px', background: '#FFF8F0' }}>
-      <div style={{ marginBottom: '20px' }}>
-        <h1 style={{ fontFamily: 'Nunito, sans-serif', fontSize: '26px', fontWeight: 900, color: '#2D2D2D', letterSpacing: '-0.8px', lineHeight: 1.15, marginBottom: '8px' }}>Come vuoi<br />pagare?</h1>
-        <p style={{ fontSize: '13px', color: '#6B7280', lineHeight: 1.6, fontWeight: 600 }}>Scegli il metodo che preferisci</p>
+      <div style={{ marginBottom: '16px' }}>
+        <p style={{ fontFamily: 'Nunito, sans-serif', fontSize: '13px', fontWeight: 700, color: '#1A9E8F', letterSpacing: '0.8px', textTransform: 'uppercase', marginBottom: '6px' }}>PagoPA</p>
+        <PhaseIndicator step={6} />
+        <h1 style={{ fontFamily: 'Nunito, sans-serif', fontSize: '26px', fontWeight: 900, color: '#2D2D2D', letterSpacing: '-0.8px', lineHeight: 1.15, marginBottom: '6px' }}>Come vuoi<br />pagare?</h1>
+        <p style={{ fontSize: '14px', color: '#6B7280', lineHeight: 1.6, fontWeight: 600 }}>Scegli il metodo che preferisci</p>
       </div>
 
       {isReplica ? (
-        // Pannello sinistro: lista statica traslata, overflow hidden
         <div style={{ flex: 1, overflow: 'hidden', position: 'relative' }}>
           <div style={{ transform: `translateY(-${scrollTop}px)`, transition: 'none' }}>
             {listItems}
           </div>
         </div>
       ) : (
-        // Pannello destro: lista scrollabile normale
         <div
           ref={listRef}
           data-highlight="payment-list"
@@ -503,8 +540,9 @@ function StepSceltaPagamento({ onBack, onNext, onScrollDetected, onListScroll, i
       )}
 
       <div style={{ paddingTop: '12px', paddingBottom: '4px', flexShrink: 0 }}>
-        <button onClick={onBack} style={{ padding: '14px', borderRadius: '14px', border: '2px solid #E8E8E8', background: 'white', fontFamily: 'Nunito, sans-serif', fontSize: '14px', fontWeight: 700, color: '#6B7280', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}>
+        <button onClick={onBack} style={{ padding: '14px 18px', borderRadius: '14px', border: '2px solid #E8E8E8', background: 'white', fontFamily: 'Nunito, sans-serif', fontSize: '14px', fontWeight: 700, color: '#6B7280', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px' }}>
           <ArrowLeft size={16} />
+          Indietro
         </button>
       </div>
     </div>
@@ -545,8 +583,8 @@ function StepDatiCarta({ onBack, onNext, onFieldChange }) {
   }
 
   const inputBase = {
-    background: 'white', borderRadius: '12px', padding: '14px 16px',
-    fontSize: '15px', fontFamily: 'Nunito, sans-serif', fontWeight: 600,
+    background: 'white', borderRadius: '12px', padding: '15px 16px',
+    fontSize: '16px', fontFamily: 'Nunito, sans-serif', fontWeight: 600,
     color: '#2D2D2D', outline: 'none',
     WebkitAppearance: 'none', appearance: 'none', boxSizing: 'border-box',
   }
@@ -555,8 +593,9 @@ function StepDatiCarta({ onBack, onNext, onFieldChange }) {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100%', padding: '32px 28px 28px', background: '#FFF8F0' }}>
       <style>{`input::placeholder { color: #9CA3AF; font-weight: 400; }`}</style>
-      <p style={{ fontFamily: 'Nunito, sans-serif', fontSize: '12px', fontWeight: 700, color: '#1A9E8F', letterSpacing: '0.8px', textTransform: 'uppercase', marginBottom: '6px' }}>PagoPA</p>
-      <h1 style={{ fontFamily: 'Nunito, sans-serif', fontSize: '26px', fontWeight: 900, color: '#2D2D2D', letterSpacing: '-0.8px', lineHeight: 1.15, marginBottom: '24px' }}>Inserisci i dati<br />della tua carta</h1>
+      <p style={{ fontFamily: 'Nunito, sans-serif', fontSize: '13px', fontWeight: 700, color: '#1A9E8F', letterSpacing: '0.8px', textTransform: 'uppercase', marginBottom: '6px' }}>PagoPA</p>
+      <PhaseIndicator step={8} />
+      <h1 style={{ fontFamily: 'Nunito, sans-serif', fontSize: '26px', fontWeight: 900, color: '#2D2D2D', letterSpacing: '-0.8px', lineHeight: 1.15, marginBottom: '22px' }}>Inserisci i dati<br />della tua carta</h1>
 
       <input
         data-highlight="card-number"
@@ -566,10 +605,10 @@ function StepDatiCarta({ onBack, onNext, onFieldChange }) {
         onChange={handleCardNumber}
         onFocus={() => handleFocus('number')}
         onBlur={() => setActiveField(null)}
-        style={{ ...inputBase, ...border('number'), width: '100%', marginBottom: '12px' }}
+        style={{ ...inputBase, ...border('number'), width: '100%', marginBottom: '14px' }}
       />
 
-      <div style={{ display: 'flex', gap: '12px', marginBottom: '12px' }}>
+      <div style={{ display: 'flex', gap: '12px', marginBottom: '14px' }}>
         <div style={{ flex: 1, minWidth: 0 }}>
           <input
             data-highlight="card-expiry"
@@ -612,13 +651,14 @@ function StepDatiCarta({ onBack, onNext, onFieldChange }) {
       <div style={{ flex: 1 }} />
 
       <div style={{ display: 'flex', gap: '10px' }}>
-        <button onClick={onBack} style={{ flex: 1, padding: '14px', borderRadius: '14px', border: '2px solid #E8E8E8', background: 'white', fontFamily: 'Nunito, sans-serif', fontSize: '14px', fontWeight: 700, color: '#6B7280', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <button onClick={onBack} style={{ flex: 1, padding: '14px 12px', borderRadius: '14px', border: '2px solid #E8E8E8', background: 'white', fontFamily: 'Nunito, sans-serif', fontSize: '14px', fontWeight: 700, color: '#6B7280', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}>
           <ArrowLeft size={16} />
+          Indietro
         </button>
         <button
           data-highlight="card-continua"
           onClick={isValid ? onNext : undefined}
-          style={{ flex: 2, padding: '14px', borderRadius: '14px', border: 'none', background: 'linear-gradient(135deg, #1A9E8F 0%, #147A6E 100%)', fontFamily: 'Nunito, sans-serif', fontSize: '14px', fontWeight: 800, color: 'white', opacity: isValid ? 1 : 0.5, cursor: isValid ? 'pointer' : 'not-allowed', boxShadow: isValid ? '0 4px 16px rgba(26,158,143,0.3)' : 'none' }}
+          style={{ flex: 2, padding: '14px', borderRadius: '14px', border: 'none', background: 'linear-gradient(135deg, #1A9E8F 0%, #147A6E 100%)', fontFamily: 'Nunito, sans-serif', fontSize: '15px', fontWeight: 800, color: 'white', opacity: isValid ? 1 : 0.5, cursor: isValid ? 'pointer' : 'not-allowed', boxShadow: isValid ? '0 4px 16px rgba(26,158,143,0.3)' : 'none' }}
         >
           Continua →
         </button>
@@ -639,11 +679,11 @@ function StepConfermaPagemento({ onBack, onNext }) {
   )
 
   const dataRow = (icon, label, value, valueColor) => (
-    <div style={{ display: 'flex', alignItems: 'center', gap: '14px', padding: '16px 0', borderBottom: '1px solid #E8E8E8' }}>
+    <div style={{ display: 'flex', alignItems: 'center', gap: '14px', padding: '15px 0', borderBottom: '1px solid #E8E8E8' }}>
       {iconBox(icon)}
       <div style={{ flex: 1 }}>
-        <span style={{ fontSize: '10px', color: '#9CA3AF', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.5px', display: 'block', marginBottom: '2px' }}>{label}</span>
-        <span style={{ fontSize: '14px', fontWeight: 800, color: valueColor || '#2D2D2D', fontFamily: 'Nunito, sans-serif' }}>{value}</span>
+        <span style={{ fontSize: '12px', color: '#9CA3AF', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.5px', display: 'block', marginBottom: '2px' }}>{label}</span>
+        <span style={{ fontSize: '15px', fontWeight: 800, color: valueColor || '#2D2D2D', fontFamily: 'Nunito, sans-serif' }}>{value}</span>
       </div>
     </div>
   )
@@ -662,9 +702,9 @@ function StepConfermaPagemento({ onBack, onNext }) {
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
         {dataRow(<CreditCard size={20} color="#6B7280" />, 'Ente Creditore', 'Carta di credito (**** 3456)')}
         {dataRow(<Tag size={20} color="#6B7280" />, 'Commissione', '1,50 €')}
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px 0', borderBottom: '1px solid #E8E8E8' }}>
-          <span style={{ fontSize: '13px', color: '#6B7280', fontWeight: 600, fontFamily: 'Nunito, sans-serif' }}>Invia ricevuta a:</span>
-          <span style={{ fontSize: '13px', fontWeight: 700, color: '#1A9E8F', fontFamily: 'Nunito, sans-serif' }}>{email}</span>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '15px 0', borderBottom: '1px solid #E8E8E8' }}>
+          <span style={{ fontSize: '14px', color: '#6B7280', fontWeight: 600, fontFamily: 'Nunito, sans-serif' }}>Invia ricevuta a:</span>
+          <span style={{ fontSize: '14px', fontWeight: 700, color: '#1A9E8F', fontFamily: 'Nunito, sans-serif' }}>{email}</span>
         </div>
       </div>
 
@@ -672,14 +712,15 @@ function StepConfermaPagemento({ onBack, onNext }) {
       <div style={{ display: 'flex', gap: '10px' }}>
         <button
           onClick={onBack}
-          style={{ flex: 1, padding: '14px', borderRadius: '14px', border: '2px solid #E8E8E8', background: 'white', fontFamily: 'Nunito, sans-serif', fontSize: '14px', fontWeight: 700, color: '#6B7280', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+          style={{ flex: 1, padding: '14px 12px', borderRadius: '14px', border: '2px solid #E8E8E8', background: 'white', fontFamily: 'Nunito, sans-serif', fontSize: '14px', fontWeight: 700, color: '#6B7280', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}
         >
           <ArrowLeft size={16} />
+          Indietro
         </button>
         <button
           data-highlight="paga-btn"
           onClick={onNext}
-          style={{ flex: 2, padding: '14px', borderRadius: '14px', border: 'none', background: 'linear-gradient(135deg, #1A9E8F 0%, #147A6E 100%)', fontFamily: 'Nunito, sans-serif', fontSize: '15px', fontWeight: 800, color: 'white', cursor: 'pointer', boxShadow: '0 4px 16px rgba(26,158,143,0.3)' }}
+          style={{ flex: 2, padding: '14px', borderRadius: '14px', border: 'none', background: 'linear-gradient(135deg, #1A9E8F 0%, #147A6E 100%)', fontFamily: 'Nunito, sans-serif', fontSize: '16px', fontWeight: 800, color: 'white', cursor: 'pointer', boxShadow: '0 4px 16px rgba(26,158,143,0.3)' }}
         >
           Paga 36,50 €
         </button>
@@ -695,23 +736,22 @@ function StepPagamentoEffettuato({ onDone }) {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100%', padding: '32px 28px 28px', background: '#FFF8F0' }}>
-      {/* Contenuto centrato verticalmente */}
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '0px' }}>
 
         {/* Cerchio con checkmark */}
-        <div style={{ width: '120px', height: '120px', border: '3px solid #2D2D2D', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '28px' }}>
-          <Check size={56} color="#2D2D2D" strokeWidth={2} />
+        <div style={{ width: '120px', height: '120px', background: '#E0F5F3', border: '3px solid #1A9E8F', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '28px' }}>
+          <Check size={56} color="#1A9E8F" strokeWidth={2} />
         </div>
 
         <h1 style={{ fontFamily: 'Nunito, sans-serif', fontSize: '32px', fontWeight: 900, color: '#2D2D2D', textAlign: 'center', lineHeight: 1.2, marginBottom: '12px' }}>
           Pagamento<br />Effettuato!
         </h1>
 
-        <p style={{ fontSize: '16px', color: '#2D2D2D', fontWeight: 600, textAlign: 'center', fontFamily: 'Nunito, sans-serif', marginBottom: '8px' }}>
-          Hai pagato con successo 35,00 €
+        <p style={{ fontSize: '17px', color: '#2D2D2D', fontWeight: 600, textAlign: 'center', fontFamily: 'Nunito, sans-serif', marginBottom: '10px' }}>
+          Hai pagato con successo 36,50 €
         </p>
 
-        <p style={{ fontSize: '13px', color: '#6B7280', textAlign: 'center', fontFamily: 'Nunito, sans-serif', fontWeight: 500 }}>
+        <p style={{ fontSize: '14px', color: '#6B7280', textAlign: 'center', fontFamily: 'Nunito, sans-serif', fontWeight: 500 }}>
           La ricevuta è stata inviata a:{' '}
           <span style={{ color: '#1A9E8F', fontWeight: 700 }}>{email}</span>
         </p>
@@ -720,7 +760,7 @@ function StepPagamentoEffettuato({ onDone }) {
       {/* Bottone in fondo */}
       <button
         onClick={onDone}
-        style={{ width: '100%', padding: '16px', borderRadius: '14px', border: 'none', background: 'linear-gradient(135deg, #1A9E8F 0%, #147A6E 100%)', fontFamily: 'Nunito, sans-serif', fontSize: '15px', fontWeight: 800, color: 'white', cursor: 'pointer', boxShadow: '0 4px 16px rgba(26,158,143,0.3)' }}
+        style={{ width: '100%', padding: '18px', borderRadius: '14px', border: 'none', background: 'linear-gradient(135deg, #1A9E8F 0%, #147A6E 100%)', fontFamily: 'Nunito, sans-serif', fontSize: '16px', fontWeight: 800, color: 'white', cursor: 'pointer', boxShadow: '0 4px 16px rgba(26,158,143,0.3)' }}
       >
         Torna alla schermata principale
       </button>
@@ -776,7 +816,6 @@ export default function PagoPA() {
         onScrollDetected={(cartaRect) => {
           const st = listScrollTopRef.current
           setFrozenScrollTop(st)
-          // cartaRect arriva direttamente dall'IO (destra) — rightPanelRef è sempre non-null
           if (cartaRect && rightPanelRef.current) {
             const scale = Math.min(window.innerWidth / 1180, window.innerHeight / 820)
             const panelRect = rightPanelRef.current.getBoundingClientRect()

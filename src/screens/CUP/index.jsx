@@ -19,7 +19,27 @@ const assistantSteps = [
     text: (<>Verifica i dati della prenotazione.<br />Poi tocca <strong style={{ color: '#1A9E8F' }}>CONFERMA PRENOTAZIONE</strong> ↓</>),
     highlightSelector: '[data-highlight="conferma"]',
   },
+  {
+    tag: '🎉 Prenotato!',
+    text: (<>La tua prenotazione è stata <strong style={{ color: '#1A9E8F' }}>confermata con successo!</strong> Puoi tornare alla schermata principale.</>),
+    highlightSelector: null,
+  },
 ]
+
+// ── STEP INDICATOR ─────────────────────────────────────────────────
+function StepIndicator({ step, total }) {
+  return (
+    <div style={{ display: 'flex', gap: '6px', marginBottom: '14px', marginTop: '2px' }}>
+      {Array.from({ length: total }, (_, i) => (
+        <div key={i} style={{
+          height: '5px', flex: 1, borderRadius: '3px',
+          background: i < step ? '#A8DDD8' : i === step ? '#1A9E8F' : '#E8E8E8',
+          transition: 'background 0.3s',
+        }} />
+      ))}
+    </div>
+  )
+}
 
 // ── MASCOT ─────────────────────────────────────────────────────────
 function Mascot() {
@@ -68,11 +88,11 @@ function Mascot() {
 function Bubble({ tag, text }) {
   return (
     <div style={{ position: 'relative', marginBottom: '8px' }}>
-      <div style={{ background: 'white', borderRadius: '16px', padding: '12px 14px', boxShadow: '0 4px 20px rgba(0,0,0,0.15)', border: '2px solid rgba(245,166,35,0.3)' }}>
-        <div style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', fontFamily: 'Nunito, sans-serif', fontSize: '9px', fontWeight: 800, letterSpacing: '0.5px', textTransform: 'uppercase', color: '#D4720A', background: '#FFF0E0', borderRadius: '5px', padding: '2px 7px', marginBottom: '6px' }}>
+      <div style={{ background: 'white', borderRadius: '16px', padding: '13px 15px', boxShadow: '0 4px 20px rgba(0,0,0,0.15)', border: '2px solid rgba(245,166,35,0.3)' }}>
+        <div style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', fontFamily: 'Nunito, sans-serif', fontSize: '11px', fontWeight: 800, letterSpacing: '0.5px', textTransform: 'uppercase', color: '#D4720A', background: '#FFF0E0', borderRadius: '5px', padding: '3px 8px', marginBottom: '7px' }}>
           {tag}
         </div>
-        <p style={{ fontFamily: 'Nunito, sans-serif', fontSize: '12px', fontWeight: 600, lineHeight: 1.6, color: '#2D2D2D', margin: 0 }}>
+        <p style={{ fontFamily: 'Nunito, sans-serif', fontSize: '14px', fontWeight: 600, lineHeight: 1.65, color: '#2D2D2D', margin: 0 }}>
           {text}
         </p>
       </div>
@@ -128,7 +148,7 @@ function PanelLeft({ step, rightPanelContent, rightPanelRef }) {
       {/* Overlay scuro su tutto */}
       <div style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.45)', pointerEvents: 'none', zIndex: 1 }} />
 
-      {/* Zona evidenziata: ritaglia l'overlay con box-shadow trick */}
+      {/* Zona evidenziata */}
       {highlightZone && (
         <>
           <div style={{
@@ -196,19 +216,20 @@ function PanelLeft({ step, rightPanelContent, rightPanelRef }) {
 
 // ── STEP 0: scelta prestazione ─────────────────────────────────────
 const prestazioni = [
-  { icon: <Stethoscope size={22} color="#1A9E8F" />, nome: 'Visita Cardiologica', codice: '89.7', attesa: '12 gg' },
-  { icon: <Stethoscope size={22} color="#1A9E8F" />, nome: 'Visita Oculistica', codice: '95.02', attesa: '8 gg' },
-  { icon: <Stethoscope size={22} color="#1A9E8F" />, nome: 'Visita Ortopedica', codice: '89.7-O', attesa: '20 gg' },
-  { icon: <Stethoscope size={22} color="#1A9E8F" />, nome: 'Visita Dermatologica', codice: '89.7-D', attesa: '15 gg' },
+  { icon: <Stethoscope size={24} color="#1A9E8F" />, nome: 'Visita Cardiologica', codice: '89.7', attesa: '12 gg' },
+  { icon: <Stethoscope size={24} color="#1A9E8F" />, nome: 'Visita Oculistica', codice: '95.02', attesa: '8 gg' },
+  { icon: <Stethoscope size={24} color="#1A9E8F" />, nome: 'Visita Ortopedica', codice: '89.7-O', attesa: '20 gg' },
+  { icon: <Stethoscope size={24} color="#1A9E8F" />, nome: 'Visita Dermatologica', codice: '89.7-D', attesa: '15 gg' },
 ]
 
 function StepSceltaPrestazione({ onSelect, onBack }) {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100%', padding: '32px 28px 28px', background: '#FFF8F0' }}>
-      <div style={{ marginBottom: '24px' }}>
-        <p style={{ fontFamily: 'Nunito, sans-serif', fontSize: '12px', fontWeight: 700, color: '#1A9E8F', letterSpacing: '0.8px', textTransform: 'uppercase', marginBottom: '6px' }}>CUP</p>
-        <h1 style={{ fontFamily: 'Nunito, sans-serif', fontSize: '26px', fontWeight: 900, color: '#2D2D2D', letterSpacing: '-0.8px', lineHeight: 1.15, marginBottom: '8px' }}>Prenota una<br />visita medica</h1>
-        <p style={{ fontSize: '13px', color: '#6B7280', lineHeight: 1.6, fontWeight: 600 }}>Scegli la prestazione di cui hai bisogno</p>
+      <div style={{ marginBottom: '20px' }}>
+        <p style={{ fontFamily: 'Nunito, sans-serif', fontSize: '13px', fontWeight: 700, color: '#1A9E8F', letterSpacing: '0.8px', textTransform: 'uppercase', marginBottom: '6px' }}>CUP</p>
+        <StepIndicator step={0} total={3} />
+        <h1 style={{ fontFamily: 'Nunito, sans-serif', fontSize: '26px', fontWeight: 900, color: '#2D2D2D', letterSpacing: '-0.8px', lineHeight: 1.15, marginBottom: '6px' }}>Prenota una<br />visita medica</h1>
+        <p style={{ fontSize: '14px', color: '#6B7280', lineHeight: 1.6, fontWeight: 600 }}>Scegli la prestazione di cui hai bisogno</p>
       </div>
 
       <div data-highlight="prestazione" style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
@@ -216,23 +237,24 @@ function StepSceltaPrestazione({ onSelect, onBack }) {
           <button
             key={i}
             onClick={() => onSelect(p)}
-            style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '14px 16px', borderRadius: '14px', border: '2px solid #E8E8E8', background: 'white', cursor: 'pointer', fontFamily: 'Nunito, sans-serif', textAlign: 'left', width: '100%', boxShadow: '0 1px 6px rgba(0,0,0,0.04)' }}
+            style={{ display: 'flex', alignItems: 'center', gap: '14px', padding: '16px 18px', borderRadius: '14px', border: '2px solid #E8E8E8', background: 'white', cursor: 'pointer', fontFamily: 'Nunito, sans-serif', textAlign: 'left', width: '100%', boxShadow: '0 1px 6px rgba(0,0,0,0.04)' }}
           >
-            <div style={{ width: '42px', height: '42px', borderRadius: '12px', background: '#E0F5F3', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+            <div style={{ width: '46px', height: '46px', borderRadius: '13px', background: '#E0F5F3', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
               {p.icon}
             </div>
             <div style={{ flex: 1 }}>
-              <span style={{ fontSize: '14px', fontWeight: 800, display: 'block', color: '#2D2D2D', lineHeight: 1.2 }}>{p.nome}</span>
-              <span style={{ fontSize: '11px', color: '#9CA3AF', marginTop: '2px', display: 'block', fontWeight: 600 }}>Cod. {p.codice} · Prima disponibile: {p.attesa}</span>
+              <span style={{ fontSize: '15px', fontWeight: 800, display: 'block', color: '#2D2D2D', lineHeight: 1.2 }}>{p.nome}</span>
+              <span style={{ fontSize: '13px', color: '#9CA3AF', marginTop: '3px', display: 'block', fontWeight: 600 }}>Cod. {p.codice} · Prima disponibile: {p.attesa}</span>
             </div>
-            <ChevronRight size={16} color="#9CA3AF" />
+            <ChevronRight size={18} color="#9CA3AF" />
           </button>
         ))}
       </div>
 
       <div style={{ marginTop: 'auto', paddingTop: '20px' }}>
-        <button onClick={onBack} style={{ padding: '14px', borderRadius: '14px', border: '2px solid #E8E8E8', background: 'white', fontFamily: 'Nunito, sans-serif', fontSize: '14px', fontWeight: 700, color: '#6B7280', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}>
+        <button onClick={onBack} style={{ padding: '14px 18px', borderRadius: '14px', border: '2px solid #E8E8E8', background: 'white', fontFamily: 'Nunito, sans-serif', fontSize: '14px', fontWeight: 700, color: '#6B7280', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px' }}>
           <ArrowLeft size={16} />
+          Indietro
         </button>
       </div>
     </div>
@@ -251,17 +273,18 @@ function StepSceltaData({ prestazione, onSelect, onBack }) {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100%', padding: '32px 28px 28px', background: '#FFF8F0' }}>
-      <div style={{ marginBottom: '20px' }}>
-        <p style={{ fontFamily: 'Nunito, sans-serif', fontSize: '12px', fontWeight: 700, color: '#1A9E8F', letterSpacing: '0.8px', textTransform: 'uppercase', marginBottom: '6px' }}>Step 1</p>
+      <div style={{ marginBottom: '16px' }}>
+        <p style={{ fontFamily: 'Nunito, sans-serif', fontSize: '13px', fontWeight: 700, color: '#1A9E8F', letterSpacing: '0.8px', textTransform: 'uppercase', marginBottom: '6px' }}>CUP · Passo 2 di 3</p>
+        <StepIndicator step={1} total={3} />
         <h1 style={{ fontFamily: 'Nunito, sans-serif', fontSize: '26px', fontWeight: 900, color: '#2D2D2D', letterSpacing: '-0.8px', lineHeight: 1.15, marginBottom: '4px' }}>Scegli data<br />e orario</h1>
-        <p style={{ fontSize: '12px', color: '#1A9E8F', fontWeight: 700 }}>{prestazione?.nome}</p>
+        <p style={{ fontSize: '14px', color: '#1A9E8F', fontWeight: 700 }}>{prestazione?.nome}</p>
       </div>
 
-      <div data-highlight="calendario" style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '12px', overflow: 'hidden' }}>
+      <div data-highlight="calendario" style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '16px', overflow: 'hidden' }}>
         {slotDisponibili.map((giorno, gi) => (
           <div key={gi}>
-            <p style={{ fontSize: '11px', fontWeight: 800, color: '#9CA3AF', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: '6px' }}>{giorno.data}</p>
-            <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+            <p style={{ fontSize: '12px', fontWeight: 800, color: '#9CA3AF', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: '8px' }}>{giorno.data}</p>
+            <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
               {giorno.orari.map((orario, oi) => {
                 const isSelected = selectedSlot?.data === giorno.data && selectedSlot?.orario === orario
                 return (
@@ -269,15 +292,16 @@ function StepSceltaData({ prestazione, onSelect, onBack }) {
                     key={oi}
                     onClick={() => setSelectedSlot({ data: giorno.data, orario })}
                     style={{
-                      padding: '8px 16px', borderRadius: '10px',
+                      padding: '12px 20px', borderRadius: '12px',
                       border: isSelected ? '2px solid #1A9E8F' : '2px solid #E8E8E8',
                       background: isSelected ? '#E0F5F3' : 'white',
-                      fontFamily: 'Nunito, sans-serif', fontSize: '13px', fontWeight: 800,
+                      fontFamily: 'Nunito, sans-serif', fontSize: '15px', fontWeight: 800,
                       color: isSelected ? '#1A9E8F' : '#2D2D2D',
-                      cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '5px',
+                      cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '7px',
+                      boxShadow: isSelected ? '0 2px 10px rgba(26,158,143,0.2)' : 'none',
                     }}
                   >
-                    <Clock size={12} color={isSelected ? '#1A9E8F' : '#9CA3AF'} />
+                    <Clock size={15} color={isSelected ? '#1A9E8F' : '#9CA3AF'} />
                     {orario}
                   </button>
                 )
@@ -288,12 +312,13 @@ function StepSceltaData({ prestazione, onSelect, onBack }) {
       </div>
 
       <div style={{ display: 'flex', gap: '10px', marginTop: '20px' }}>
-        <button onClick={onBack} style={{ flex: 1, padding: '14px', borderRadius: '14px', border: '2px solid #E8E8E8', background: 'white', fontFamily: 'Nunito, sans-serif', fontSize: '14px', fontWeight: 700, color: '#6B7280', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}>
+        <button onClick={onBack} style={{ flex: 1, padding: '14px 12px', borderRadius: '14px', border: '2px solid #E8E8E8', background: 'white', fontFamily: 'Nunito, sans-serif', fontSize: '14px', fontWeight: 700, color: '#6B7280', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}>
           <ArrowLeft size={16} />
+          Indietro
         </button>
         <button
           onClick={() => selectedSlot && onSelect(selectedSlot)}
-          style={{ flex: 2, padding: '14px', borderRadius: '14px', border: 'none', background: selectedSlot ? 'linear-gradient(135deg, #1A9E8F 0%, #147A6E 100%)' : '#E8E8E8', fontFamily: 'Nunito, sans-serif', fontSize: '14px', fontWeight: 800, color: selectedSlot ? 'white' : '#9CA3AF', cursor: selectedSlot ? 'pointer' : 'default', boxShadow: selectedSlot ? '0 4px 16px rgba(26,158,143,0.3)' : 'none' }}
+          style={{ flex: 2, padding: '14px', borderRadius: '14px', border: 'none', background: selectedSlot ? 'linear-gradient(135deg, #1A9E8F 0%, #147A6E 100%)' : '#E8E8E8', fontFamily: 'Nunito, sans-serif', fontSize: '15px', fontWeight: 800, color: selectedSlot ? 'white' : '#9CA3AF', cursor: selectedSlot ? 'pointer' : 'default', boxShadow: selectedSlot ? '0 4px 16px rgba(26,158,143,0.3)' : 'none' }}
         >
           Avanti →
         </button>
@@ -314,38 +339,84 @@ function StepRiepilogo({ prestazione, slot, onBack, onConfirm }) {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100%', padding: '32px 28px 28px', background: '#FFF8F0' }}>
-      <div style={{ marginBottom: '20px' }}>
-        <p style={{ fontFamily: 'Nunito, sans-serif', fontSize: '12px', fontWeight: 700, color: '#1A9E8F', letterSpacing: '0.8px', textTransform: 'uppercase', marginBottom: '6px' }}>Riepilogo</p>
+      <div style={{ marginBottom: '16px' }}>
+        <p style={{ fontFamily: 'Nunito, sans-serif', fontSize: '13px', fontWeight: 700, color: '#1A9E8F', letterSpacing: '0.8px', textTransform: 'uppercase', marginBottom: '6px' }}>CUP · Passo 3 di 3</p>
+        <StepIndicator step={2} total={3} />
         <h1 style={{ fontFamily: 'Nunito, sans-serif', fontSize: '26px', fontWeight: 900, color: '#2D2D2D', letterSpacing: '-0.8px', lineHeight: 1.15 }}>Conferma la<br />prenotazione</h1>
       </div>
 
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
         {rows.map((row, i) => (
-          <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '11px 0', borderBottom: '1px solid #F0F0F0' }}>
-            <div style={{ width: '34px', height: '34px', borderRadius: '10px', background: '#E0F5F3', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+          <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '13px 0', borderBottom: '1px solid #F0F0F0' }}>
+            <div style={{ width: '36px', height: '36px', borderRadius: '10px', background: '#E0F5F3', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
               {row.icon}
             </div>
             <div style={{ flex: 1 }}>
-              <span style={{ fontSize: '10px', color: '#9CA3AF', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.5px', display: 'block' }}>{row.label}</span>
-              <span style={{ fontSize: '14px', fontWeight: 800, color: '#2D2D2D', fontFamily: 'Nunito, sans-serif' }}>{row.value}</span>
+              <span style={{ fontSize: '12px', color: '#9CA3AF', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.5px', display: 'block' }}>{row.label}</span>
+              <span style={{ fontSize: '15px', fontWeight: 800, color: '#2D2D2D', fontFamily: 'Nunito, sans-serif' }}>{row.value}</span>
             </div>
           </div>
         ))}
       </div>
 
       <div style={{ display: 'flex', gap: '10px', marginTop: '20px' }}>
-        <button onClick={onBack} style={{ flex: 1, padding: '14px', borderRadius: '14px', border: '2px solid #E8E8E8', background: 'white', fontFamily: 'Nunito, sans-serif', fontSize: '14px', fontWeight: 700, color: '#6B7280', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}>
+        <button onClick={onBack} style={{ flex: 1, padding: '14px 12px', borderRadius: '14px', border: '2px solid #E8E8E8', background: 'white', fontFamily: 'Nunito, sans-serif', fontSize: '14px', fontWeight: 700, color: '#6B7280', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}>
           <ArrowLeft size={16} />
+          Indietro
         </button>
         <button
           data-highlight="conferma"
           onClick={onConfirm}
-          style={{ flex: 2, padding: '14px', borderRadius: '14px', border: 'none', background: 'linear-gradient(135deg, #1A9E8F 0%, #147A6E 100%)', fontFamily: 'Nunito, sans-serif', fontSize: '13px', fontWeight: 800, color: 'white', cursor: 'pointer', boxShadow: '0 4px 16px rgba(26,158,143,0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}
+          style={{ flex: 2, padding: '14px', borderRadius: '14px', border: 'none', background: 'linear-gradient(135deg, #1A9E8F 0%, #147A6E 100%)', fontFamily: 'Nunito, sans-serif', fontSize: '14px', fontWeight: 800, color: 'white', cursor: 'pointer', boxShadow: '0 4px 16px rgba(26,158,143,0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}
         >
-          <CheckCircle2 size={16} />
+          <CheckCircle2 size={17} />
           Conferma prenotazione
         </button>
       </div>
+    </div>
+  )
+}
+
+// ── STEP 3: successo prenotazione ──────────────────────────────────
+function StepSuccessoPrenotazione({ prestazione, slot, onDone }) {
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', height: '100%', padding: '32px 28px 28px', background: '#FFF8F0' }}>
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+        <div style={{
+          width: '112px', height: '112px',
+          background: '#E0F5F3', border: '3px solid #1A9E8F',
+          borderRadius: '50%', display: 'flex', alignItems: 'center',
+          justifyContent: 'center', marginBottom: '24px',
+        }}>
+          <CheckCircle2 size={52} color="#1A9E8F" strokeWidth={1.8} />
+        </div>
+        <h1 style={{ fontFamily: 'Nunito, sans-serif', fontSize: '30px', fontWeight: 900, color: '#2D2D2D', textAlign: 'center', lineHeight: 1.2, marginBottom: '16px' }}>
+          Prenotazione<br />Confermata!
+        </h1>
+        <div style={{ background: 'white', borderRadius: '16px', padding: '18px 20px', border: '2px solid #E0F5F3', width: '100%', marginBottom: '14px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '12px' }}>
+            <Stethoscope size={18} color="#1A9E8F" />
+            <span style={{ fontSize: '15px', fontWeight: 800, color: '#2D2D2D', fontFamily: 'Nunito, sans-serif' }}>{prestazione?.nome}</span>
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '12px' }}>
+            <CalendarDays size={18} color="#1A9E8F" />
+            <span style={{ fontSize: '15px', fontWeight: 700, color: '#2D2D2D', fontFamily: 'Nunito, sans-serif' }}>{slot?.data}</span>
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <Clock size={18} color="#1A9E8F" />
+            <span style={{ fontSize: '15px', fontWeight: 700, color: '#2D2D2D', fontFamily: 'Nunito, sans-serif' }}>Ore {slot?.orario}</span>
+          </div>
+        </div>
+        <p style={{ fontSize: '14px', color: '#6B7280', textAlign: 'center', fontFamily: 'Nunito, sans-serif', fontWeight: 500, lineHeight: 1.55 }}>
+          La conferma è stata registrata nel sistema CUP.
+        </p>
+      </div>
+      <button
+        onClick={onDone}
+        style={{ width: '100%', padding: '18px', borderRadius: '14px', border: 'none', background: 'linear-gradient(135deg, #1A9E8F 0%, #147A6E 100%)', fontFamily: 'Nunito, sans-serif', fontSize: '16px', fontWeight: 800, color: 'white', cursor: 'pointer', boxShadow: '0 4px 16px rgba(26,158,143,0.3)' }}
+      >
+        Torna alla schermata principale
+      </button>
     </div>
   )
 }
@@ -364,6 +435,7 @@ export default function CUP() {
     if (step === 0) return <StepSceltaPrestazione onSelect={() => {}} onBack={() => {}} />
     if (step === 1) return <StepSceltaData prestazione={prestazione} onSelect={() => {}} onBack={() => {}} />
     if (step === 2) return <StepRiepilogo prestazione={prestazione} slot={slot} onBack={() => {}} onConfirm={() => {}} />
+    if (step === 3) return <StepSuccessoPrenotazione prestazione={prestazione} slot={slot} onDone={() => {}} />
   }
 
   const rightPanelInteractive = () => {
@@ -385,7 +457,14 @@ export default function CUP() {
         prestazione={prestazione}
         slot={slot}
         onBack={() => setStep(1)}
-        onConfirm={() => alert('Prenotazione confermata!')}
+        onConfirm={() => setStep(3)}
+      />
+    )
+    if (step === 3) return (
+      <StepSuccessoPrenotazione
+        prestazione={prestazione}
+        slot={slot}
+        onDone={goHome}
       />
     )
   }
