@@ -140,13 +140,16 @@ function MascotFooter() {
   )
 }
 
+import { useFontZoom } from '../context/AppContext'
+
 export default function AssistantOverlay({ tag, text, highlightZone, showGesture, forceTop }) {
+  const zoom = useFontZoom()
   const atTop = forceTop || (highlightZone && highlightZone.top > 350)
 
   if (showGesture) {
     return (
       <div style={{ position: 'absolute', top: 10, left: 10, right: 10, zIndex: 10 }}>
-        <div style={CARD_STYLE}>
+        <div style={{ ...CARD_STYLE, zoom }}>
           <div style={TAG_STYLE}>{tag}</div>
           <p style={TEXT_STYLE}>{text}</p>
           <div style={{ display: 'flex', justifyContent: 'center', padding: '4px 0 8px' }}>
@@ -166,7 +169,7 @@ export default function AssistantOverlay({ tag, text, highlightZone, showGesture
       left: 10, right: 10,
       zIndex: 10,
     }}>
-      <div style={CARD_STYLE}>
+      <div style={{ ...CARD_STYLE, zoom }}>
         <div style={TAG_STYLE}>{tag}</div>
         <p style={TEXT_STYLE}>{text}</p>
         <MascotFooter />

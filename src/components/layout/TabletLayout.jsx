@@ -2,8 +2,10 @@ import { useEffect, useState } from 'react'
 import { useApp } from '../../context/AppContext'
 import ScreenLeft from './ScreenLeft'
 import ScreenRight from './ScreenRight'
+import { PhoneFrame, TotemFrame } from './DeviceFrames'
 import PagoPA from '../../screens/PagoPA'
 import CUP from '../../screens/CUP'
+import Pairing from '../../screens/Pairing'
 
 const DESIGN_W = 1180
 const DESIGN_H = 820
@@ -22,36 +24,38 @@ export default function TabletLayout() {
   }, [])
 
   const renderContent = () => {
+    if (state.currentScreen === 'pairing') return <Pairing />
     if (state.currentScreen === 'pagopa') return <PagoPA />
     if (state.currentScreen === 'cup') return <CUP />
+
+    // home screen
     return (
-      <>
-        <ScreenLeft />
-        <div style={{ width: '20px', height: '740px', background: '#1A1A1A', flexShrink: 0 }} />
-        <ScreenRight />
-      </>
+      <div style={{
+        display: 'flex', flexDirection: 'row', alignItems: 'center',
+        justifyContent: 'center', gap: '40px', height: '820px',
+      }}>
+        <PhoneFrame><ScreenLeft /></PhoneFrame>
+        <TotemFrame><ScreenRight /></TotemFrame>
+      </div>
     )
   }
 
   return (
-    <div style={{ width: '100vw', height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#000', overflow: 'hidden' }}>
-      <div
-        style={{
-          width: `${DESIGN_W}px`,
-          height: `${DESIGN_H}px`,
-          background: '#1A1A1A',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          overflow: 'hidden',
-          transform: `scale(${scale})`,
-          transformOrigin: 'center center',
-          flexShrink: 0,
-        }}
-      >
-        <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', height: '740px' }}>
-          {renderContent()}
-        </div>
+    <div style={{
+      width: '100vw', height: '100vh',
+      display: 'flex', alignItems: 'center', justifyContent: 'center',
+      background: '#000', overflow: 'hidden',
+    }}>
+      <div style={{
+        width: `${DESIGN_W}px`, height: `${DESIGN_H}px`,
+        background: 'linear-gradient(145deg, #0A1628 0%, #0D2140 50%, #0A1E35 100%)',
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        overflow: 'hidden',
+        transform: `scale(${scale})`,
+        transformOrigin: 'center center',
+        flexShrink: 0, position: 'relative',
+      }}>
+        {renderContent()}
       </div>
     </div>
   )
