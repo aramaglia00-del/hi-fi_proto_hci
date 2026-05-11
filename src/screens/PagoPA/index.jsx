@@ -363,24 +363,23 @@ function NaturalLangOverlay({ email, cardLast4 }) {
   const zoom = useFontZoom()
   return (
     <div style={{ position: 'absolute', top: 100, left: 14, right: 14, zIndex: 10 }}>
-      <div style={{ ...s.card, zoom, width: `${330 / zoom}px`, maxHeight: `${560 / zoom}px`, overflowY: 'auto' }}>
+      <div style={{ ...s.card, zoom, width: `${330 / zoom}px`, maxHeight: `${360 / zoom}px`, overflowY: 'auto', padding: '14px 16px' }}>
         <div style={s.tagOrange}><Tag size={12} /> Rileggiamo insieme</div>
-        <p style={{ fontFamily: 'Nunito, sans-serif', fontSize: '17px', fontWeight: 700, color: s.bodyText.color, lineHeight: 1.75, margin: '0 0 14px' }}>
+        <p style={{ fontFamily: 'Nunito, sans-serif', fontSize: '14px', fontWeight: 700, color: s.bodyText.color, lineHeight: 1.5, margin: '0 0 10px' }}>
           Stai per pagare{' '}
-          <strong style={{ color: '#1A9E8F', fontSize: '22px' }}>36,50 €</strong>
+          <strong style={{ color: '#1A9E8F', fontSize: '18px' }}>36,50 €</strong>
           <br />per un <strong>Ticket Sanitario</strong>
           <br />all'<strong>ASL Vercelli</strong>.
         </p>
-        <div style={{ background: s.itemBg, border: `1.5px solid ${s.itemBorder}`, borderRadius: '10px', padding: '10px 13px', marginBottom: '8px' }}>
+        <div style={{ background: s.itemBg, border: `1.5px solid ${s.itemBorder}`, borderRadius: '8px', padding: '6px 10px', marginBottom: '6px' }}>
           <span style={s.itemLabel}>Ricevuta inviata a</span>
-          <span style={{ fontFamily: 'Nunito, sans-serif', fontSize: '14px', fontWeight: 800, color: s.itemValue.color, wordBreak: 'break-all' }}>{email || '—'}</span>
+          <span style={{ fontFamily: 'Nunito, sans-serif', fontSize: '12px', fontWeight: 800, color: s.itemValue.color, wordBreak: 'break-all', display: 'block' }}>{email || '—'}</span>
         </div>
-        <div style={{ background: s.itemBg, border: `1.5px solid ${s.itemBorder}`, borderRadius: '10px', padding: '10px 13px', marginBottom: '14px' }}>
+        <div style={{ background: s.itemBg, border: `1.5px solid ${s.itemBorder}`, borderRadius: '8px', padding: '6px 10px', marginBottom: '8px' }}>
           <span style={s.itemLabel}>Carta che finisce in</span>
-          <span style={{ fontFamily: 'Nunito, sans-serif', fontSize: '15px', fontWeight: 800, color: s.itemValue.color }}>**** **** **** {cardLast4 || '????'}</span>
+          <span style={{ fontFamily: 'Nunito, sans-serif', fontSize: '13px', fontWeight: 800, color: s.itemValue.color, display: 'block' }}>**** **** **** {cardLast4 || '????'}</span>
         </div>
-        <div style={s.divider} />
-        <p style={{ fontFamily: 'Nunito, sans-serif', fontSize: '13px', fontWeight: 700, color: s.tagOrange.color, margin: 0 }}>
+        <p style={{ fontFamily: 'Nunito, sans-serif', fontSize: '12px', fontWeight: 700, color: s.tagOrange.color, margin: 0 }}>
           Va tutto bene? Tocca <strong>PAGA</strong> qui a fianco.
         </p>
       </div>
@@ -560,15 +559,15 @@ function StepSceltaMetodo({ onQR, onBack }) {
 // ── STEP 1 ─────────────────────────────────────────────────────────
 function StepInquadraQR({ onNext, onBack }) {
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', height: '100%', padding: '28px 24px 24px', background: '#FFF8F0' }}>
-      <div style={{ marginBottom: '18px' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', height: '100%', padding: '28px 24px 24px', background: '#FFF8F0', boxSizing: 'border-box', overflow: 'hidden' }}>
+      <div style={{ flexShrink: 0, marginBottom: '18px' }}>
         <p style={{ fontFamily: 'Nunito, sans-serif', fontSize: '13px', fontWeight: 700, color: '#1A9E8F', letterSpacing: '0.8px', textTransform: 'uppercase', marginBottom: '6px' }}>PagoPA · Pagamento</p>
         <JourneyMap step={1} />
         <h1 style={{ fontFamily: 'Nunito, sans-serif', fontSize: '24px', fontWeight: 900, color: '#1A1A1A', letterSpacing: '-0.5px', lineHeight: 1.2, marginBottom: '6px' }}>Inquadra il<br />codice QR</h1>
         <p style={{ fontSize: '15px', color: '#5A5755', lineHeight: 1.6, fontWeight: 600 }}>Tieni il bollettino davanti alla fotocamera</p>
       </div>
-      <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        <div data-highlight="scanner" style={{ width: '252px', height: '252px', borderRadius: '20px', background: '#1A1A1A', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', overflow: 'hidden', boxShadow: '0 8px 32px rgba(0,0,0,0.25)' }}>
+      <div style={{ flex: 1, minHeight: 0, overflowY: 'auto', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <div data-highlight="scanner" style={{ width: '252px', height: '252px', flexShrink: 0, borderRadius: '20px', background: '#1A1A1A', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', overflow: 'hidden', boxShadow: '0 8px 32px rgba(0,0,0,0.25)' }}>
           <div style={{ position: 'absolute', top: '18px', left: '18px', width: '36px', height: '36px', borderTop: '4px solid #1A9E8F', borderLeft: '4px solid #1A9E8F', borderRadius: '4px 0 0 0' }} />
           <div style={{ position: 'absolute', top: '18px', right: '18px', width: '36px', height: '36px', borderTop: '4px solid #1A9E8F', borderRight: '4px solid #1A9E8F', borderRadius: '0 4px 0 0' }} />
           <div style={{ position: 'absolute', bottom: '18px', left: '18px', width: '36px', height: '36px', borderBottom: '4px solid #1A9E8F', borderLeft: '4px solid #1A9E8F', borderRadius: '0 0 0 4px' }} />
@@ -578,7 +577,7 @@ function StepInquadraQR({ onNext, onBack }) {
           <div style={{ position: 'absolute', left: '18px', right: '18px', height: '2px', background: 'rgba(26,158,143,0.85)', boxShadow: '0 0 8px #1A9E8F', animation: 'scan 1.8s ease-in-out infinite alternate' }} />
         </div>
       </div>
-      <div style={{ display: 'flex', gap: '10px', marginTop: '18px' }}>
+      <div style={{ flexShrink: 0, display: 'flex', gap: '10px', marginTop: '18px' }}>
         <button onClick={onBack} style={{ flex: 1, padding: '16px 12px', borderRadius: '14px', border: '2px solid #E0E0E0', background: 'white', fontFamily: 'Nunito, sans-serif', fontSize: '15px', fontWeight: 700, color: '#6B7280', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '7px', minHeight: '58px' }}>
           <ArrowLeft size={17} /> Indietro
         </button>
@@ -832,12 +831,14 @@ function StepDatiCarta({ onBack, onNext, onFieldChange, onCardLast4Change, isRep
   const border = (field) => ({ border: activeField === field ? '2px solid #1A9E8F' : '2px solid #D9D6D1' })
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', height: '100%', padding: '28px 24px 24px', background: '#FFF8F0' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', height: '100%', padding: '28px 24px 24px', background: '#FFF8F0', boxSizing: 'border-box', overflow: 'hidden' }}>
       <style>{`input::placeholder { color: #B0ADA8; font-weight: 400; }`}</style>
-      <p style={{ fontFamily: 'Nunito, sans-serif', fontSize: '13px', fontWeight: 700, color: '#1A9E8F', letterSpacing: '0.8px', textTransform: 'uppercase', marginBottom: '6px' }}>PagoPA · Pagamento</p>
-      <JourneyMap step={8} />
-      <h1 style={{ fontFamily: 'Nunito, sans-serif', fontSize: '22px', fontWeight: 900, color: '#1A1A1A', letterSpacing: '-0.5px', lineHeight: 1.2, marginBottom: '16px' }}>Dati della carta</h1>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', flex: 1 }}>
+      <div style={{ flexShrink: 0 }}>
+        <p style={{ fontFamily: 'Nunito, sans-serif', fontSize: '13px', fontWeight: 700, color: '#1A9E8F', letterSpacing: '0.8px', textTransform: 'uppercase', marginBottom: '6px' }}>PagoPA · Pagamento</p>
+        <JourneyMap step={8} />
+        <h1 style={{ fontFamily: 'Nunito, sans-serif', fontSize: '22px', fontWeight: 900, color: '#1A1A1A', letterSpacing: '-0.5px', lineHeight: 1.2, marginBottom: '16px' }}>Dati della carta</h1>
+      </div>
+      <div style={{ flex: 1, minHeight: 0, overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '12px' }}>
         <div>
           {fieldLabel('Numero carta (16 cifre sul fronte)')}
           <input data-highlight="card-number" inputMode="numeric" placeholder="0000 0000 0000 0000" value={cardNumber} onChange={handleCardNumber} onFocus={() => handleFocus('number')} onBlur={() => setActiveField(null)} style={{ ...inputBase, ...border('number'), width: '100%' }} />
@@ -852,10 +853,12 @@ function StepDatiCarta({ onBack, onNext, onFieldChange, onCardLast4Change, isRep
             <input data-highlight="card-cvv" type="password" inputMode="numeric" placeholder="···" maxLength={3} value={cvv} onChange={e => setCvv(e.target.value.replace(/\D/g, '').slice(0, 3))} onFocus={() => handleFocus('cvv')} onBlur={() => setActiveField(null)} style={{ ...inputBase, ...border('cvv'), width: '100%' }} />
           </div>
         </div>
-        {fieldLabel('Nome del titolare (come sulla carta)')}
-        <input data-highlight="card-name" type="text" placeholder="MARIO ROSSI" value={name} onChange={e => setName(e.target.value.toUpperCase())} onFocus={() => handleFocus('name')} onBlur={() => setActiveField(null)} style={{ ...inputBase, ...border('name'), width: '100%' }} />
+        <div>
+          {fieldLabel('Nome del titolare (come sulla carta)')}
+          <input data-highlight="card-name" type="text" placeholder="MARIO ROSSI" value={name} onChange={e => setName(e.target.value.toUpperCase())} onFocus={() => handleFocus('name')} onBlur={() => setActiveField(null)} style={{ ...inputBase, ...border('name'), width: '100%' }} />
+        </div>
       </div>
-      <div style={{ display: 'flex', gap: '10px', paddingTop: '14px' }}>
+      <div style={{ flexShrink: 0, display: 'flex', gap: '10px', paddingTop: '14px' }}>
         <button onClick={onBack} style={{ flex: 1, padding: '16px 12px', borderRadius: '14px', border: '2px solid #E0E0E0', background: 'white', fontFamily: 'Nunito, sans-serif', fontSize: '15px', fontWeight: 700, color: '#6B7280', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '7px', minHeight: '58px' }}>
           <ArrowLeft size={17} /> Indietro
         </button>
