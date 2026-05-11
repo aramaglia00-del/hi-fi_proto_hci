@@ -1,57 +1,3 @@
-function Mascot() {
-  return (
-    <svg
-      style={{ width: '58px', height: 'auto', flexShrink: 0, filter: 'drop-shadow(0 3px 8px rgba(245,166,35,0.25))' }}
-      viewBox="0 0 200 220"
-      fill="none"
-    >
-      <style>{`@keyframes mascotFloat{0%,100%{transform:translateY(0px) rotate(-1.5deg)}50%{transform:translateY(-6px) rotate(1.5deg)}}`}</style>
-      <defs>
-        <clipPath id="shirtClip2">
-          <path d="M52 118 Q54 106 100 112 Q146 106 148 118 L154 204 Q154 210 145 210 L55 210 Q46 210 46 204 Z"/>
-        </clipPath>
-      </defs>
-      <ellipse cx="100" cy="215" rx="47" ry="8" fill="#1A1A1A" opacity="0.12"/>
-      <g style={{ animation: 'mascotFloat 2.8s ease-in-out infinite', transformOrigin: '50% 50%', transformBox: 'fill-box' }}>
-        <path d="M52 130 Q34 152 32 176" stroke="#1A9E8F" strokeWidth="19" strokeLinecap="round"/>
-        <path d="M148 130 Q166 152 168 176" stroke="#1A9E8F" strokeWidth="19" strokeLinecap="round"/>
-        <path d="M52 118 Q54 106 100 112 Q146 106 148 118 L154 204 Q154 210 145 210 L55 210 Q46 210 46 204 Z" fill="#1A9E8F"/>
-        <rect x="38" y="130" width="124" height="12" fill="#147A6E" clipPath="url(#shirtClip2)"/>
-        <rect x="38" y="156" width="124" height="12" fill="#147A6E" clipPath="url(#shirtClip2)"/>
-        <rect x="38" y="182" width="124" height="22" fill="#147A6E" clipPath="url(#shirtClip2)"/>
-        <path d="M80 112 Q100 130 120 112" fill="none" stroke="white" strokeWidth="11" strokeLinecap="round"/>
-        <rect x="91" y="108" width="18" height="12" rx="6" fill="#FBBF8C"/>
-        <ellipse cx="56" cy="70" rx="11" ry="13" fill="#FBBF8C"/>
-        <ellipse cx="144" cy="70" rx="11" ry="13" fill="#FBBF8C"/>
-        <ellipse cx="56" cy="70" rx="6.5" ry="9" fill="#F5A07A"/>
-        <ellipse cx="144" cy="70" rx="6.5" ry="9" fill="#F5A07A"/>
-        <ellipse cx="100" cy="66" rx="44" ry="47" fill="#FBBF8C"/>
-        <path d="M56 60 Q58 18 100 14 Q142 18 144 60" fill="#4A2C0A"/>
-        <path d="M84 16 Q88 2 100 13" stroke="#4A2C0A" strokeWidth="9" strokeLinecap="round" fill="none"/>
-        <path d="M100 13 Q112 1 116 16" stroke="#4A2C0A" strokeWidth="8" strokeLinecap="round" fill="none"/>
-        <path d="M72 48 Q83 43 94 47" stroke="#4A2C0A" strokeWidth="2.8" fill="none" strokeLinecap="round"/>
-        <path d="M106 47 Q117 43 128 48" stroke="#4A2C0A" strokeWidth="2.8" fill="none" strokeLinecap="round"/>
-        <ellipse cx="84" cy="64" rx="14" ry="15" fill="white"/>
-        <ellipse cx="116" cy="64" rx="14" ry="15" fill="white"/>
-        <ellipse cx="84" cy="65" rx="9" ry="9.5" fill="#1A9E8F"/>
-        <ellipse cx="116" cy="65" rx="9" ry="9.5" fill="#1A9E8F"/>
-        <ellipse cx="85" cy="65.5" rx="5" ry="5.5" fill="#1A1A1A"/>
-        <ellipse cx="117" cy="65.5" rx="5" ry="5.5" fill="#1A1A1A"/>
-        <circle cx="87" cy="62.5" r="2.5" fill="white"/>
-        <circle cx="119" cy="62.5" r="2.5" fill="white"/>
-        <path d="M96 78 Q100 84 104 78" stroke="#E8907A" strokeWidth="2.2" fill="none" strokeLinecap="round"/>
-        <path d="M80 91 Q100 110 120 91" stroke="#C0604A" strokeWidth="3.2" fill="none" strokeLinecap="round"/>
-        <ellipse cx="69" cy="80" rx="13" ry="9" fill="#F9A0A0" opacity="0.5"/>
-        <ellipse cx="131" cy="80" rx="13" ry="9" fill="#F9A0A0" opacity="0.5"/>
-        <ellipse cx="32" cy="178" rx="17" ry="15" fill="#FBBF8C"/>
-        <ellipse cx="168" cy="178" rx="17" ry="15" fill="#FBBF8C"/>
-        <path d="M174 171 L190 161" stroke="#FBBF8C" strokeWidth="10" strokeLinecap="round"/>
-        <ellipse cx="190" cy="161" rx="7" ry="5" fill="#F5A07A" transform="rotate(-22 190 161)"/>
-      </g>
-    </svg>
-  )
-}
-
 function ScrollGesture() {
   return (
     <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: '10px', margin: '6px 0' }}>
@@ -102,7 +48,7 @@ function ScrollGesture() {
 
 import { useFontZoom, useTheme } from '../context/AppContext'
 
-export default function AssistantOverlay({ tag, text, highlightZone, showGesture, forceTop }) {
+export default function AssistantOverlay({ tag, text, highlightZone, showGesture, forceTop, tutorialMode }) {
   const zoom = useFontZoom()
   const theme = useTheme()
   const atTop = forceTop || (highlightZone && highlightZone.top > 350)
@@ -112,8 +58,9 @@ export default function AssistantOverlay({ tag, text, highlightZone, showGesture
     borderRadius: '22px',
     boxShadow: '0 8px 36px rgba(0,0,0,0.30)',
     border: `2.5px solid ${theme.primary}72`,
-    padding: '18px 20px',
-    maxHeight: 'calc(100% - 20px)',
+    padding: tutorialMode ? '20px 22px' : '18px 20px',
+    width: `${330 / zoom}px`,
+    maxHeight: `${(tutorialMode ? 600 : 280) / zoom}px`,
     overflowY: 'auto',
   }
   const tagStyle = {
@@ -126,44 +73,28 @@ export default function AssistantOverlay({ tag, text, highlightZone, showGesture
   }
   const textStyle = {
     fontFamily: 'Nunito, sans-serif', fontSize: '16px', fontWeight: 700,
-    lineHeight: 1.72, color: theme.text, margin: '0 0 12px',
+    lineHeight: 1.72, color: theme.text, margin: 0,
   }
-  const footerText = {
-    fontFamily: 'Nunito, sans-serif', fontSize: '13px', fontWeight: 600,
-    color: theme.textSecondary, lineHeight: 1.5, fontStyle: 'italic', margin: 0, flex: 1,
-  }
-
-  const MascotFooter = () => (
-    <>
-      <div style={{ height: '1px', background: theme.isHC ? 'rgba(255,255,255,0.12)' : 'rgba(0,0,0,0.08)', margin: '0 0 10px' }} />
-      <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-        <Mascot />
-        <p style={footerText}>Puoi sempre tornare indietro.<br />Non puoi fare danni!</p>
-      </div>
-    </>
-  )
 
   if (showGesture) {
     return (
-      <div style={{ position: 'absolute', top: atTop ? 10 : 'auto', bottom: atTop ? 'auto' : 10, left: 10, right: 10, zIndex: 10 }}>
+      <div style={{ position: 'absolute', top: atTop ? 100 : 'auto', bottom: atTop ? 'auto' : 30, left: 14, right: 14, zIndex: 10 }}>
         <div style={{ ...cardStyle, zoom }}>
           <div style={tagStyle}>{tag}</div>
-          <p style={textStyle}>{text}</p>
-          <div style={{ display: 'flex', justifyContent: 'center', padding: '4px 0 8px' }}>
+          <p style={{ ...textStyle, marginBottom: '12px' }}>{text}</p>
+          <div style={{ display: 'flex', justifyContent: 'center', padding: '4px 0 4px' }}>
             <ScrollGesture />
           </div>
-          <MascotFooter />
         </div>
       </div>
     )
   }
 
   return (
-    <div style={{ position: 'absolute', top: atTop ? 10 : 'auto', bottom: atTop ? 'auto' : 10, left: 10, right: 10, zIndex: 10 }}>
+    <div style={{ position: 'absolute', top: atTop ? 100 : 'auto', bottom: atTop ? 'auto' : 30, left: 14, right: 14, zIndex: 10 }}>
       <div style={{ ...cardStyle, zoom }}>
         <div style={tagStyle}>{tag}</div>
         <p style={textStyle}>{text}</p>
-        <MascotFooter />
       </div>
     </div>
   )

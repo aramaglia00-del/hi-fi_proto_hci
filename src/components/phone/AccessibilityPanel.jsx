@@ -1,6 +1,15 @@
 import { useState } from 'react'
 import { useApp, useTheme } from '../../context/AppContext'
 
+function GearIcon() {
+  return (
+    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" aria-hidden="true">
+      <circle cx="12" cy="12" r="3.2" stroke="white" strokeWidth="1.8"/>
+      <path d="M12 2.8v2.1M12 19.1v2.1M4.9 4.9l1.5 1.5M17.6 17.6l1.5 1.5M2.8 12h2.1M19.1 12h2.1M4.9 19.1l1.5-1.5M17.6 6.4l1.5-1.5" stroke="white" strokeWidth="1.6" strokeLinecap="round"/>
+    </svg>
+  )
+}
+
 const SIZE_OPTS = [
   { id: 'normal',  label: 'Normale',  d: 'A'   },
   { id: 'large',   label: 'Grande',   d: 'AA'  },
@@ -29,7 +38,7 @@ export default function AccessibilityPanel() {
         }}
         title="Accessibilità"
       >
-        ⚙️
+        <GearIcon />
       </button>
 
       {open && (
@@ -50,7 +59,7 @@ export default function AccessibilityPanel() {
 
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
               <h3 style={{ fontFamily: 'Nunito, sans-serif', fontSize: 17, fontWeight: 900, color: theme.text, margin: 0 }}>
-                ⚙️ Accessibilità
+                <span style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}><GearIcon />Accessibilità</span>
               </h3>
               <button
                 onClick={() => setOpen(false)}

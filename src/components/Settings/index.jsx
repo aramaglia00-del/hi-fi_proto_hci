@@ -1,6 +1,15 @@
 import { useState } from 'react'
 import { useApp } from '../../context/AppContext'
 
+function GearIcon() {
+  return (
+    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" aria-hidden="true">
+      <circle cx="12" cy="12" r="3.2" stroke="white" strokeWidth="1.8"/>
+      <path d="M12 2.8v2.1M12 19.1v2.1M4.9 4.9l1.5 1.5M17.6 17.6l1.5 1.5M2.8 12h2.1M19.1 12h2.1M4.9 19.1l1.5-1.5M17.6 6.4l1.5-1.5" stroke="white" strokeWidth="1.6" strokeLinecap="round"/>
+    </svg>
+  )
+}
+
 const sizeOptions = [
   { id: 'normal',  label: 'Normale',       display: 'A',   samplePx: 14 },
   { id: 'large',   label: 'Grande',        display: 'AA',  samplePx: 17 },
@@ -40,7 +49,7 @@ export default function SettingsButton() {
         }}
         title="Impostazioni accessibilità"
       >
-        ⚙️
+        <GearIcon />
       </button>
 
       {/* Overlay panel */}
@@ -85,7 +94,7 @@ export default function SettingsButton() {
                 color: '#1A1A1A',
                 margin: 0,
               }}>
-                ⚙️ Impostazioni
+                <span style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}><GearIcon />Impostazioni</span>
               </h2>
               <button
                 onClick={() => setOpen(false)}

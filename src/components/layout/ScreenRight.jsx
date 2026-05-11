@@ -1,5 +1,6 @@
-import { CalendarDays, CreditCard, ChevronRight, Info } from 'lucide-react'
+import { CalendarDays, CreditCard, ChevronRight } from 'lucide-react'
 import { useApp, useTheme, useFontZoom } from '../../context/AppContext'
+import ExitButton from '../ExitButton'
 
 export default function ScreenRight() {
   const { setState } = useApp()
@@ -32,18 +33,7 @@ export default function ScreenRight() {
           <span style={{ fontFamily: 'Nunito, sans-serif', fontSize: '16px', fontWeight: 800, color: theme.text }}>
             ServizioPA
           </span>
-          <button
-            onClick={disconnect}
-            title="Disconnetti telefono dal totem"
-            style={{
-              marginLeft: 'auto', background: 'none', border: `1px solid ${theme.border}`,
-              borderRadius: '8px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px',
-              fontFamily: 'Nunito, sans-serif', fontSize: '11px', fontWeight: 700,
-              color: theme.textSecondary, padding: '4px 8px',
-            }}
-          >
-            ⏻ Esci
-          </button>
+          <ExitButton onClick={disconnect} variant="inline" />
         </div>
 
         {/* Header */}
@@ -104,15 +94,6 @@ export default function ScreenRight() {
           </button>
         </div>
 
-        {/* Nota */}
-        <div style={{ marginTop: 'auto', paddingTop: '20px', display: 'flex', alignItems: 'flex-start', gap: '10px' }}>
-          <div style={{ width: '22px', height: '22px', background: theme.primaryLight, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: '1px' }}>
-            <Info size={13} color={theme.primary} />
-          </div>
-          <p style={{ fontSize: '13px', color: theme.textSecondary, lineHeight: 1.55, fontWeight: 600 }}>
-            L'assistente ti guiderà in ogni passaggio. Puoi sempre tornare indietro.
-          </p>
-        </div>
       </div>
     </div>
   )

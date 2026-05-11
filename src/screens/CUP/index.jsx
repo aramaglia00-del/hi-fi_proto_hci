@@ -7,23 +7,24 @@ import { useApp, useTheme, useFontZoom } from '../../context/AppContext'
 import { PhoneFrame, TotemFrame } from '../../components/layout/DeviceFrames'
 import AssistantOverlay from '../../components/AssistantOverlay'
 import AccessibilityPanel from '../../components/phone/AccessibilityPanel'
+import ExitButton from '../../components/ExitButton'
 
 // ── ASSISTANT STEPS CONFIG ─────────────────────────────────────────
 function getAssistantSteps(theme) {
   const c = theme.primary
   return [
   {
-    tag: '👆 Fai così',
+    tag: 'Fai così',
     text: (<>Clicca su <strong style={{ color: c }}>PRENOTAZIONI</strong> per iniziare!</>),
     highlightSelector: '[data-highlight="prenotazioni"]',
   },
   {
-    tag: '👆 Fai così',
+    tag: 'Fai così',
     text: (<>Fai CLICK su <strong style={{ color: c }}>AGGIUNGI PRENOTAZIONE</strong>!</>),
     highlightSelector: '[data-highlight="aggiungi"]',
   },
   {
-    tag: '📖 Come compilare il form',
+    tag: 'Come compilare il form',
     isTutorialMode: true,
     text: (
       <div style={{ textAlign: 'left' }}>
@@ -32,17 +33,17 @@ function getAssistantSteps(theme) {
           { n: '2', title: 'Tocca i rettangoli bianchi', desc: 'Clicca sul campo e scrivi le informazioni richieste', color: '#FFF0E0', accent: '#D4720A' },
           { n: '3', title: 'Premi il pulsante in fondo', desc: 'Quando hai finito, premi il bottone per inviare', color: '#EEF0FF', accent: '#5C60C0' },
         ].map(s => (
-          <div key={s.n} style={{ display: 'flex', gap: '12px', alignItems: 'flex-start', padding: '10px 12px', background: s.color, borderRadius: '12px', marginBottom: '8px' }}>
-            <div style={{ width: '28px', height: '28px', background: s.accent, borderRadius: '7px', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-              <span style={{ fontFamily: 'Nunito, sans-serif', fontSize: '14px', fontWeight: 900, color: 'white' }}>{s.n}</span>
+          <div key={s.n} style={{ display: 'flex', gap: '14px', alignItems: 'flex-start', padding: '14px 16px', background: s.color, borderRadius: '14px', marginBottom: '12px' }}>
+            <div style={{ width: '34px', height: '34px', background: s.accent, borderRadius: '9px', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+              <span style={{ fontFamily: 'Nunito, sans-serif', fontSize: '16px', fontWeight: 900, color: 'white' }}>{s.n}</span>
             </div>
             <div>
-              <p style={{ fontFamily: 'Nunito, sans-serif', fontSize: '14px', fontWeight: 800, color: '#1A1A1A', marginBottom: '2px' }}>{s.title}</p>
-              <p style={{ fontFamily: 'Nunito, sans-serif', fontSize: '12px', fontWeight: 600, color: '#4B5563', lineHeight: 1.4 }}>{s.desc}</p>
+              <p style={{ fontFamily: 'Nunito, sans-serif', fontSize: '15px', fontWeight: 800, color: '#1A1A1A', marginBottom: '4px' }}>{s.title}</p>
+              <p style={{ fontFamily: 'Nunito, sans-serif', fontSize: '13px', fontWeight: 600, color: '#4B5563', lineHeight: 1.5 }}>{s.desc}</p>
             </div>
           </div>
         ))}
-        <p style={{ fontFamily: 'Nunito, sans-serif', fontSize: '13px', fontWeight: 700, color: c, marginTop: '6px', marginBottom: 0 }}>
+        <p style={{ fontFamily: 'Nunito, sans-serif', fontSize: '13px', fontWeight: 700, color: c, marginTop: '14px', marginBottom: 0 }}>
           Poi premi <strong>HO CAPITO</strong> sul totem per iniziare →
         </p>
       </div>
@@ -50,37 +51,37 @@ function getAssistantSteps(theme) {
     highlightSelector: '[data-highlight="continua"]',
   },
   {
-    tag: '📝 Passo 1',
+    tag: 'Passo 1',
     text: (<>COMPILA IL FORM! Inserisci i dati che trovi sul documento, iniziamo con il <strong>NRE di SINISTRA</strong>!</>),
     highlightSelector: '[data-highlight="nre-sx"]',
   },
   {
-    tag: '📝 Passo 2',
+    tag: 'Passo 2',
     text: (<>Ottimo! Ora inserisci il <strong>NRE di DESTRA</strong>.</>),
     highlightSelector: '[data-highlight="nre-dx"]',
   },
   {
-    tag: '📝 Passo 3',
+    tag: 'Passo 3',
     text: (<>Infine, inserisci il tuo <strong>CODICE FISCALE</strong>.</>),
     highlightSelector: '[data-highlight="cf"]',
   },
   {
-    tag: '🚀 Quasi fatto',
+    tag: 'Quasi fatto',
     text: (<>Molto bene! Ora <strong>FAI CLICK SUL BOTTONE RICHIEDI</strong> per cercare le disponibilità!</>),
     highlightSelector: '[data-highlight="richiedi-btn"]',
   },
   {
-    tag: '📍 Selezione',
+    tag: 'Selezione',
     text: (<><strong>SELEZIONA L'APPUNTAMENTO!</strong></>),
     highlightSelector: '[data-highlight="target-hospital"]',
   },
   {
-    tag: '✅ Conferma',
+    tag: 'Conferma',
     text: (<><strong>ABBIAMO FINITO!</strong><br />Conferma la tua prenotazione premendo il bottone <strong>CONFERMA</strong> ↓</>),
     highlightSelector: '[data-highlight="conferma-btn"]',
   },
   {
-    tag: '🎉 Grande!',
+    tag: 'Grande!',
     text: (<><strong>GRANDE!</strong><br />Prenotazione effettuata! Ora puoi tornare alla schermata principale.</>),
     highlightSelector: '[data-highlight="home-back"]',
   },
@@ -233,6 +234,7 @@ function PanelLeft({ step, rightPanelContent, rightPanelRef, panelScroll }) {
         text={currentStep.text}
         highlightZone={currentStep.isTutorialMode ? null : highlightZone}
         forceTop={!!currentStep.isTutorialMode}
+        tutorialMode={!!currentStep.isTutorialMode}
       />
       <AccessibilityPanel />
     </div>
@@ -244,7 +246,7 @@ function PanelLeft({ step, rightPanelContent, rightPanelRef, panelScroll }) {
 function StepMenu({ onPrenotazioni, onBack }) {
   const theme = useTheme()
   const voci = [
-    { icon: <CalendarDays size={38} />, label: 'Prenotazioni', highlight: true },
+    { id: 'prenotazioni', icon: <CalendarDays size={38} />, label: 'Prenotazioni' },
     { icon: <Building2 size={38} />, label: 'Strutture' },
     { icon: <svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>, label: 'Come fare' },
     { icon: <svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v4"/><path d="M16 2v4M8 2v4M3 10h7"/><path d="M2 22l5-5M7 22l-5-5"/></svg>, label: 'News' },
@@ -255,24 +257,27 @@ function StepMenu({ onPrenotazioni, onBack }) {
     <div style={{ height: '100%', background: theme.bg, display: 'flex', flexDirection: 'column', textAlign: 'center', padding: '0 20px 20px' }}>
       <h1 style={{ padding: '32px 0 16px', fontSize: '26px', fontWeight: 900, color: theme.text, fontFamily: 'Nunito, sans-serif' }}>Sanità pubblica</h1>
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', flex: 1 }}>
-        {voci.map((v, i) => (
-          <div
-            key={i}
-            data-highlight={v.highlight ? 'prenotazioni' : null}
-            onClick={v.highlight ? onPrenotazioni : null}
-            style={{
-              display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px',
-              cursor: v.highlight ? 'pointer' : 'default',
-              padding: '14px 8px', borderRadius: '14px',
-              background: v.highlight ? theme.primaryLight : theme.surface,
-              border: `2px solid ${v.highlight ? theme.primary + '44' : theme.border}`,
-              color: v.highlight ? theme.primary : theme.textSecondary,
-            }}
-          >
-            {v.icon}
-            <span style={{ fontWeight: 700, fontFamily: 'Nunito, sans-serif', fontSize: '13px', color: v.highlight ? theme.primary : theme.text }}>{v.label}</span>
-          </div>
-        ))}
+        {voci.map((v, i) => {
+          const isPrenotazioni = v.id === 'prenotazioni'
+          return (
+            <div
+              key={i}
+              data-highlight={isPrenotazioni ? 'prenotazioni' : null}
+              onClick={isPrenotazioni ? onPrenotazioni : null}
+              style={{
+                display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '8px',
+                cursor: isPrenotazioni ? 'pointer' : 'default',
+                padding: '14px 8px', borderRadius: '14px',
+                background: theme.surface,
+                border: `2px solid ${theme.border}`,
+                color: theme.textSecondary,
+              }}
+            >
+              {v.icon}
+              <span style={{ fontWeight: 700, fontFamily: 'Nunito, sans-serif', fontSize: '13px', color: theme.text }}>{v.label}</span>
+            </div>
+          )
+        })}
       </div>
       <div style={{ display: 'flex', gap: '10px', marginTop: '16px', paddingTop: '4px' }}>
         <BackButton onBack={onBack} />
@@ -289,15 +294,20 @@ function StepOptions({ onNext, onBack }) {
       <CupJourneyMap step={1} />
       <h2 style={{ fontFamily: 'Nunito, sans-serif', fontSize: '24px', fontWeight: 900, color: theme.text, marginBottom: '20px' }}>Prenotazioni</h2>
       <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', flex: 1 }}>
-        <button data-highlight="aggiungi" onClick={onNext} style={{ display: 'flex', alignItems: 'center', gap: '15px', padding: '18px', border: `2.5px solid ${theme.primary}`, borderRadius: '14px', background: theme.primaryLight, fontWeight: 800, textAlign: 'left', cursor: 'pointer', fontFamily: 'Nunito, sans-serif', color: theme.text, minHeight: '64px' }}>
-          <PlusCircle color={theme.primary} /> <span>Aggiungi Prenotazione</span>
-        </button>
-        <button disabled style={{ display: 'flex', alignItems: 'center', gap: '15px', padding: '18px', border: `1.5px solid ${theme.border}`, borderRadius: '14px', background: theme.surface, color: theme.muted, textAlign: 'left', fontFamily: 'Nunito, sans-serif', minHeight: '64px', opacity: 0.5 }}>
-          <Download /> Recupera Prenotazione
-        </button>
-        <button disabled style={{ display: 'flex', alignItems: 'center', gap: '15px', padding: '18px', border: `1.5px solid ${theme.border}`, borderRadius: '14px', background: theme.surface, color: theme.muted, textAlign: 'left', fontFamily: 'Nunito, sans-serif', minHeight: '64px', opacity: 0.5 }}>
-          <List /> Elenca prenotazioni
-        </button>
+        {[
+          { id: 'aggiungi', icon: <PlusCircle color={theme.text} />, label: 'Aggiungi Prenotazione', onClick: onNext },
+          { id: 'recupera', icon: <Download color={theme.text} />, label: 'Recupera Prenotazione' },
+          { id: 'elenca', icon: <List color={theme.text} />, label: 'Elenca prenotazioni' },
+        ].map(b => (
+          <button
+            key={b.id}
+            data-highlight={b.id === 'aggiungi' ? 'aggiungi' : undefined}
+            onClick={b.onClick}
+            style={{ display: 'flex', alignItems: 'center', gap: '15px', padding: '18px', border: `1.5px solid ${theme.border}`, borderRadius: '14px', background: theme.surface, fontWeight: 800, textAlign: 'left', cursor: b.onClick ? 'pointer' : 'default', fontFamily: 'Nunito, sans-serif', color: theme.text, minHeight: '64px' }}
+          >
+            {b.icon} <span>{b.label}</span>
+          </button>
+        ))}
       </div>
       <div style={{ display: 'flex', gap: '10px', marginTop: 'auto', paddingTop: '16px' }}>
         <BackButton onBack={onBack} />
@@ -309,29 +319,45 @@ function StepOptions({ onNext, onBack }) {
 function StepTutorialScreen({ onNext, onBack }) {
   const theme = useTheme()
   return (
-    <div style={{ height: '100%', background: theme.bg, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '40px 28px 28px', textAlign: 'center' }}>
-      <div style={{ width: '72px', height: '72px', background: theme.primaryLight, borderRadius: '18px', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '20px' }}>
-        <svg viewBox="0 0 36 36" fill="none" width="40" height="40">
-          <rect x="6" y="2" width="18" height="28" rx="4" stroke={theme.primary} strokeWidth="2" fill="none"/>
-          <rect x="10" y="8" width="10" height="2.5" rx="1.25" fill={theme.primary} opacity="0.5"/>
-          <rect x="10" y="13" width="10" height="2.5" rx="1.25" fill={theme.primary} opacity="0.5"/>
-          <rect x="10" y="18" width="7" height="2.5" rx="1.25" fill={theme.primary} opacity="0.5"/>
-          <path d="M26 20 L34 20 M30 16 L34 20 L30 24" stroke={theme.primary} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-        </svg>
+    <div style={{ height: '100%', background: theme.bg, display: 'flex', flexDirection: 'column', padding: '40px 28px 20px', textAlign: 'center' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', flex: 1 }}>
+        <div style={{ width: '72px', height: '72px', background: theme.primaryLight, borderRadius: '18px', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '20px' }}>
+          <svg viewBox="0 0 36 36" fill="none" width="40" height="40">
+            <rect x="6" y="2" width="18" height="28" rx="4" stroke={theme.primary} strokeWidth="2" fill="none"/>
+            <rect x="10" y="8" width="10" height="2.5" rx="1.25" fill={theme.primary} opacity="0.5"/>
+            <rect x="10" y="13" width="10" height="2.5" rx="1.25" fill={theme.primary} opacity="0.5"/>
+            <rect x="10" y="18" width="7" height="2.5" rx="1.25" fill={theme.primary} opacity="0.5"/>
+            <path d="M26 20 L34 20 M30 16 L34 20 L30 24" stroke={theme.primary} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
+        </div>
+        <h2 style={{ fontFamily: 'Nunito, sans-serif', fontSize: '24px', fontWeight: 900, color: theme.text, lineHeight: 1.25, marginBottom: '10px' }}>
+          Leggi il tutorial<br />sul telefono
+        </h2>
+        <p style={{ fontFamily: 'Nunito, sans-serif', fontSize: '15px', fontWeight: 600, color: theme.textSecondary, lineHeight: 1.6, maxWidth: '260px', marginBottom: '24px' }}>
+          Il tuo assistente ti spiega come compilare il form. Leggilo e poi torna qui.
+        </p>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', background: theme.primaryLight, border: `1.5px solid ${theme.borderStrong}`, borderRadius: '12px', padding: '10px 16px' }}>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <rect x="6" y="2.5" width="12" height="19" rx="3" stroke={theme.primary} strokeWidth="1.8"/>
+            <rect x="9" y="6.2" width="6" height="8.2" rx="1.5" fill={theme.primaryLight} stroke={theme.primary} strokeWidth="1.2"/>
+            <path d="M10 18.2h4" stroke={theme.primary} strokeWidth="1.6" strokeLinecap="round"/>
+          </svg>
+          <span style={{ fontFamily: 'Nunito, sans-serif', fontSize: '13px', fontWeight: 700, color: theme.primary }}>Guarda lo schermo dell'assistente →</span>
+        </div>
       </div>
-      <h2 style={{ fontFamily: 'Nunito, sans-serif', fontSize: '24px', fontWeight: 900, color: theme.text, lineHeight: 1.25, marginBottom: '10px' }}>
-        Leggi il tutorial<br />sul telefono
-      </h2>
-      <p style={{ fontFamily: 'Nunito, sans-serif', fontSize: '15px', fontWeight: 600, color: theme.textSecondary, lineHeight: 1.6, maxWidth: '260px', marginBottom: '32px' }}>
-        Il tuo assistente ti spiega come compilare il form. Leggilo e poi torna qui.
-      </p>
-      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '32px', background: theme.primaryLight, border: `1.5px solid ${theme.borderStrong}`, borderRadius: '12px', padding: '10px 16px' }}>
-        <span style={{ fontSize: '20px' }}>📱</span>
-        <span style={{ fontFamily: 'Nunito, sans-serif', fontSize: '13px', fontWeight: 700, color: theme.primary }}>Guarda lo schermo dell'assistente →</span>
-      </div>
-      <div style={{ display: 'flex', gap: '10px', width: '100%' }}>
+      <div style={{ display: 'flex', gap: '10px', marginTop: 'auto', paddingTop: '16px' }}>
         <BackButton onBack={onBack} />
-        <button data-highlight="continua" onClick={onNext} style={{ flex: 1, padding: '18px', background: `linear-gradient(135deg, ${theme.primary} 0%, ${theme.primaryDark} 100%)`, color: theme.primaryText, border: 'none', borderRadius: '14px', fontWeight: 900, fontSize: '16px', cursor: 'pointer', fontFamily: 'Nunito, sans-serif', boxShadow: `0 4px 16px ${theme.primary}5C` }}>
+        <button
+          data-highlight="continua"
+          onClick={onNext}
+          style={{
+            flex: 2, padding: '16px', borderRadius: '14px', border: 'none', minHeight: '58px',
+            background: `linear-gradient(135deg, ${theme.primary} 0%, ${theme.primaryDark} 100%)`,
+            color: theme.primaryText, fontWeight: 800, cursor: 'pointer',
+            fontFamily: 'Nunito, sans-serif', fontSize: '15px',
+            boxShadow: `0 4px 16px ${theme.primary}55`,
+          }}
+        >
           Ho capito, inizia! →
         </button>
       </div>
@@ -407,7 +433,7 @@ function StepFormScreen({ currentStep, setStep, onNext, onBack }) {
   )
 }
 
-function StepResults({ onNext, onBack }) {
+function StepResults({ onNext, onBack, isReplica, listScrollTop = 0, onListScroll }) {
   const theme = useTheme()
   const sedi = [
     { h: 'Ospedale Molinette', s: 'Via San Maurizio - Torino', d: '11/07/2026 - 12:30' },
@@ -415,6 +441,25 @@ function StepResults({ onNext, onBack }) {
     { h: 'Ospedale San Pietro', s: 'Corso Ottomano - Torino', d: '21/07/2026 - 14:00', target: true },
     { h: 'Ospedale Santa Agata', s: 'Via Verdi - Vercelli', d: '13/07/2026 - 09:30' },
   ]
+  const items = sedi.map((s, i) => (
+    <div
+      key={i}
+      data-highlight={s.target ? 'target-hospital' : null}
+      onClick={!isReplica ? onNext : undefined}
+      style={{
+        display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+        padding: '24px 20px', borderBottom: `1px solid ${theme.border}`, cursor: !isReplica ? 'pointer' : 'default',
+        background: 'transparent', textAlign: 'center', minHeight: '140px', width: '100%',
+      }}
+    >
+      <CalendarDays style={{ marginBottom: '12px', color: theme.primary, flexShrink: 0 }} size={36} />
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '0' }}>
+        <div style={{ fontWeight: 800, fontSize: '16px', fontFamily: 'Nunito, sans-serif', color: theme.text, marginBottom: '6px' }}>{s.h}</div>
+        <div style={{ fontSize: '12px', color: theme.textSecondary, fontFamily: 'Nunito, sans-serif', marginBottom: '8px' }}>{s.s}</div>
+        <div style={{ fontSize: '13px', fontWeight: 700, color: theme.primary, fontFamily: 'Nunito, sans-serif' }}>{s.d}</div>
+      </div>
+    </div>
+  ))
   return (
     <div style={{ height: '100%', background: theme.bg, display: 'flex', flexDirection: 'column' }}>
       <div style={{ padding: '24px 20px 0' }}>
@@ -422,26 +467,19 @@ function StepResults({ onNext, onBack }) {
         <CupJourneyMap step={7} />
         <h3 style={{ fontFamily: 'Nunito, sans-serif', fontWeight: 900, fontSize: '22px', color: theme.text, marginBottom: '12px' }}>Prime Disponibilità</h3>
       </div>
-      <div style={{ overflowY: 'auto', flex: 1, display: 'flex', flexDirection: 'column', width: '100%' }}>
-        {sedi.map((s, i) => (
-          <div
-            key={i}
-            data-highlight={s.target ? 'target-hospital' : null}
-            onClick={onNext}
-            style={{
-              display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', 
-              padding: '24px 20px', borderBottom: `1px solid ${theme.border}`, cursor: 'pointer',
-              background: 'transparent', textAlign: 'center', minHeight: '140px', width: '100%',
-            }}
-          >
-            <CalendarDays style={{ marginBottom: '12px', color: theme.primary, flexShrink: 0 }} size={36} />
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '0' }}>
-              <div style={{ fontWeight: 800, fontSize: '16px', fontFamily: 'Nunito, sans-serif', color: theme.text, marginBottom: '6px' }}>{s.h}</div>
-              <div style={{ fontSize: '12px', color: theme.textSecondary, fontFamily: 'Nunito, sans-serif', marginBottom: '8px' }}>{s.s}</div>
-              <div style={{ fontSize: '13px', fontWeight: 700, color: theme.primary, fontFamily: 'Nunito, sans-serif' }}>{s.d}</div>
-            </div>
-          </div>
-        ))}
+      <div
+        onScroll={!isReplica ? e => onListScroll?.(e.currentTarget.scrollTop) : undefined}
+        style={{
+          flex: 1,
+          overflow: isReplica ? 'hidden' : 'auto',
+          width: '100%',
+          display: 'flex',
+          flexDirection: 'column',
+        }}
+      >
+        <div style={{ display: 'flex', flexDirection: 'column', flexShrink: 0, transform: isReplica ? `translateY(-${listScrollTop}px)` : undefined }}>
+          {items}
+        </div>
       </div>
       <div style={{ display: 'flex', gap: '10px', padding: '12px 20px' }}>
         <BackButton onBack={onBack} />
@@ -503,10 +541,10 @@ function StepSuccess({ onHome }) {
 export default function CUP() {
   const [step, setStep] = useState(0)
   const [panelScroll, setPanelScroll] = useState(0)
+  const [resultsScroll, setResultsScroll] = useState(0)
   const { setState } = useApp()
   const rightPanelRef = useRef(null)
   const zoom = useFontZoom()
-  const theme = useTheme()
 
   const goHome = () => setState(s => ({ ...s, currentScreen: 'home', currentStep: 0 }))
   const disconnect = () => setState(s => ({ ...s, currentScreen: 'pairing', paired: false, currentStep: 0 }))
@@ -519,12 +557,20 @@ export default function CUP() {
     switch (step) {
       case 0: return <StepMenu onPrenotazioni={props.onPrenotazioni} onBack={goHome} />
       case 1: return <StepOptions onNext={props.onNext} onBack={props.onBack} />
-      case 2: return <StepTutorialScreen onNext={props.onNext} />
+      case 2: return <StepTutorialScreen onNext={props.onNext} onBack={interactive ? () => setStep(1) : () => {}} />
       case 3:
       case 4:
       case 5:
       case 6: return <StepFormScreen {...props} onBack={interactive ? () => setStep(2) : () => {}} />
-      case 7: return <StepResults onNext={props.onNext} onBack={interactive ? () => setStep(3) : () => {}} />
+      case 7: return (
+        <StepResults
+          onNext={props.onNext}
+          onBack={interactive ? () => setStep(3) : () => {}}
+          isReplica={!interactive}
+          listScrollTop={resultsScroll}
+          onListScroll={interactive ? setResultsScroll : undefined}
+        />
+      )
       case 8: return <StepConfirm onNext={props.onNext} onBack={props.onBack} />
       case 9: return <StepSuccess onHome={props.onHome} />
       default: return null
@@ -534,7 +580,7 @@ export default function CUP() {
   return (
     <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '80px', height: '820px' }}>
       <PhoneFrame>
-        <PanelLeft step={step} rightPanelContent={renderContent(false)} rightPanelRef={rightPanelRef} panelScroll={panelScroll} />
+        <PanelLeft step={step} rightPanelContent={renderContent(false)} rightPanelRef={rightPanelRef} panelScroll={panelScroll + resultsScroll} />
       </PhoneFrame>
       <TotemFrame>
         <div ref={rightPanelRef} style={{ width: '390px', height: '740px', flexShrink: 0, overflow: 'hidden', position: 'relative' }}>
@@ -544,20 +590,7 @@ export default function CUP() {
           >
             {renderContent(true)}
           </div>
-          <button
-            onClick={disconnect}
-            style={{
-              position: 'absolute', top: 10, right: 10, zIndex: 200,
-              background: theme.isHC ? 'rgba(255,215,0,0.2)' : 'rgba(0,0,0,0.35)',
-              border: `1px solid ${theme.isHC ? 'rgba(255,215,0,0.5)' : 'rgba(255,255,255,0.2)'}`,
-              borderRadius: '10px', padding: '5px 10px', cursor: 'pointer',
-              display: 'flex', alignItems: 'center', gap: '4px',
-              fontFamily: 'Nunito, sans-serif', fontSize: '11px', fontWeight: 700,
-              color: theme.isHC ? '#FFD700' : 'rgba(255,255,255,0.75)',
-            }}
-          >
-            ⏻ Esci
-          </button>
+          <ExitButton onClick={disconnect} />
         </div>
       </TotemFrame>
     </div>

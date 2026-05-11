@@ -94,35 +94,8 @@ export function TotemFrame({ children }) {
         flexShrink: 0,
         display: 'flex',
         flexDirection: 'column',
-        padding: '0 14px',
+        padding: '14px',
       }}>
-        {/* Header brand bar */}
-        <div style={{
-          height: '24px',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          gap: '6px',
-          marginTop: '10px',
-          marginBottom: '4px',
-        }}>
-          {/* Teal icon */}
-          <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-            <rect x="1" y="1" width="12" height="12" rx="3" fill="#1A9E8F" opacity="0.85"/>
-            <path d="M4 7h6M7 4v6" stroke="white" strokeWidth="1.5" strokeLinecap="round"/>
-          </svg>
-          <span style={{
-            fontFamily: 'Nunito, sans-serif',
-            fontSize: '10px',
-            fontWeight: 800,
-            color: 'rgba(255,255,255,0.55)',
-            letterSpacing: '1px',
-            textTransform: 'uppercase',
-          }}>
-            ServizioPA
-          </span>
-        </div>
-
         {/* Inner screen */}
         <div style={{
           width: '390px',
@@ -133,8 +106,6 @@ export function TotemFrame({ children }) {
         }}>
           {children}
         </div>
-
-        <div style={{ height: '10px' }} />
       </div>
     </div>
   )

@@ -1,9 +1,10 @@
 import { useState, useEffect, useRef } from 'react'
-import { QrCode, Keyboard, Building2, FileText, DollarSign, Hash, CreditCard, ChevronRight, ArrowLeft, Tag, Check } from 'lucide-react'
+import { QrCode, Keyboard, Building2, FileText, DollarSign, Hash, CreditCard, ChevronRight, ArrowLeft, Tag, Check, AlertTriangle, Camera } from 'lucide-react'
 import { useApp, useTheme, useFontZoom } from '../../context/AppContext'
 import AssistantOverlay from '../../components/AssistantOverlay'
 import { PhoneFrame, TotemFrame } from '../../components/layout/DeviceFrames'
 import AccessibilityPanel from '../../components/phone/AccessibilityPanel'
+import ExitButton from '../../components/ExitButton'
 
 // ── HIGHLIGHT SELECTORS ────────────────────────────────────────────
 const HIGHLIGHT_SELECTORS = [
@@ -29,32 +30,32 @@ function getCoaching(theme) {
   const c = theme.primary
   return {
     0: {
-      tag: '👆 Cosa fare adesso',
+      tag: (<span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}><ChevronRight size={12} />Cosa fare adesso</span>),
       text: (<>Tocca il pulsante <strong style={{ color: c }}>Inquadra il codice QR</strong> qui a fianco per iniziare il pagamento.</>),
     },
     2: {
-      tag: '✅ Controlla i dati',
+      tag: (<span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}><Check size={12} />Controlla i dati</span>),
       text: (<>Leggi i dati qui a fianco e verifica che siano corretti.<br />Poi tocca <strong style={{ color: c }}>VAI AL PAGAMENTO</strong>.</>),
     },
     3: {
-      tag: '✉️ Scrivi la tua email',
+      tag: (<span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}><FileText size={12} />Scrivi la tua email</span>),
       text: (<>Tocca il campo <strong style={{ color: c }}>Email</strong> e scrivi il tuo indirizzo.<br />Riceverai la ricevuta di pagamento lì.</>),
     },
     4: {
-      tag: '✅ Email inserita!',
+      tag: (<span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}><Check size={12} />Email inserita!</span>),
       text: (<>Bene! Ora tocca il secondo campo e riscrivi la stessa email per <strong style={{ color: c }}>confermare</strong> che sia quella giusta.</>),
     },
     6: {
-      tag: '👆 Scorri verso l\'alto',
+      tag: (<span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}><ChevronRight size={12} />Scorri verso l'alto</span>),
       text: (<>Muovi il dito <strong style={{ color: c }}>dal basso verso l'alto</strong> sulla lista qui a fianco per trovare il metodo di pagamento.</>),
       showGesture: true,
     },
     7: {
-      tag: '💳 Tocca questo',
+      tag: (<span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}><CreditCard size={12} />Tocca questo</span>),
       text: (<>Tocca <strong style={{ color: c }}>Carta di debito o credito</strong> — è quella evidenziata qui a fianco.</>),
     },
     14: {
-      tag: '🎉 Bravissimo!',
+      tag: (<span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}><Check size={12} />Bravissimo!</span>),
       text: 'Hai completato il pagamento con successo! Riceverai una ricevuta via email.',
     },
   }
@@ -287,27 +288,27 @@ function useOverlayStyles() {
 // ── MECHANISM 3: ANCHOR OVERLAY ───────────────────────────────────
 const ANCHOR_CONFIGS = {
   bollettino: {
-    tag: '📄 Dove si trova il QR',
+    tag: (<span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}><FileText size={12} />Dove si trova il QR</span>),
     text: 'Il codice QR è stampato sul bollettino. Tienilo davanti alla fotocamera.',
     illustration: <BollentinoIllustration />,
   },
   'card-number': {
-    tag: '💳 Dove trovi le 16 cifre',
+    tag: (<span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}><CreditCard size={12} />Dove trovi le 16 cifre</span>),
     text: 'Le cifre sono sul FRONTE della carta, in rilievo. Trovi 4 gruppi da 4 numeri.',
     illustration: <CardFrontIllustration highlight="number" />,
   },
   'card-expiry': {
-    tag: '📅 Dove trovi la scadenza',
+    tag: (<span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}><DollarSign size={12} />Dove trovi la scadenza</span>),
     text: 'La data di scadenza è sul FRONTE, sotto il numero. Formato: mese/anno (es. 06/27).',
     illustration: <CardFrontIllustration highlight="expiry" />,
   },
   'card-cvv': {
-    tag: '🔒 Dove trovi il CVV',
+    tag: (<span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}><Tag size={12} />Dove trovi il CVV</span>),
     text: 'Il CVV sono 3 cifre nel riquadro bianco sul RETRO della carta, in basso a destra.',
     illustration: <CardBackIllustration />,
   },
   'card-name': {
-    tag: '👤 Dove trovi il nome',
+    tag: (<span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}><Building2 size={12} />Dove trovi il nome</span>),
     text: 'Il tuo nome è sul FRONTE della carta, in basso a sinistra, stampato in rilievo.',
     illustration: <CardFrontIllustration highlight="name" />,
   },
@@ -315,19 +316,18 @@ const ANCHOR_CONFIGS = {
 
 function AnchorOverlay({ type, highlightZone, forceTop }) {
   const s = useOverlayStyles()
+  const zoom = useFontZoom()
   const atTop = forceTop || !highlightZone || highlightZone.top > 350
   const cfg = ANCHOR_CONFIGS[type]
   if (!cfg) return null
   return (
-    <div style={{ position: 'absolute', top: atTop ? 10 : 'auto', bottom: atTop ? 'auto' : 10, left: 10, right: 10, zIndex: 10 }}>
-      <div style={s.card}>
+    <div style={{ position: 'absolute', top: atTop ? 100 : 'auto', bottom: atTop ? 'auto' : 30, left: 14, right: 14, zIndex: 10 }}>
+      <div style={{ ...s.card, zoom, width: `${330 / zoom}px`, maxHeight: `${260 / zoom}px`, overflowY: 'auto', padding: '14px 16px' }}>
         <div style={s.tagOrange}>{cfg.tag}</div>
-        <p style={s.bodyText}>{cfg.text}</p>
-        <div style={{ borderRadius: '10px', overflow: 'hidden', background: s.itemBg, padding: '10px' }}>
+        <p style={{ ...s.bodyText, fontSize: '14px', margin: '0 0 8px' }}>{cfg.text}</p>
+        <div style={{ borderRadius: '8px', overflow: 'hidden', background: s.itemBg, padding: '6px', width: '160px', marginLeft: 'auto', marginRight: 'auto' }}>
           {cfg.illustration}
         </div>
-        <div style={s.divider} />
-        <p style={s.reassureText}>Puoi sempre tornare indietro. Non puoi fare danni!</p>
       </div>
     </div>
   )
@@ -336,9 +336,10 @@ function AnchorOverlay({ type, highlightZone, forceTop }) {
 // ── MECHANISM 2: MIRROR OVERLAY ───────────────────────────────────
 function MirrorOverlay({ title, items, cta }) {
   const s = useOverlayStyles()
+  const zoom = useFontZoom()
   return (
-    <div style={{ position: 'absolute', top: 10, left: 10, right: 10, zIndex: 10 }}>
-      <div style={s.card}>
+    <div style={{ position: 'absolute', top: 100, left: 14, right: 14, zIndex: 10 }}>
+      <div style={{ ...s.card, zoom, width: `${330 / zoom}px`, maxHeight: `${560 / zoom}px`, overflowY: 'auto' }}>
         <div style={s.tagGreen}>
           <Check size={12} strokeWidth={3} />
           {title}
@@ -350,7 +351,7 @@ function MirrorOverlay({ title, items, cta }) {
           </div>
         ))}
         <div style={s.divider} />
-        <p style={{ ...s.bodyText, margin: 0 }}>➜ {cta}</p>
+        <p style={{ ...s.bodyText, margin: 0 }}>→ {cta}</p>
       </div>
     </div>
   )
@@ -359,10 +360,11 @@ function MirrorOverlay({ title, items, cta }) {
 // ── MECHANISM 5: NATURAL LANGUAGE SUMMARY ─────────────────────────
 function NaturalLangOverlay({ email, cardLast4 }) {
   const s = useOverlayStyles()
+  const zoom = useFontZoom()
   return (
-    <div style={{ position: 'absolute', top: 10, left: 10, right: 10, zIndex: 10 }}>
-      <div style={s.card}>
-        <div style={s.tagOrange}>🔍 Rileggiamo insieme</div>
+    <div style={{ position: 'absolute', top: 100, left: 14, right: 14, zIndex: 10 }}>
+      <div style={{ ...s.card, zoom, width: `${330 / zoom}px`, maxHeight: `${560 / zoom}px`, overflowY: 'auto' }}>
+        <div style={s.tagOrange}><Tag size={12} /> Rileggiamo insieme</div>
         <p style={{ fontFamily: 'Nunito, sans-serif', fontSize: '17px', fontWeight: 700, color: s.bodyText.color, lineHeight: 1.75, margin: '0 0 14px' }}>
           Stai per pagare{' '}
           <strong style={{ color: '#1A9E8F', fontSize: '22px' }}>36,50 €</strong>
@@ -605,8 +607,8 @@ function StepDatiPagamento({ onBack, onNext }) {
         <h1 style={{ fontFamily: 'Nunito, sans-serif', fontSize: '24px', fontWeight: 900, color: '#1A1A1A', letterSpacing: '-0.5px', lineHeight: 1.2 }}>Dati del<br />pagamento</h1>
       </div>
       <div style={{ background: '#FFF9F0', border: '1.5px solid #FFE0B0', borderRadius: '12px', padding: '10px 14px', marginBottom: '12px' }}>
-        <p style={{ fontFamily: 'Nunito, sans-serif', fontSize: '13px', fontWeight: 600, color: '#B07000', margin: 0, lineHeight: 1.5 }}>
-          ⚠️ Controlla che questi dati corrispondano al tuo bollettino.
+        <p style={{ fontFamily: 'Nunito, sans-serif', fontSize: '13px', fontWeight: 600, color: '#B07000', margin: 0, lineHeight: 1.5, display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <AlertTriangle size={14} color="#B07000" /> Controlla che questi dati corrispondano al tuo bollettino.
         </p>
       </div>
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflowY: 'auto' }}>
@@ -635,10 +637,12 @@ function StepDatiPagamento({ onBack, onNext }) {
 // ── STEP 3-5: EMAIL ────────────────────────────────────────────────
 const isValidEmail = val => val.includes('@') && val.includes('.') && val.length > 5
 
-function StepInserisciEmail({ onBack, onNext, onStepChange, onEmailChange }) {
+function StepInserisciEmail({ onBack, onNext, onStepChange, onEmailChange, isReplica }) {
   const { state, setState: setAppState } = useApp()
-  const [email, setEmail] = useState(state.pagopaForm?.email || '')
-  const [emailConfirm, setEmailConfirm] = useState(state.pagopaForm?.emailConfirm || '')
+  const email = state.pagopaForm?.email || ''
+  const emailConfirm = state.pagopaForm?.emailConfirm || ''
+  const setEmail = (v) => setAppState(s => ({ ...s, pagopaForm: { ...s.pagopaForm, email: v } }))
+  const setEmailConfirm = (v) => setAppState(s => ({ ...s, pagopaForm: { ...s.pagopaForm, emailConfirm: v } }))
   const [isFocused, setIsFocused] = useState(false)
   const [isConfirmFocused, setIsConfirmFocused] = useState(false)
   const [email1Touched, setEmail1Touched] = useState(false)
@@ -649,12 +653,9 @@ function StepInserisciEmail({ onBack, onNext, onStepChange, onEmailChange }) {
   const confirmError = confirmTouched && emailConfirm !== email
 
   useEffect(() => {
-    setAppState(s => ({ ...s, pagopaForm: { ...s.pagopaForm, email, emailConfirm } }))
-  }, [email, emailConfirm, setAppState])
-
-  useEffect(() => {
+    if (isReplica) return
     setAppState(s => ({ ...s, buttonState: { ...s.buttonState, pagopaEmailReady: isValid } }))
-  }, [isValid, setAppState])
+  }, [isValid, isReplica, setAppState])
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100%', padding: '28px 24px 24px', background: '#FFF8F0' }}>
@@ -677,7 +678,7 @@ function StepInserisciEmail({ onBack, onNext, onStepChange, onEmailChange }) {
             style={{ ...inputBase, border: isFocused ? '2px solid #1A9E8F' : email1Error ? '2px solid #C0392B' : '2px solid #D9D6D1' }}
           />
           {email1Error
-            ? <p style={{ fontFamily: 'Nunito, sans-serif', fontSize: '13px', fontWeight: 700, color: '#C0392B', marginTop: '6px', background: '#FFF2F2', borderRadius: '8px', padding: '7px 11px' }}>⚠️ Scrivi un indirizzo email valido (es: nome@email.it)</p>
+            ? <p style={{ fontFamily: 'Nunito, sans-serif', fontSize: '13px', fontWeight: 700, color: '#C0392B', marginTop: '6px', background: '#FFF2F2', borderRadius: '8px', padding: '7px 11px', display: 'flex', alignItems: 'center', gap: '8px' }}><AlertTriangle size={14} color="#C0392B" />Scrivi un indirizzo email valido (es: nome@email.it)</p>
             : fieldHelper('Esempio: mario.rossi@email.it')
           }
         </div>
@@ -697,7 +698,7 @@ function StepInserisciEmail({ onBack, onNext, onStepChange, onEmailChange }) {
             style={{ ...inputBase, border: isConfirmFocused ? '2px solid #1A9E8F' : confirmError ? '2px solid #C0392B' : '2px solid #D9D6D1' }}
           />
           {confirmError
-            ? <p style={{ fontFamily: 'Nunito, sans-serif', fontSize: '13px', fontWeight: 700, color: '#C0392B', marginTop: '6px', background: '#FFF2F2', borderRadius: '8px', padding: '7px 11px' }}>⚠️ Le due email non coincidono. Ricontrolla.</p>
+            ? <p style={{ fontFamily: 'Nunito, sans-serif', fontSize: '13px', fontWeight: 700, color: '#C0392B', marginTop: '6px', background: '#FFF2F2', borderRadius: '8px', padding: '7px 11px', display: 'flex', alignItems: 'center', gap: '8px' }}><AlertTriangle size={14} color="#C0392B" />Le due email non coincidono. Ricontrolla.</p>
             : fieldHelper('Deve essere identica a quella sopra')
           }
         </div>
@@ -711,7 +712,7 @@ function StepInserisciEmail({ onBack, onNext, onStepChange, onEmailChange }) {
           onClick={isValid ? () => { setAppState(s => ({ ...s, email })); onNext?.() } : undefined}
           style={{ flex: 2, padding: '16px', borderRadius: '14px', border: 'none', background: 'linear-gradient(135deg, #1A9E8F 0%, #147A6E 100%)', fontFamily: 'Nunito, sans-serif', fontSize: '15px', fontWeight: 800, color: 'white', boxShadow: isValid ? '0 4px 16px rgba(26,158,143,0.35)' : 'none', opacity: isValid ? 1 : 0.45, cursor: isValid ? 'pointer' : 'not-allowed', minHeight: '58px' }}
         >
-          {isValid ? 'Continua →' : 'Completa i campi sopra'}
+          Continua →
         </button>
       </div>
     </div>
@@ -740,8 +741,8 @@ function StepSceltaPagamento({ onBack, onNext, onScrollDetected, onListScroll, i
   useEffect(() => {
     if (isReplica || !cartaRef.current || !listRef.current) return
     const observer = new IntersectionObserver(
-      ([entry]) => { if (entry.isIntersecting) onScrollDetectedRef.current?.(entry.target.getBoundingClientRect()) },
-      { root: listRef.current, threshold: 0.5 }
+      ([entry]) => { if (entry.isIntersecting) onScrollDetectedRef.current?.() },
+      { root: listRef.current, threshold: 0.3 }
     )
     observer.observe(cartaRef.current)
     return () => observer.disconnect()
@@ -749,11 +750,10 @@ function StepSceltaPagamento({ onBack, onNext, onScrollDetected, onListScroll, i
 
   const listItems = paymentMethods.map(m => {
     const isCarta = m.id === 'carta'
-    const shouldHighlight = isCarta && !isReplica
     return (
-      <div key={m.id} ref={isCarta && !isReplica ? cartaRef : null} data-highlight={shouldHighlight ? 'carta-credito' : undefined}
-        onClick={!isReplica ? onNext : undefined}
-        style={{ display: 'flex', alignItems: 'center', gap: '16px', padding: '16px 14px', borderRadius: '16px', marginBottom: '8px', border: shouldHighlight ? '2.5px solid #1A9E8F' : '1.5px solid #E8E8E8', background: shouldHighlight ? '#F0FDFB' : 'white', cursor: !isReplica ? 'pointer' : 'default', minHeight: '64px' }}>
+      <div key={m.id} ref={isCarta && !isReplica ? cartaRef : null} data-highlight={isCarta ? 'carta-credito' : undefined}
+        onClick={isCarta && !isReplica ? onNext : undefined}
+        style={{ display: 'flex', alignItems: 'center', gap: '16px', padding: '16px 14px', borderRadius: '16px', marginBottom: '8px', border: '1.5px solid #E8E8E8', background: 'white', cursor: isCarta && !isReplica ? 'pointer' : 'default', minHeight: '64px' }}>
         <div style={{ width: '46px', height: '46px', borderRadius: '12px', background: m.iconBg, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
           {isCarta ? (
             <svg width="26" height="20" viewBox="0 0 26 20" fill="none">
@@ -797,34 +797,26 @@ function StepSceltaPagamento({ onBack, onNext, onScrollDetected, onListScroll, i
 }
 
 // ── STEP 8-12: DATI CARTA ──────────────────────────────────────────
-function StepDatiCarta({ onBack, onNext, onFieldChange, onCardLast4Change }) {
+function StepDatiCarta({ onBack, onNext, onFieldChange, onCardLast4Change, isReplica }) {
   const { state, setState } = useApp()
-  const [cardNumber, setCardNumber] = useState(state.pagopaForm?.cardNumber || '')
-  const [expiry, setExpiry] = useState(state.pagopaForm?.expiry || '')
-  const [cvv, setCvv] = useState(state.pagopaForm?.cvv || '')
-  const [name, setName] = useState(state.pagopaForm?.cardName || '')
+  const cardNumber = state.pagopaForm?.cardNumber || ''
+  const expiry = state.pagopaForm?.expiry || ''
+  const cvv = state.pagopaForm?.cvv || ''
+  const name = state.pagopaForm?.cardName || ''
+  const setCardNumber = (v) => setState(s => ({ ...s, pagopaForm: { ...s.pagopaForm, cardNumber: v } }))
+  const setExpiry = (v) => setState(s => ({ ...s, pagopaForm: { ...s.pagopaForm, expiry: v } }))
+  const setCvv = (v) => setState(s => ({ ...s, pagopaForm: { ...s.pagopaForm, cvv: v } }))
+  const setName = (v) => setState(s => ({ ...s, pagopaForm: { ...s.pagopaForm, cardName: v } }))
   const [activeField, setActiveField] = useState(null)
 
   const isValid = cardNumber.length === 19 && expiry.length === 5 && cvv.length === 3 && name.trim().length >= 2
 
-  useEffect(() => { if (isValid) onFieldChange?.('continua') }, [isValid])
+  useEffect(() => { if (!isReplica && isValid) onFieldChange?.('continua') }, [isValid, isReplica])
 
   useEffect(() => {
-    setState(s => ({
-      ...s,
-      pagopaForm: {
-        ...s.pagopaForm,
-        cardNumber,
-        expiry,
-        cvv,
-        cardName: name,
-      },
-    }))
-  }, [cardNumber, expiry, cvv, name, setState])
-
-  useEffect(() => {
+    if (isReplica) return
     setState(s => ({ ...s, buttonState: { ...s.buttonState, pagopaCardReady: isValid } }))
-  }, [isValid, setState])
+  }, [isValid, isReplica, setState])
 
   const handleCardNumber = (e) => {
     const digits = e.target.value.replace(/\D/g, '').slice(0, 16)
@@ -868,7 +860,7 @@ function StepDatiCarta({ onBack, onNext, onFieldChange, onCardLast4Change }) {
           <ArrowLeft size={17} /> Indietro
         </button>
         <button data-highlight="card-continua" onClick={isValid ? onNext : undefined} style={{ flex: 2, padding: '16px', borderRadius: '14px', border: 'none', background: 'linear-gradient(135deg, #1A9E8F 0%, #147A6E 100%)', fontFamily: 'Nunito, sans-serif', fontSize: '15px', fontWeight: 800, color: 'white', opacity: isValid ? 1 : 0.45, cursor: isValid ? 'pointer' : 'not-allowed', boxShadow: isValid ? '0 4px 16px rgba(26,158,143,0.35)' : 'none', minHeight: '58px' }}>
-          {isValid ? 'Continua →' : 'Completa i campi'}
+          Continua →
         </button>
       </div>
     </div>
@@ -908,8 +900,8 @@ function StepConfermaPagemento({ onBack, onNext }) {
         </div>
       </div>
       <div style={{ background: '#FFF9F0', border: '1.5px solid #FFE0B0', borderRadius: '12px', padding: '10px 14px', margin: '12px 0' }}>
-        <p style={{ fontFamily: 'Nunito, sans-serif', fontSize: '13px', fontWeight: 600, color: '#B07000', margin: 0, lineHeight: 1.5 }}>
-          ⚠️ Dopo aver toccato PAGA il pagamento sarà definitivo.
+        <p style={{ fontFamily: 'Nunito, sans-serif', fontSize: '13px', fontWeight: 600, color: '#B07000', margin: 0, lineHeight: 1.5, display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <AlertTriangle size={14} color="#B07000" /> Dopo aver toccato PAGA il pagamento sarà definitivo.
         </p>
       </div>
       <div style={{ display: 'flex', gap: '10px' }}>
@@ -951,9 +943,7 @@ function StepPagamentoEffettuato({ onDone }) {
 // ── SCREEN PRINCIPALE ──────────────────────────────────────────────
 export default function PagoPA() {
   const [step, setStep] = useState(0)
-  const [frozenHighlightZone, setFrozenHighlightZone] = useState(null)
   const [listScrollTop, setListScrollTop] = useState(0)
-  const [frozenScrollTop, setFrozenScrollTop] = useState(null)
   const [pendingEmail, setPendingEmail] = useState('')
   const [cardLast4, setCardLast4] = useState('')
   const { state, setState } = useApp()
@@ -972,9 +962,9 @@ export default function PagoPA() {
     if (step === 0) return <StepSceltaMetodo onQR={() => {}} onBack={() => {}} />
     if (step === 1) return <StepInquadraQR onNext={() => {}} onBack={() => {}} />
     if (step === 2) return <StepDatiPagamento onBack={() => {}} onNext={() => {}} />
-    if (step >= 3 && step <= 5) return <StepInserisciEmail onBack={() => {}} onNext={() => {}} onStepChange={() => {}} onEmailChange={() => {}} />
-    if (step >= 6 && step <= 7) return <StepSceltaPagamento isReplica={true} scrollTop={frozenScrollTop !== null ? frozenScrollTop : listScrollTop} onBack={() => {}} onNext={() => {}} onScrollDetected={() => {}} />
-    if (step >= 8 && step <= 12) return <StepDatiCarta onBack={() => {}} onNext={() => {}} onFieldChange={() => {}} onCardLast4Change={() => {}} />
+    if (step >= 3 && step <= 5) return <StepInserisciEmail isReplica={true} onBack={() => {}} onNext={() => {}} onStepChange={() => {}} onEmailChange={() => {}} />
+    if (step >= 6 && step <= 7) return <StepSceltaPagamento isReplica={true} scrollTop={listScrollTop} onBack={() => {}} onNext={() => {}} onScrollDetected={() => {}} />
+    if (step >= 8 && step <= 12) return <StepDatiCarta isReplica={true} onBack={() => {}} onNext={() => {}} onFieldChange={() => {}} onCardLast4Change={() => {}} />
     if (step === 13) return <StepConfermaPagemento onBack={() => {}} onNext={() => {}} />
     if (step === 14) return <StepPagamentoEffettuato onDone={() => {}} />
   }
@@ -993,23 +983,9 @@ export default function PagoPA() {
     if (step >= 6 && step <= 7) return (
       <StepSceltaPagamento
         isReplica={false}
-        onBack={() => { setFrozenScrollTop(null); setListScrollTop(0); setFrozenHighlightZone(null); listScrollTopRef.current = 0; setStep(5) }}
+        onBack={() => { setListScrollTop(0); listScrollTopRef.current = 0; setStep(5) }}
         onNext={() => setStep(8)}
-        onScrollDetected={(cartaRect) => {
-          const st = listScrollTopRef.current
-          setFrozenScrollTop(st)
-          if (cartaRect && rightPanelRef.current) {
-            const scale = Math.min(window.innerWidth / 1180, window.innerHeight / 820)
-            const panelRect = rightPanelRef.current.getBoundingClientRect()
-            setFrozenHighlightZone({
-              top: (cartaRect.top - panelRect.top) / scale,
-              left: (cartaRect.left - panelRect.left) / scale,
-              width: cartaRect.width / scale,
-              height: cartaRect.height / scale,
-            })
-          }
-          setStep(7)
-        }}
+        onScrollDetected={() => { if (step === 6) setStep(7) }}
         onListScroll={st => { listScrollTopRef.current = st; setListScrollTop(st) }}
       />
     )
@@ -1036,12 +1012,12 @@ export default function PagoPA() {
         <PanelLeft
           step={step} rightPanelContent={rightPanelContent()} rightPanelRef={rightPanelRef}
           showGesture={step === 6}
-          overrideHighlightZone={step === 7 ? frozenHighlightZone : step === 6 ? null : undefined}
+          overrideHighlightZone={step === 6 ? null : undefined}
           leftPanelRef={leftPanelRef}
-          forceTop={step === 6 || step === 7}
+          forceTop={step === 6}
           email={currentEmail}
           cardLast4={cardLast4}
-          scrollVersion={listScrollTop + (frozenScrollTop || 0)}
+          scrollVersion={listScrollTop}
         />
       </PhoneFrame>
       <TotemFrame>
@@ -1049,20 +1025,7 @@ export default function PagoPA() {
           <div onScroll={e => setListScrollTop(e.currentTarget.scrollTop)} style={{ width: `${390/zoom}px`, height: `${740/zoom}px`, zoom, filter: theme.isHC ? 'invert(1)' : 'none', overflowY: 'auto', overflowX: 'hidden' }}>
             {rightPanelInteractive()}
           </div>
-          <button
-            onClick={disconnect}
-            style={{
-              position: 'absolute', top: 10, right: 10, zIndex: 200,
-              background: theme.isHC ? 'rgba(255,215,0,0.2)' : 'rgba(0,0,0,0.35)',
-              border: `1px solid ${theme.isHC ? 'rgba(255,215,0,0.5)' : 'rgba(255,255,255,0.2)'}`,
-              borderRadius: '10px', padding: '5px 10px', cursor: 'pointer',
-              display: 'flex', alignItems: 'center', gap: '4px',
-              fontFamily: 'Nunito, sans-serif', fontSize: '11px', fontWeight: 700,
-              color: theme.isHC ? '#FFD700' : 'rgba(255,255,255,0.75)',
-            }}
-          >
-            ⏻ Esci
-          </button>
+          <ExitButton onClick={disconnect} />
         </div>
       </TotemFrame>
     </div>

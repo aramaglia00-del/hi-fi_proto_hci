@@ -7,6 +7,7 @@ import PagoPA from '../../screens/PagoPA'
 import CUP from '../../screens/CUP'
 import Pairing from '../../screens/Pairing'
 import Accessibility from '../../screens/Accessibility'
+import AssistantWaiting from '../AssistantWaiting'
 
 const DESIGN_W = 1180
 const DESIGN_H = 820
@@ -25,14 +26,14 @@ export default function TabletLayout() {
   }, [])
 
   const renderContent = () => {
-    // Accessibility screen: only on totem, phone shows Pairing
+    // Accessibility screen: pre-pairing, phone shows attesa
     if (state.currentScreen === 'accessibility') {
       return (
         <div style={{
           display: 'flex', flexDirection: 'row', alignItems: 'center',
           justifyContent: 'center', gap: '80px', height: '820px',
         }}>
-          <PhoneFrame><Pairing /></PhoneFrame>
+          <PhoneFrame><AssistantWaiting /></PhoneFrame>
           <Accessibility />
         </div>
       )
@@ -57,11 +58,11 @@ export default function TabletLayout() {
     <div style={{
       width: '100vw', height: '100vh',
       display: 'flex', alignItems: 'center', justifyContent: 'center',
-      background: '#FFF8F0', overflow: 'hidden',
+      background: 'radial-gradient(circle at top, #2A3038 0%, #14181E 52%, #0B0E13 100%)', overflow: 'hidden',
     }}>
       <div style={{
         width: `${DESIGN_W}px`, height: `${DESIGN_H}px`,
-        background: '#FFF8F0',
+        background: 'radial-gradient(circle at top, #2A3038 0%, #1A1F26 40%, #11151A 100%)',
         display: 'flex', alignItems: 'center', justifyContent: 'center',
         overflow: 'hidden',
         transform: `scale(${scale})`,

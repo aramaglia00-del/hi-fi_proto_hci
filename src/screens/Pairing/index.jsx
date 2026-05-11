@@ -29,6 +29,68 @@ function MascotLarge() {
   )
 }
 
+function WaveIcon() {
+  return (
+    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" aria-hidden="true">
+      <path d="M4 14c2 0 2-4 4-4s2 4 4 4 2-4 4-4 2 4 4 4" stroke="#1A9E8F" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+      <path d="M6 18c1.2 0 1.2-2 2.4-2s1.2 2 2.4 2 1.2-2 2.4-2 1.2 2 2.4 2 1.2-2 2.4-2" stroke="#147A6E" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" opacity="0.8"/>
+    </svg>
+  )
+}
+
+function TextSizeIcon() {
+  return (
+    <svg viewBox="0 0 24 24" width="24" height="24" fill="none" aria-hidden="true">
+      <rect x="2" y="2" width="20" height="20" rx="6" fill="#E0F5F3" stroke="#1A9E8F" strokeWidth="1.5"/>
+      <path d="M6.5 16.5L9.5 7.5h1.5l3 9" stroke="#1A9E8F" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round"/>
+      <path d="M7.7 13.5h3.6" stroke="#1A9E8F" strokeWidth="1.9" strokeLinecap="round"/>
+      <path d="M16 8.5h2M17 7.5v2" stroke="#1A9E8F" strokeWidth="1.6" strokeLinecap="round"/>
+    </svg>
+  )
+}
+
+function AccessibilityIcon() {
+  return (
+    <svg viewBox="0 0 24 24" width="24" height="24" fill="none" aria-hidden="true">
+      <circle cx="12" cy="4" r="2.1" fill="#1A9E8F"/>
+      <path d="M4 8.5c2.7 1.7 5 2.5 8 2.5s5.3-.8 8-2.5" stroke="#1A9E8F" strokeWidth="1.8" strokeLinecap="round"/>
+      <path d="M12 7v9" stroke="#1A9E8F" strokeWidth="1.8" strokeLinecap="round"/>
+      <path d="M7.5 20l2.6-5.5M16.5 20l-2.6-5.5" stroke="#147A6E" strokeWidth="1.8" strokeLinecap="round"/>
+      <path d="M8.4 11.2 5.6 15.8M15.6 11.2l2.8 4.6" stroke="#147A6E" strokeWidth="1.8" strokeLinecap="round" opacity="0.9"/>
+    </svg>
+  )
+}
+
+function QuestionIcon() {
+  return (
+    <svg viewBox="0 0 24 24" width="24" height="24" fill="none" aria-hidden="true">
+      <circle cx="12" cy="12" r="10" fill="#E0F5F3" stroke="#1A9E8F" strokeWidth="1.5"/>
+      <path d="M9.6 9.1c.3-1.6 1.6-2.6 3.2-2.6 1.7 0 3 1 3 2.6 0 1.2-.7 1.8-1.7 2.4-.8.5-1.5 1-1.5 2" stroke="#1A9E8F" strokeWidth="1.7" strokeLinecap="round"/>
+      <circle cx="12" cy="16.8" r="1.1" fill="#147A6E"/>
+    </svg>
+  )
+}
+
+function CameraIcon() {
+  return (
+    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" aria-hidden="true">
+      <rect x="3" y="7" width="18" height="12" rx="3" fill="#E0F5F3" stroke="#1A9E8F" strokeWidth="1.5"/>
+      <path d="M8 7.5 9.2 5.5h5.6L16 7.5" stroke="#1A9E8F" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+      <circle cx="12" cy="13" r="3.2" stroke="#147A6E" strokeWidth="1.6"/>
+      <circle cx="12" cy="13" r="1.2" fill="#147A6E"/>
+    </svg>
+  )
+}
+
+function GearIcon() {
+  return (
+    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" aria-hidden="true">
+      <circle cx="12" cy="12" r="3.2" stroke="#1A9E8F" strokeWidth="1.8"/>
+      <path d="M12 2.8v2.1M12 19.1v2.1M4.9 4.9l1.5 1.5M17.6 17.6l1.5 1.5M2.8 12h2.1M19.1 12h2.1M4.9 19.1l1.5-1.5M17.6 6.4l1.5-1.5" stroke="#1A9E8F" strokeWidth="1.6" strokeLinecap="round"/>
+    </svg>
+  )
+}
+
 // ── SIMULATED QR CODE ──────────────────────────────────────────────
 function QRCode({ size = 180, primaryColor = '#1A9E8F' }) {
   const data = [
@@ -118,7 +180,10 @@ function SlideWelcome({ onNext, onAccessibility }) {
           color: theme.text, textAlign: 'center', lineHeight: 1.15,
           letterSpacing: '-0.7px', marginBottom: '12px',
         }}>
-          Ciao! Sono il tuo<br />assistente 👋
+          <span style={{ display: 'inline-flex', alignItems: 'center', gap: '10px', justifyContent: 'center' }}>
+            <WaveIcon />
+            <span>Ciao! Sono il tuo<br />assistente</span>
+          </span>
         </h1>
         <p style={{
           fontFamily: 'Nunito, sans-serif', fontSize: '17px', fontWeight: 600,
@@ -136,7 +201,7 @@ function SlideWelcome({ onNext, onAccessibility }) {
           display: 'flex', alignItems: 'center', gap: '14px',
           fontFamily: 'Nunito, sans-serif', textAlign: 'left',
         }}>
-          <span style={{ fontSize: '34px', lineHeight: 1 }}>🔠</span>
+          <TextSizeIcon />
           <div>
             <p style={{ margin: 0, fontFamily: 'Nunito, sans-serif', fontSize: '14px', fontWeight: 900, color: theme.primary }}>
               Testo troppo piccolo?
@@ -181,14 +246,15 @@ function SlideAccessibility({ onNext }) {
         display: 'flex', flexDirection: 'column', padding: '32px 24px',
         overflowY: 'auto', overflowX: 'hidden',
       }}>
-        <h2 style={{ fontFamily: 'Nunito, sans-serif', fontSize: '28px', fontWeight: 900, color: theme.text, marginBottom: '4px' }}>
-          ♿ Personalizza
+        <h2 style={{ fontFamily: 'Nunito, sans-serif', fontSize: '28px', fontWeight: 900, color: theme.text, marginBottom: '4px', display: 'flex', alignItems: 'center', gap: '10px' }}>
+          <AccessibilityIcon />
+          <span>Personalizza</span>
         </h2>
         <p style={{ fontFamily: 'Nunito, sans-serif', fontSize: '15px', color: theme.textSecondary, marginBottom: '6px', fontWeight: 600 }}>
           Prova le impostazioni — il totem cambia in tempo reale!
         </p>
         <p style={{ fontFamily: 'Nunito, sans-serif', fontSize: '13px', color: theme.muted, marginBottom: '24px', fontWeight: 600 }}>
-          Puoi modificarle sempre in seguito con ⚙️
+          <span style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}><GearIcon />Puoi modificarle sempre in seguito</span>
         </p>
 
         <p style={{ fontFamily: 'Nunito, sans-serif', fontSize: '11px', fontWeight: 800, color: theme.muted, textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '10px' }}>
@@ -294,8 +360,10 @@ function SlideHow({ onNext }) {
         <h2 style={{
           fontFamily: 'Nunito, sans-serif', fontSize: '28px', fontWeight: 900,
           color: theme.text, textAlign: 'center', letterSpacing: '-0.5px', marginBottom: '20px',
+          display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px',
         }}>
-          Come funziona 🤔
+          <QuestionIcon />
+          <span>Come funziona</span>
         </h2>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginBottom: '22px', width: '100%' }}>
           {cards.map((c, i) => (
@@ -363,7 +431,7 @@ function SlideScanQR({ onPaired }) {
             </svg>
           </div>
           <h2 style={{ fontFamily: 'Nunito, sans-serif', fontSize: '26px', fontWeight: 900, color: theme.text, textAlign: 'center', lineHeight: 1.2 }}>
-            Connesso! 🎉
+              Connesso!
           </h2>
           <p style={{ fontFamily: 'Nunito, sans-serif', fontSize: '16px', color: theme.textSecondary, textAlign: 'center', marginTop: '8px' }}>
             Ottimo, siamo pronti a iniziare!
@@ -451,7 +519,12 @@ function SlideScanQR({ onPaired }) {
           fontFamily: 'Nunito, sans-serif', fontSize: '18px', fontWeight: 900,
           boxShadow: scanning ? 'none' : `0 5px 18px ${theme.primary}5C`,
         }}>
-          {scanning ? 'Connessione in corso...' : '📷 Connetti al totem!'}
+          {scanning ? 'Connessione in corso...' : (
+            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '10px' }}>
+              <CameraIcon />
+              <span>Connetti al totem!</span>
+            </span>
+          )}
         </button>
         <SlideDots count={3} current={2} color={theme.primary} />
       </div>
@@ -506,7 +579,7 @@ function TotemConnectSlide({ onPaired }) {
               </svg>
             </div>
             <h2 style={{ fontFamily: 'Nunito, sans-serif', fontSize: '26px', fontWeight: 900, color: theme.text, textAlign: 'center' }}>
-              Connesso! 🎉
+              Connesso!
             </h2>
           </>
         ) : (

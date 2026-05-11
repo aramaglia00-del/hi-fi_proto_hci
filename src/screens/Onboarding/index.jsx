@@ -72,6 +72,44 @@ function PhoneIllustration() {
   )
 }
 
+function WaveIcon() {
+  return (
+    <svg viewBox="0 0 24 24" width="24" height="24" fill="none" aria-hidden="true">
+      <path d="M4 14c2 0 2-4 4-4s2 4 4 4 2-4 4-4 2 4 4 4" stroke="#1A9E8F" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+      <path d="M6 18c1.2 0 1.2-2 2.4-2s1.2 2 2.4 2 1.2-2 2.4-2 1.2 2 2.4 2 1.2-2 2.4-2" stroke="#147A6E" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" opacity="0.8"/>
+    </svg>
+  )
+}
+
+function GearIcon() {
+  return (
+    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" aria-hidden="true">
+      <circle cx="12" cy="12" r="3.2" stroke="#888" strokeWidth="1.8"/>
+      <path d="M12 2.8v2.1M12 19.1v2.1M4.9 4.9l1.5 1.5M17.6 17.6l1.5 1.5M2.8 12h2.1M19.1 12h2.1M4.9 19.1l1.5-1.5M17.6 6.4l1.5-1.5" stroke="#888" strokeWidth="1.6" strokeLinecap="round"/>
+    </svg>
+  )
+}
+
+function QuestionIcon() {
+  return (
+    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" aria-hidden="true">
+      <circle cx="12" cy="12" r="10" fill="#E0F5F3" stroke="#1A9E8F" strokeWidth="1.5"/>
+      <path d="M9.6 9.2c.2-1.5 1.4-2.5 3-2.5 1.7 0 3 1 3 2.5 0 1.1-.6 1.7-1.6 2.3-.8.5-1.4 1-1.4 2" stroke="#1A9E8F" strokeWidth="1.7" strokeLinecap="round"/>
+      <circle cx="12" cy="16.8" r="1.05" fill="#147A6E"/>
+    </svg>
+  )
+}
+
+function PointerIcon() {
+  return (
+    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" aria-hidden="true">
+      <path d="M12 3v7" stroke="#1A9E8F" strokeWidth="1.8" strokeLinecap="round"/>
+      <path d="M8 7l4-4 4 4" stroke="#1A9E8F" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+      <path d="M7 13c2.2 0 3.2 1.4 4.2 3.2.8 1.4 1.5 2.8 2.8 2.8 1.4 0 2.2-1 2.2-2.2V11" stroke="#147A6E" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+    </svg>
+  )
+}
+
 // ── SLIDE DOT INDICATOR ────────────────────────────────────────────
 function SlideDots({ count, current }) {
   return (
@@ -154,7 +192,10 @@ function SlideWelcome({ onNext, onAccessibility }) {
         letterSpacing: '-1px',
         marginBottom: '16px',
       }}>
-        Ciao! Sono il tuo<br />assistente 👋
+        <span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: '12px', flexWrap: 'wrap' }}>
+          <WaveIcon />
+          <span>Ciao! Sono il tuo<br />assistente</span>
+        </span>
       </h1>
 
       <p style={{
@@ -194,7 +235,8 @@ function SlideWelcome({ onNext, onAccessibility }) {
           gap: '5px',
         }}
       >
-        ⚙️ Impostazioni accessibilità
+        <GearIcon />
+        Impostazioni accessibilità
       </button>
 
       <SlideDots count={3} current={0} />
@@ -245,7 +287,10 @@ function SlideHow({ onNext }) {
         letterSpacing: '-0.8px',
         marginBottom: '36px',
       }}>
-        Come funziona? 🤔
+        <span style={{ display: 'inline-flex', alignItems: 'center', gap: '10px' }}>
+          <QuestionIcon />
+          <span>Come funziona?</span>
+        </span>
       </h2>
 
       <div style={{ display: 'flex', gap: '20px', marginBottom: '40px', width: '100%', maxWidth: '900px' }}>
@@ -352,7 +397,7 @@ function SlideAccessibility({ onDone }) {
         letterSpacing: '-0.8px',
         marginBottom: '10px',
       }}>
-        Come preferisci il testo? 📖
+        Come preferisci il testo?
       </h2>
       <p style={{
         fontFamily: 'Nunito, sans-serif',
@@ -362,7 +407,7 @@ function SlideAccessibility({ onDone }) {
         textAlign: 'center',
         marginBottom: '28px',
       }}>
-        Puoi cambiarlo sempre in seguito. 👆
+        <span style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}><PointerIcon />Puoi cambiarlo sempre in seguito.</span>
       </p>
 
       {/* Font size cards */}
