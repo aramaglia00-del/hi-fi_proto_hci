@@ -193,7 +193,6 @@ function SlideWelcome({ onNext, onAccessibility }) {
         marginBottom: '16px',
       }}>
         <span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: '12px', flexWrap: 'wrap' }}>
-          <WaveIcon />
           <span>Ciao! Sono il tuo<br />assistente</span>
         </span>
       </h1>
