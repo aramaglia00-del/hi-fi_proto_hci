@@ -1,6 +1,6 @@
 # HI-FI Prototype — HCI Project
 
-An interactive hi-fi prototype built with React + Vite, simulating a tablet-based assistant interface for Italian public health services (Sanità pubblica). The prototype features a dual-panel layout: the left panel shows a guided assistant with contextual highlights, and the right panel is the interactive screen.
+An interactive hi-fi prototype built with React + Vite, simulating a tablet-based assistant interface for Italian public health services (Sanità pubblica). The prototype features a dual-panel layout: one panel shows a guided assistant with contextual highlights, and the other panel is the interactive screen.
 
 ---
 
