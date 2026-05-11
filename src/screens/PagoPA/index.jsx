@@ -515,39 +515,39 @@ const inputBase = {
 // ── STEP 0 ─────────────────────────────────────────────────────────
 function StepSceltaMetodo({ onQR, onBack }) {
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', height: '100%', padding: '28px 24px 24px', background: '#FFF8F0' }}>
-      <div style={{ marginBottom: '22px' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', height: '100%', padding: '28px 24px 24px', background: '#FFF8F0', boxSizing: 'border-box', overflow: 'hidden' }}>
+      <div style={{ flexShrink: 0, marginBottom: '18px' }}>
         <p style={{ fontFamily: 'Nunito, sans-serif', fontSize: '13px', fontWeight: 700, color: '#1A9E8F', letterSpacing: '0.8px', textTransform: 'uppercase', marginBottom: '6px' }}>PagoPA · Pagamento</p>
         <JourneyMap step={0} />
         <h1 style={{ fontFamily: 'Nunito, sans-serif', fontSize: '24px', fontWeight: 900, color: '#1A1A1A', letterSpacing: '-0.5px', lineHeight: 1.2, marginBottom: '8px' }}>Paga un avviso</h1>
         <p style={{ fontSize: '15px', color: '#5A5755', lineHeight: 1.6, fontWeight: 600 }}>Come preferisci inserire i dati?</p>
       </div>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
-        <button data-highlight="qr" onClick={onQR} style={{ display: 'flex', alignItems: 'center', gap: '18px', padding: '20px 18px', borderRadius: '18px', border: '2.5px solid #1A9E8F', background: '#F0FDFB', cursor: 'pointer', fontFamily: 'Nunito, sans-serif', textAlign: 'left', width: '100%', boxShadow: '0 2px 12px rgba(26,158,143,0.12)', minHeight: '84px' }}>
+      <div style={{ flex: 1, minHeight: 0, overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '14px' }}>
+        <button data-highlight="qr" onClick={onQR} style={{ display: 'flex', alignItems: 'center', gap: '18px', padding: '20px 18px', borderRadius: '18px', border: '2.5px solid #1A9E8F', background: '#F0FDFB', cursor: 'pointer', fontFamily: 'Nunito, sans-serif', textAlign: 'left', width: '100%', boxShadow: '0 2px 12px rgba(26,158,143,0.12)', minHeight: '84px', flexShrink: 0 }}>
           <div style={{ width: '54px', height: '54px', borderRadius: '15px', background: '#E0F5F3', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
             <QrCode size={30} color="#1A9E8F" />
           </div>
-          <div style={{ flex: 1 }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '3px' }}>
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '3px', flexWrap: 'wrap' }}>
               <span style={{ fontSize: '17px', fontWeight: 800, color: '#1A1A1A', lineHeight: 1.2 }}>Inquadra il codice QR</span>
-              <span style={{ fontSize: '11px', fontWeight: 800, color: '#1A9E8F', background: '#E0F5F3', padding: '2px 8px', borderRadius: '20px', textTransform: 'uppercase', letterSpacing: '0.4px' }}>Consigliato</span>
+              <span style={{ fontSize: '10px', fontWeight: 800, color: '#1A9E8F', background: '#E0F5F3', padding: '2px 7px', borderRadius: '20px', textTransform: 'uppercase', letterSpacing: '0.4px', whiteSpace: 'nowrap' }}>Consigliato</span>
             </div>
             <span style={{ fontSize: '14px', color: '#6B7280', display: 'block', fontWeight: 600 }}>Usa la fotocamera sul bollettino</span>
           </div>
-          <ChevronRight size={22} color="#1A9E8F" />
+          <ChevronRight size={22} color="#1A9E8F" style={{ flexShrink: 0 }} />
         </button>
-        <button style={{ display: 'flex', alignItems: 'center', gap: '18px', padding: '20px 18px', borderRadius: '18px', border: '2px solid #E0E0E0', background: 'white', cursor: 'pointer', fontFamily: 'Nunito, sans-serif', textAlign: 'left', width: '100%', minHeight: '84px' }}>
+        <button style={{ display: 'flex', alignItems: 'center', gap: '18px', padding: '20px 18px', borderRadius: '18px', border: '2px solid #E0E0E0', background: 'white', cursor: 'pointer', fontFamily: 'Nunito, sans-serif', textAlign: 'left', width: '100%', minHeight: '84px', flexShrink: 0 }}>
           <div style={{ width: '54px', height: '54px', borderRadius: '15px', background: '#F5F5F5', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
             <Keyboard size={28} color="#9CA3AF" />
           </div>
-          <div style={{ flex: 1 }}>
+          <div style={{ flex: 1, minWidth: 0 }}>
             <span style={{ fontSize: '17px', fontWeight: 800, color: '#1A1A1A', display: 'block', lineHeight: 1.2, marginBottom: '3px' }}>Digita il codice</span>
             <span style={{ fontSize: '14px', color: '#6B7280', display: 'block', fontWeight: 600 }}>Inserisci manualmente i numeri</span>
           </div>
-          <ChevronRight size={22} color="#C0C0C0" />
+          <ChevronRight size={22} color="#C0C0C0" style={{ flexShrink: 0 }} />
         </button>
       </div>
-      <div style={{ marginTop: 'auto', paddingTop: '18px' }}>
+      <div style={{ flexShrink: 0, paddingTop: '18px' }}>
         <button onClick={onBack} style={{ padding: '15px 20px', borderRadius: '14px', border: '2px solid #E0E0E0', background: 'white', fontFamily: 'Nunito, sans-serif', fontSize: '15px', fontWeight: 700, color: '#6B7280', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px' }}>
           <ArrowLeft size={17} /> Torna alla schermata principale
         </button>
@@ -559,15 +559,15 @@ function StepSceltaMetodo({ onQR, onBack }) {
 // ── STEP 1 ─────────────────────────────────────────────────────────
 function StepInquadraQR({ onNext, onBack }) {
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', height: '100%', padding: '28px 24px 24px', background: '#FFF8F0', boxSizing: 'border-box', overflow: 'hidden' }}>
-      <div style={{ flexShrink: 0, marginBottom: '18px' }}>
-        <p style={{ fontFamily: 'Nunito, sans-serif', fontSize: '13px', fontWeight: 700, color: '#1A9E8F', letterSpacing: '0.8px', textTransform: 'uppercase', marginBottom: '6px' }}>PagoPA · Pagamento</p>
+    <div style={{ display: 'flex', flexDirection: 'column', height: '100%', padding: '20px 24px 20px', background: '#FFF8F0', boxSizing: 'border-box', overflow: 'hidden' }}>
+      <div style={{ flexShrink: 0, marginBottom: '12px' }}>
+        <p style={{ fontFamily: 'Nunito, sans-serif', fontSize: '12px', fontWeight: 700, color: '#1A9E8F', letterSpacing: '0.8px', textTransform: 'uppercase', marginBottom: '4px' }}>PagoPA · Pagamento</p>
         <JourneyMap step={1} />
-        <h1 style={{ fontFamily: 'Nunito, sans-serif', fontSize: '24px', fontWeight: 900, color: '#1A1A1A', letterSpacing: '-0.5px', lineHeight: 1.2, marginBottom: '6px' }}>Inquadra il<br />codice QR</h1>
-        <p style={{ fontSize: '15px', color: '#5A5755', lineHeight: 1.6, fontWeight: 600 }}>Tieni il bollettino davanti alla fotocamera</p>
+        <h1 style={{ fontFamily: 'Nunito, sans-serif', fontSize: '20px', fontWeight: 900, color: '#1A1A1A', letterSpacing: '-0.5px', lineHeight: 1.2, marginBottom: '4px' }}>Inquadra il codice QR</h1>
+        <p style={{ fontSize: '13px', color: '#5A5755', lineHeight: 1.5, fontWeight: 600 }}>Tieni il bollettino davanti alla fotocamera</p>
       </div>
-      <div style={{ flex: 1, minHeight: 0, overflowY: 'auto', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        <div data-highlight="scanner" style={{ width: '252px', height: '252px', flexShrink: 0, borderRadius: '20px', background: '#1A1A1A', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', overflow: 'hidden', boxShadow: '0 8px 32px rgba(0,0,0,0.25)' }}>
+      <div style={{ flex: 1, minHeight: 0, overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <div data-highlight="scanner" style={{ width: '100%', maxWidth: '252px', aspectRatio: '1 / 1', maxHeight: '100%', borderRadius: '20px', background: '#1A1A1A', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', overflow: 'hidden', boxShadow: '0 8px 32px rgba(0,0,0,0.25)' }}>
           <div style={{ position: 'absolute', top: '18px', left: '18px', width: '36px', height: '36px', borderTop: '4px solid #1A9E8F', borderLeft: '4px solid #1A9E8F', borderRadius: '4px 0 0 0' }} />
           <div style={{ position: 'absolute', top: '18px', right: '18px', width: '36px', height: '36px', borderTop: '4px solid #1A9E8F', borderRight: '4px solid #1A9E8F', borderRadius: '0 4px 0 0' }} />
           <div style={{ position: 'absolute', bottom: '18px', left: '18px', width: '36px', height: '36px', borderBottom: '4px solid #1A9E8F', borderLeft: '4px solid #1A9E8F', borderRadius: '0 0 0 4px' }} />
@@ -599,29 +599,29 @@ function StepDatiPagamento({ onBack, onNext }) {
     { icon: <CreditCard size={20} color="#1A9E8F" />, label: 'Codice Fiscale Ente', value: '01020600123' },
   ]
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', height: '100%', padding: '28px 24px 24px', background: '#FFF8F0', overflow: 'hidden' }}>
-      <div style={{ marginBottom: '14px' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', height: '100%', padding: '28px 24px 24px', background: '#FFF8F0', boxSizing: 'border-box', overflow: 'hidden' }}>
+      <div style={{ flexShrink: 0, marginBottom: '14px' }}>
         <p style={{ fontFamily: 'Nunito, sans-serif', fontSize: '13px', fontWeight: 700, color: '#1A9E8F', letterSpacing: '0.8px', textTransform: 'uppercase', marginBottom: '6px' }}>PagoPA · Pagamento</p>
         <JourneyMap step={2} />
-        <h1 style={{ fontFamily: 'Nunito, sans-serif', fontSize: '24px', fontWeight: 900, color: '#1A1A1A', letterSpacing: '-0.5px', lineHeight: 1.2 }}>Dati del<br />pagamento</h1>
+        <h1 style={{ fontFamily: 'Nunito, sans-serif', fontSize: '24px', fontWeight: 900, color: '#1A1A1A', letterSpacing: '-0.5px', lineHeight: 1.2 }}>Dati del pagamento</h1>
       </div>
-      <div style={{ background: '#FFF9F0', border: '1.5px solid #FFE0B0', borderRadius: '12px', padding: '10px 14px', marginBottom: '12px' }}>
+      <div style={{ flexShrink: 0, background: '#FFF9F0', border: '1.5px solid #FFE0B0', borderRadius: '12px', padding: '10px 14px', marginBottom: '12px' }}>
         <p style={{ fontFamily: 'Nunito, sans-serif', fontSize: '13px', fontWeight: 600, color: '#B07000', margin: 0, lineHeight: 1.5, display: 'flex', alignItems: 'center', gap: '8px' }}>
           <AlertTriangle size={14} color="#B07000" /> Controlla che questi dati corrispondano al tuo bollettino.
         </p>
       </div>
-      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflowY: 'auto' }}>
+      <div style={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column', overflowY: 'auto' }}>
         {rows.map((row, i) => (
-          <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '14px', padding: '13px 0', borderBottom: '1px solid #EEECEA' }}>
+          <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '14px', padding: '13px 0', borderBottom: '1px solid #EEECEA', flexShrink: 0 }}>
             <div style={{ width: '40px', height: '40px', borderRadius: '11px', background: '#E0F5F3', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>{row.icon}</div>
-            <div style={{ flex: 1 }}>
+            <div style={{ flex: 1, minWidth: 0 }}>
               <span style={{ fontSize: '12px', color: '#9CA3AF', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.5px', display: 'block', marginBottom: '2px' }}>{row.label}</span>
               <span style={{ fontSize: '16px', fontWeight: 800, color: '#1A1A1A', fontFamily: 'Nunito, sans-serif' }}>{row.value}</span>
             </div>
           </div>
         ))}
       </div>
-      <div style={{ display: 'flex', gap: '10px', marginTop: '16px' }}>
+      <div style={{ flexShrink: 0, display: 'flex', gap: '10px', marginTop: '16px' }}>
         <button onClick={onBack} style={{ flex: 1, padding: '16px 12px', borderRadius: '14px', border: '2px solid #E0E0E0', background: 'white', fontFamily: 'Nunito, sans-serif', fontSize: '15px', fontWeight: 700, color: '#6B7280', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '7px', minHeight: '58px' }}>
           <ArrowLeft size={17} /> Indietro
         </button>
@@ -657,15 +657,15 @@ function StepInserisciEmail({ onBack, onNext, onStepChange, onEmailChange, isRep
   }, [isValid, isReplica, setAppState])
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', height: '100%', padding: '28px 24px 24px', background: '#FFF8F0' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', height: '100%', padding: '28px 24px 24px', background: '#FFF8F0', boxSizing: 'border-box', overflow: 'hidden' }}>
       <style>{`input::placeholder { color: #B0ADA8; font-weight: 400; }`}</style>
-      <div style={{ marginBottom: '20px' }}>
+      <div style={{ flexShrink: 0, marginBottom: '20px' }}>
         <p style={{ fontFamily: 'Nunito, sans-serif', fontSize: '13px', fontWeight: 700, color: '#1A9E8F', letterSpacing: '0.8px', textTransform: 'uppercase', marginBottom: '6px' }}>PagoPA · Pagamento</p>
         <JourneyMap step={3} />
         <h1 style={{ fontFamily: 'Nunito, sans-serif', fontSize: '24px', fontWeight: 900, color: '#1A1A1A', letterSpacing: '-0.5px', lineHeight: 1.2, marginBottom: '6px' }}>La tua email</h1>
         <p style={{ fontSize: '15px', color: '#5A5755', lineHeight: 1.6, fontWeight: 600 }}>Riceverai qui la ricevuta di pagamento</p>
       </div>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+      <div style={{ flex: 1, minHeight: 0, overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '16px' }}>
         <div>
           {fieldLabel('Indirizzo email')}
           <input
@@ -702,7 +702,7 @@ function StepInserisciEmail({ onBack, onNext, onStepChange, onEmailChange, isRep
           }
         </div>
       </div>
-      <div style={{ display: 'flex', gap: '10px', marginTop: 'auto', paddingTop: '18px' }}>
+      <div style={{ flexShrink: 0, display: 'flex', gap: '10px', marginTop: 'auto', paddingTop: '18px' }}>
         <button onClick={onBack} style={{ flex: 1, padding: '16px 12px', borderRadius: '14px', border: '2px solid #E0E0E0', background: 'white', fontFamily: 'Nunito, sans-serif', fontSize: '15px', fontWeight: 700, color: '#6B7280', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '7px', minHeight: '58px' }}>
           <ArrowLeft size={17} /> Indietro
         </button>
@@ -875,8 +875,8 @@ function StepConfermaPagemento({ onBack, onNext }) {
   const { state } = useApp()
   const email = state.email || '—'
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', height: '100%', padding: '28px 24px 24px', background: '#FFF8F0' }}>
-      <div style={{ background: 'white', borderRadius: '20px', padding: '20px 22px', marginBottom: '14px', border: '2px solid #1A9E8F', boxShadow: '0 4px 20px rgba(26,158,143,0.12)' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', height: '100%', padding: '28px 24px 24px', background: '#FFF8F0', boxSizing: 'border-box', overflow: 'hidden' }}>
+      <div style={{ flexShrink: 0, background: 'white', borderRadius: '20px', padding: '20px 22px', marginBottom: '14px', border: '2px solid #1A9E8F', boxShadow: '0 4px 20px rgba(26,158,143,0.12)' }}>
         <p style={{ fontFamily: 'Nunito, sans-serif', fontSize: '13px', fontWeight: 700, color: '#1A9E8F', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '6px' }}>Totale da pagare</p>
         <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px' }}>
           <span style={{ fontFamily: 'Nunito, sans-serif', fontSize: '38px', fontWeight: 900, color: '#1A1A1A', lineHeight: 1 }}>36,50</span>
@@ -884,30 +884,30 @@ function StepConfermaPagemento({ onBack, onNext }) {
         </div>
         <p style={{ fontFamily: 'Nunito, sans-serif', fontSize: '13px', fontWeight: 500, color: '#6B7280', margin: '6px 0 0', lineHeight: 1.4 }}>Di cui 1,50 € di commissione bancaria</p>
       </div>
-      <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+      <div style={{ flex: 1, minHeight: 0, overflowY: 'auto', display: 'flex', flexDirection: 'column' }}>
         {[
           { icon: <CreditCard size={18} color="#6B7280" />, label: 'Metodo', value: 'Carta di credito (**** 3456)' },
           { icon: <Tag size={18} color="#6B7280" />, label: 'Ente creditore', value: 'ASL VERCELLI' },
         ].map((row, i) => (
-          <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '14px', padding: '13px 0', borderBottom: '1px solid #EEECEA', justifyContent: 'center', textAlign: 'center' }}>
+          <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '14px', padding: '13px 0', borderBottom: '1px solid #EEECEA', justifyContent: 'center', textAlign: 'center', flexShrink: 0 }}>
             <div style={{ width: '38px', height: '38px', borderRadius: '10px', background: '#F5F5F5', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>{row.icon}</div>
-            <div style={{ flex: 1 }}>
+            <div style={{ flex: 1, minWidth: 0 }}>
               <span style={{ fontSize: '12px', color: '#9CA3AF', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.5px', display: 'block', marginBottom: '2px' }}>{row.label}</span>
               <span style={{ fontSize: '15px', fontWeight: 800, color: '#1A1A1A', fontFamily: 'Nunito, sans-serif' }}>{row.value}</span>
             </div>
           </div>
         ))}
-        <div style={{ padding: '13px 0', borderBottom: '1px solid #EEECEA', textAlign: 'center' }}>
+        <div style={{ padding: '13px 0', borderBottom: '1px solid #EEECEA', textAlign: 'center', flexShrink: 0 }}>
           <span style={{ fontSize: '12px', color: '#9CA3AF', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.5px', display: 'block', marginBottom: '4px' }}>Ricevuta inviata a</span>
-          <span style={{ fontSize: '15px', fontWeight: 700, color: '#1A9E8F', fontFamily: 'Nunito, sans-serif' }}>{email}</span>
+          <span style={{ fontSize: '15px', fontWeight: 700, color: '#1A9E8F', fontFamily: 'Nunito, sans-serif', wordBreak: 'break-all' }}>{email}</span>
         </div>
       </div>
-      <div style={{ background: '#FFF9F0', border: '1.5px solid #FFE0B0', borderRadius: '12px', padding: '10px 14px', margin: '12px 0' }}>
+      <div style={{ flexShrink: 0, background: '#FFF9F0', border: '1.5px solid #FFE0B0', borderRadius: '12px', padding: '10px 14px', margin: '12px 0' }}>
         <p style={{ fontFamily: 'Nunito, sans-serif', fontSize: '13px', fontWeight: 600, color: '#B07000', margin: 0, lineHeight: 1.5, display: 'flex', alignItems: 'center', gap: '8px' }}>
           <AlertTriangle size={14} color="#B07000" /> Dopo aver toccato PAGA il pagamento sarà definitivo.
         </p>
       </div>
-      <div style={{ display: 'flex', gap: '10px' }}>
+      <div style={{ flexShrink: 0, display: 'flex', gap: '10px' }}>
         <button onClick={onBack} style={{ flex: 1, padding: '16px 12px', borderRadius: '14px', border: '2px solid #E0E0E0', background: 'white', fontFamily: 'Nunito, sans-serif', fontSize: '15px', fontWeight: 700, color: '#6B7280', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '7px', minHeight: '58px' }}>
           <ArrowLeft size={17} /> Indietro
         </button>
