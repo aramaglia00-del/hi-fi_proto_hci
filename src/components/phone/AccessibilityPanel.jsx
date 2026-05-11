@@ -12,10 +12,8 @@ export default function AccessibilityPanel() {
   const { state, setState } = useApp()
   const theme = useTheme()
   const fs = state.accessibility?.fontSize || 'normal'
-  const cm = state.accessibility?.colorMode || 'normal'
 
   const setFs = v => setState(s => ({ ...s, accessibility: { ...s.accessibility, fontSize: v } }))
-  const setCm = v => setState(s => ({ ...s, accessibility: { ...s.accessibility, colorMode: v } }))
 
   return (
     <>
@@ -83,28 +81,6 @@ export default function AccessibilityPanel() {
               ))}
             </div>
 
-            <p style={{ fontFamily: 'Nunito, sans-serif', fontSize: 11, fontWeight: 800, color: theme.muted, textTransform: 'uppercase', letterSpacing: '1px', marginBottom: 10 }}>
-              Contrasto colori
-            </p>
-            <div style={{ display: 'flex', gap: 8 }}>
-              {[
-                { id: 'normal',       label: 'Normale',        bg: '#FFF8F0', fg: '#1A1A1A', dot: '#1A9E8F' },
-                { id: 'highContrast', label: 'Alto contrasto', bg: '#000',    fg: 'white',   dot: '#FFD700' },
-              ].map(o => (
-                <button key={o.id} onClick={() => setCm(o.id)} style={{
-                  flex: 1, padding: '10px 8px', borderRadius: 12,
-                  border: cm === o.id ? `2.5px solid ${theme.primary}` : `2px solid ${theme.border}`,
-                  background: o.bg,
-                  cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6,
-                }}>
-                  <div style={{ width: 24, height: 14, borderRadius: 3, background: o.dot }} />
-                  <span style={{ fontFamily: 'Nunito, sans-serif', fontSize: 11, fontWeight: 800, color: o.fg }}>
-                    {o.label}
-                  </span>
-                  {cm === o.id && <span style={{ fontSize: 12, color: o.dot }}>✓</span>}
-                </button>
-              ))}
-            </div>
           </div>
         </div>
       )}

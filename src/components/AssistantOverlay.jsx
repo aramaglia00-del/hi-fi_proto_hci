@@ -100,58 +100,55 @@ function ScrollGesture() {
   )
 }
 
-const CARD_STYLE = {
-  background: 'rgba(255, 255, 255, 0.97)',
-  borderRadius: '22px',
-  boxShadow: '0 8px 36px rgba(0,0,0,0.30)',
-  border: '2.5px solid rgba(26,158,143,0.45)',
-  padding: '18px 20px',
-}
-
-const TAG_STYLE = {
-  display: 'inline-flex', alignItems: 'center',
-  background: '#FFF0E0', borderRadius: '8px', padding: '5px 11px',
-  fontFamily: 'Nunito, sans-serif', fontSize: '12px', fontWeight: 800,
-  color: '#D4720A', letterSpacing: '0.4px', textTransform: 'uppercase',
-  marginBottom: '10px',
-}
-
-const TEXT_STYLE = {
-  fontFamily: 'Nunito, sans-serif',
-  fontSize: '16px', fontWeight: 700,
-  lineHeight: 1.72, color: '#1A1A1A', margin: '0 0 12px',
-}
-
-function MascotFooter() {
-  return (
-    <>
-      <div style={{ height: '1px', background: 'rgba(0,0,0,0.08)', margin: '0 0 10px' }} />
-      <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-        <Mascot />
-        <p style={{
-          fontFamily: 'Nunito, sans-serif', fontSize: '13px',
-          fontWeight: 600, color: '#5A5755', lineHeight: 1.5,
-          fontStyle: 'italic', margin: 0, flex: 1,
-        }}>
-          Puoi sempre tornare indietro.<br />Non puoi fare danni!
-        </p>
-      </div>
-    </>
-  )
-}
-
-import { useFontZoom } from '../context/AppContext'
+import { useFontZoom, useTheme } from '../context/AppContext'
 
 export default function AssistantOverlay({ tag, text, highlightZone, showGesture, forceTop }) {
   const zoom = useFontZoom()
+  const theme = useTheme()
   const atTop = forceTop || (highlightZone && highlightZone.top > 350)
+
+  const cardStyle = {
+    background: theme.isHC ? 'rgba(10,10,10,0.97)' : 'rgba(255,255,255,0.97)',
+    borderRadius: '22px',
+    boxShadow: '0 8px 36px rgba(0,0,0,0.30)',
+    border: `2.5px solid ${theme.primary}72`,
+    padding: '18px 20px',
+    maxHeight: 'calc(100% - 20px)',
+    overflowY: 'auto',
+  }
+  const tagStyle = {
+    display: 'inline-flex', alignItems: 'center',
+    background: theme.isHC ? '#1A1400' : '#FFF0E0',
+    borderRadius: '8px', padding: '5px 11px',
+    fontFamily: 'Nunito, sans-serif', fontSize: '12px', fontWeight: 800,
+    color: theme.isHC ? theme.primary : '#D4720A',
+    letterSpacing: '0.4px', textTransform: 'uppercase', marginBottom: '10px',
+  }
+  const textStyle = {
+    fontFamily: 'Nunito, sans-serif', fontSize: '16px', fontWeight: 700,
+    lineHeight: 1.72, color: theme.text, margin: '0 0 12px',
+  }
+  const footerText = {
+    fontFamily: 'Nunito, sans-serif', fontSize: '13px', fontWeight: 600,
+    color: theme.textSecondary, lineHeight: 1.5, fontStyle: 'italic', margin: 0, flex: 1,
+  }
+
+  const MascotFooter = () => (
+    <>
+      <div style={{ height: '1px', background: theme.isHC ? 'rgba(255,255,255,0.12)' : 'rgba(0,0,0,0.08)', margin: '0 0 10px' }} />
+      <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+        <Mascot />
+        <p style={footerText}>Puoi sempre tornare indietro.<br />Non puoi fare danni!</p>
+      </div>
+    </>
+  )
 
   if (showGesture) {
     return (
-      <div style={{ position: 'absolute', top: 10, left: 10, right: 10, zIndex: 10 }}>
-        <div style={{ ...CARD_STYLE, zoom }}>
-          <div style={TAG_STYLE}>{tag}</div>
-          <p style={TEXT_STYLE}>{text}</p>
+      <div style={{ position: 'absolute', top: atTop ? 10 : 'auto', bottom: atTop ? 'auto' : 10, left: 10, right: 10, zIndex: 10 }}>
+        <div style={{ ...cardStyle, zoom }}>
+          <div style={tagStyle}>{tag}</div>
+          <p style={textStyle}>{text}</p>
           <div style={{ display: 'flex', justifyContent: 'center', padding: '4px 0 8px' }}>
             <ScrollGesture />
           </div>
@@ -162,16 +159,10 @@ export default function AssistantOverlay({ tag, text, highlightZone, showGesture
   }
 
   return (
-    <div style={{
-      position: 'absolute',
-      top: atTop ? 10 : 'auto',
-      bottom: atTop ? 'auto' : 10,
-      left: 10, right: 10,
-      zIndex: 10,
-    }}>
-      <div style={{ ...CARD_STYLE, zoom }}>
-        <div style={TAG_STYLE}>{tag}</div>
-        <p style={TEXT_STYLE}>{text}</p>
+    <div style={{ position: 'absolute', top: atTop ? 10 : 'auto', bottom: atTop ? 'auto' : 10, left: 10, right: 10, zIndex: 10 }}>
+      <div style={{ ...cardStyle, zoom }}>
+        <div style={tagStyle}>{tag}</div>
+        <p style={textStyle}>{text}</p>
         <MascotFooter />
       </div>
     </div>

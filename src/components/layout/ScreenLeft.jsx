@@ -11,9 +11,7 @@ export default function ScreenLeft() {
     <div
       style={{
         width: '390px', height: '740px', flexShrink: 0,
-        background: theme.isHC
-          ? '#0A0A0A'
-          : 'linear-gradient(160deg, #FFE0B2 0%, #FFF3E4 50%, #FFF8F2 100%)',
+        background: theme.bg,
         position: 'relative', overflow: 'hidden',
       }}
     >

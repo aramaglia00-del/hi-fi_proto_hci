@@ -12,16 +12,9 @@ export default function SettingsButton() {
   const { state, setState } = useApp()
 
   const fontSize = state.accessibility?.fontSize || 'normal'
-  const colorMode = state.accessibility?.colorMode || 'normal'
-
   const setFontSize = (val) => {
     setState(s => ({ ...s, accessibility: { ...s.accessibility, fontSize: val } }))
   }
-
-  const setColorMode = (val) => {
-    setState(s => ({ ...s, accessibility: { ...s.accessibility, colorMode: val } }))
-  }
-
   return (
     <>
       {/* Settings gear button — absolute within 1180×820 design area */}
@@ -184,57 +177,6 @@ export default function SettingsButton() {
               })}
             </div>
 
-            {/* Divider */}
-            <div style={{ height: '1px', background: '#E8E8E8', marginBottom: '20px' }} />
-
-            {/* Color mode section */}
-            <p style={{
-              fontFamily: 'Nunito, sans-serif',
-              fontSize: '13px',
-              fontWeight: 800,
-              color: '#9CA3AF',
-              textTransform: 'uppercase',
-              letterSpacing: '1px',
-              marginBottom: '14px',
-            }}>
-              Modalità colori
-            </p>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-              {[
-                { id: 'normal',       label: 'Normale',        bg: 'white',   color: '#1A1A1A' },
-                { id: 'highContrast', label: 'Alto contrasto', bg: '#1A1A1A', color: 'white' },
-              ].map(opt => {
-                const isActive = colorMode === opt.id
-                return (
-                  <button
-                    key={opt.id}
-                    onClick={() => setColorMode(opt.id)}
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '12px',
-                      padding: '14px 16px',
-                      borderRadius: '16px',
-                      border: isActive ? '2.5px solid #1A9E8F' : '2px solid #E0E0E0',
-                      background: opt.bg,
-                      color: opt.color,
-                      cursor: 'pointer',
-                      width: '100%',
-                      transition: 'all 0.2s',
-                      textAlign: 'left',
-                      fontFamily: 'Nunito, sans-serif',
-                      fontSize: '15px',
-                      fontWeight: 800,
-                    }}
-                  >
-                    {opt.label}
-                    {isActive && (
-                      <span style={{ marginLeft: 'auto', color: isActive && opt.id === 'highContrast' ? '#1A9E8F' : '#1A9E8F', fontSize: '18px' }}>✓</span>
-                    )}
-                  </button>
-                )
-              })}
-            </div>
           </div>
         </div>
       )}

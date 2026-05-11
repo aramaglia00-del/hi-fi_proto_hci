@@ -127,7 +127,7 @@ function SlideWelcome({ onNext, onAccessibility }) {
   return (
     <div style={{
       width: '100%', height: '100%',
-      background: 'linear-gradient(160deg, #FFF0D6 0%, #FFF5E8 40%, #E8F7F5 100%)',
+      background: '#FFF8F0',
       display: 'flex', flexDirection: 'column',
       alignItems: 'center', justifyContent: 'center',
       padding: '48px 80px',
@@ -225,7 +225,7 @@ function SlideHow({ onNext }) {
   return (
     <div style={{
       width: '100%', height: '100%',
-      background: 'linear-gradient(160deg, #FFF0D6 0%, #FFF5E8 40%, #E8F7F5 100%)',
+      background: '#FFF8F0',
       display: 'flex', flexDirection: 'column',
       alignItems: 'center', justifyContent: 'center',
       padding: '40px 60px',
@@ -308,7 +308,6 @@ function SlideHow({ onNext }) {
 // ── SLIDE 2: ACCESSIBILITÀ ─────────────────────────────────────────
 function SlideAccessibility({ onDone }) {
   const [selectedSize, setSelectedSize] = useState('normal')
-  const [selectedMode, setSelectedMode] = useState('normal')
   const { setState } = useApp()
 
   const sizeOptions = [
@@ -323,7 +322,6 @@ function SlideAccessibility({ onDone }) {
       currentScreen: 'home',
       accessibility: {
         fontSize: selectedSize,
-        colorMode: selectedMode,
       },
     }))
     onDone?.()
@@ -333,14 +331,14 @@ function SlideAccessibility({ onDone }) {
     setState(s => ({
       ...s,
       currentScreen: 'home',
-      accessibility: { fontSize: 'normal', colorMode: 'normal' },
+      accessibility: { fontSize: 'normal' },
     }))
   }
 
   return (
     <div style={{
       width: '100%', height: '100%',
-      background: 'linear-gradient(160deg, #FFF0D6 0%, #FFF5E8 40%, #E8F7F5 100%)',
+      background: '#FFF8F0',
       display: 'flex', flexDirection: 'column',
       alignItems: 'center', justifyContent: 'center',
       padding: '40px 80px',

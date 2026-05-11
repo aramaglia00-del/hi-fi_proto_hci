@@ -79,18 +79,6 @@ export function PhoneFrame({ children }) {
           margin: '8px auto 10px',
         }} />
       </div>
-
-      {/* Label */}
-      <div style={{
-        marginTop: '10px',
-        color: 'white',
-        fontSize: '10px',
-        opacity: 0.4,
-        fontFamily: 'Nunito, sans-serif',
-        fontWeight: 600,
-      }}>
-        📱 Il tuo telefono
-      </div>
     </div>
   )
 }
@@ -146,46 +134,7 @@ export function TotemFrame({ children }) {
           {children}
         </div>
 
-        {/* NFC footer */}
-        <div style={{
-          height: '26px',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          gap: '6px',
-          marginTop: '4px',
-          marginBottom: '10px',
-        }}>
-          {/* NFC contactless icon */}
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-            <path d="M8 8 Q10 6 10 4" stroke="#1A9E8F" strokeWidth="1.2" strokeLinecap="round" opacity="0.5"/>
-            <path d="M8 8 Q12 5 12 2" stroke="#1A9E8F" strokeWidth="1.2" strokeLinecap="round" opacity="0.35"/>
-            <path d="M8 8 Q14 4 14 0" stroke="#1A9E8F" strokeWidth="1.2" strokeLinecap="round" opacity="0.2"/>
-            <circle cx="8" cy="8" r="2" fill="#1A9E8F" opacity="0.6"/>
-          </svg>
-          <span style={{
-            fontFamily: 'Nunito, sans-serif',
-            fontSize: '9px',
-            fontWeight: 700,
-            color: 'rgba(26,158,143,0.55)',
-            letterSpacing: '0.5px',
-            textTransform: 'uppercase',
-          }}>
-            NFC · Avvicina la tessera
-          </span>
-        </div>
-      </div>
-
-      {/* Label */}
-      <div style={{
-        marginTop: '10px',
-        color: 'white',
-        fontSize: '10px',
-        opacity: 0.4,
-        fontFamily: 'Nunito, sans-serif',
-        fontWeight: 600,
-      }}>
-        🖥 Totem ServizioPA
+        <div style={{ height: '10px' }} />
       </div>
     </div>
   )

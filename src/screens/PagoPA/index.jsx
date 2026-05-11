@@ -25,36 +25,39 @@ const HIGHLIGHT_SELECTORS = [
 ]
 
 // ── COACHING (default overlay steps) ──────────────────────────────
-const COACHING = {
-  0: {
-    tag: '👆 Cosa fare adesso',
-    text: (<>Tocca il pulsante <strong style={{ color: '#1A9E8F' }}>Inquadra il codice QR</strong> qui a fianco per iniziare il pagamento.</>),
-  },
-  2: {
-    tag: '✅ Controlla i dati',
-    text: (<>Leggi i dati qui a fianco e verifica che siano corretti.<br />Poi tocca <strong style={{ color: '#1A9E8F' }}>VAI AL PAGAMENTO</strong>.</>),
-  },
-  3: {
-    tag: '✉️ Scrivi la tua email',
-    text: (<>Tocca il campo <strong style={{ color: '#1A9E8F' }}>Email</strong> e scrivi il tuo indirizzo.<br />Riceverai la ricevuta di pagamento lì.</>),
-  },
-  4: {
-    tag: '✅ Email inserita!',
-    text: (<>Bene! Ora tocca il secondo campo e riscrivi la stessa email per <strong style={{ color: '#1A9E8F' }}>confermare</strong> che sia quella giusta.</>),
-  },
-  6: {
-    tag: '👆 Scorri verso l\'alto',
-    text: (<>Muovi il dito <strong style={{ color: '#1A9E8F' }}>dal basso verso l'alto</strong> sulla lista qui a fianco per trovare il metodo di pagamento.</>),
-    showGesture: true,
-  },
-  7: {
-    tag: '💳 Tocca questo',
-    text: (<>Tocca <strong style={{ color: '#1A9E8F' }}>Carta di debito o credito</strong> — è quella evidenziata qui a fianco.</>),
-  },
-  14: {
-    tag: '🎉 Bravissimo!',
-    text: 'Hai completato il pagamento con successo! Riceverai una ricevuta via email.',
-  },
+function getCoaching(theme) {
+  const c = theme.primary
+  return {
+    0: {
+      tag: '👆 Cosa fare adesso',
+      text: (<>Tocca il pulsante <strong style={{ color: c }}>Inquadra il codice QR</strong> qui a fianco per iniziare il pagamento.</>),
+    },
+    2: {
+      tag: '✅ Controlla i dati',
+      text: (<>Leggi i dati qui a fianco e verifica che siano corretti.<br />Poi tocca <strong style={{ color: c }}>VAI AL PAGAMENTO</strong>.</>),
+    },
+    3: {
+      tag: '✉️ Scrivi la tua email',
+      text: (<>Tocca il campo <strong style={{ color: c }}>Email</strong> e scrivi il tuo indirizzo.<br />Riceverai la ricevuta di pagamento lì.</>),
+    },
+    4: {
+      tag: '✅ Email inserita!',
+      text: (<>Bene! Ora tocca il secondo campo e riscrivi la stessa email per <strong style={{ color: c }}>confermare</strong> che sia quella giusta.</>),
+    },
+    6: {
+      tag: '👆 Scorri verso l\'alto',
+      text: (<>Muovi il dito <strong style={{ color: c }}>dal basso verso l'alto</strong> sulla lista qui a fianco per trovare il metodo di pagamento.</>),
+      showGesture: true,
+    },
+    7: {
+      tag: '💳 Tocca questo',
+      text: (<>Tocca <strong style={{ color: c }}>Carta di debito o credito</strong> — è quella evidenziata qui a fianco.</>),
+    },
+    14: {
+      tag: '🎉 Bravissimo!',
+      text: 'Hai completato il pagamento con successo! Riceverai una ricevuta via email.',
+    },
+  }
 }
 
 // ── MECHANISM 1: JOURNEY MAP ───────────────────────────────────────
@@ -244,36 +247,42 @@ function CardBackIllustration() {
   )
 }
 
-// ── SHARED OVERLAY STYLES ─────────────────────────────────────────
-const CARD_STYLE = {
-  background: 'rgba(255,255,255,0.97)',
-  borderRadius: '22px',
-  boxShadow: '0 8px 36px rgba(0,0,0,0.30)',
-  border: '2.5px solid rgba(26,158,143,0.45)',
-  padding: '18px 20px',
+// ── SHARED OVERLAY STYLES (dynamic, HC-aware) ─────────────────────
+function useOverlayStyles() {
+  const theme = useTheme()
+  return {
+    card: {
+      background: theme.isHC ? 'rgba(10,10,10,0.97)' : 'rgba(255,255,255,0.97)',
+      borderRadius: '22px',
+      boxShadow: '0 8px 36px rgba(0,0,0,0.30)',
+      border: `2.5px solid ${theme.primary}72`,
+      padding: '18px 20px',
+    },
+    tagOrange: {
+      display: 'inline-flex', alignItems: 'center',
+      background: theme.isHC ? '#1A1400' : '#FFF0E0',
+      borderRadius: '8px', padding: '5px 11px',
+      fontFamily: 'Nunito, sans-serif', fontSize: '12px', fontWeight: 800,
+      color: theme.isHC ? theme.primary : '#D4720A',
+      letterSpacing: '0.4px', textTransform: 'uppercase', marginBottom: '10px',
+    },
+    tagGreen: {
+      display: 'inline-flex', alignItems: 'center',
+      background: theme.isHC ? '#001A15' : '#E0F5F3',
+      borderRadius: '8px', padding: '5px 11px',
+      fontFamily: 'Nunito, sans-serif', fontSize: '12px', fontWeight: 800,
+      color: theme.isHC ? theme.primary : '#0D7A6D',
+      letterSpacing: '0.4px', textTransform: 'uppercase', marginBottom: '10px', gap: '5px',
+    },
+    bodyText: { fontFamily: 'Nunito, sans-serif', fontSize: '15px', fontWeight: 700, color: theme.text, margin: '0 0 12px', lineHeight: 1.6 },
+    divider: { height: '1px', background: theme.isHC ? 'rgba(255,255,255,0.12)' : 'rgba(0,0,0,0.08)', margin: '12px 0 10px' },
+    reassureText: { fontFamily: 'Nunito, sans-serif', fontSize: '13px', fontWeight: 600, color: theme.textSecondary, lineHeight: 1.5, fontStyle: 'italic', margin: 0 },
+    itemBg: theme.isHC ? '#111' : '#F0FDFB',
+    itemBorder: theme.isHC ? '#333' : '#A8DDD8',
+    itemLabel: { fontFamily: 'Nunito, sans-serif', fontSize: '11px', fontWeight: 700, color: theme.isHC ? theme.primary : '#5A9E8F', display: 'block', marginBottom: '2px', textTransform: 'uppercase', letterSpacing: '0.5px' },
+    itemValue: { fontFamily: 'Nunito, sans-serif', fontSize: '18px', fontWeight: 900, color: theme.text, lineHeight: 1.2, wordBreak: 'break-all', display: 'block' },
+  }
 }
-const TAG_ORANGE = {
-  display: 'inline-flex', alignItems: 'center',
-  background: '#FFF0E0', borderRadius: '8px', padding: '5px 11px',
-  fontFamily: 'Nunito, sans-serif', fontSize: '12px', fontWeight: 800,
-  color: '#D4720A', letterSpacing: '0.4px', textTransform: 'uppercase',
-  marginBottom: '10px',
-}
-const TAG_GREEN = {
-  display: 'inline-flex', alignItems: 'center',
-  background: '#E0F5F3', borderRadius: '8px', padding: '5px 11px',
-  fontFamily: 'Nunito, sans-serif', fontSize: '12px', fontWeight: 800,
-  color: '#0D7A6D', letterSpacing: '0.4px', textTransform: 'uppercase',
-  marginBottom: '10px', gap: '5px',
-}
-const REASSURANCE = (
-  <>
-    <div style={{ height: '1px', background: 'rgba(0,0,0,0.08)', margin: '12px 0 10px' }} />
-    <p style={{ fontFamily: 'Nunito, sans-serif', fontSize: '13px', fontWeight: 600, color: '#5A5755', lineHeight: 1.5, fontStyle: 'italic', margin: 0 }}>
-      Puoi sempre tornare indietro. Non puoi fare danni!
-    </p>
-  </>
-)
 
 // ── MECHANISM 3: ANCHOR OVERLAY ───────────────────────────────────
 const ANCHOR_CONFIGS = {
@@ -304,21 +313,21 @@ const ANCHOR_CONFIGS = {
   },
 }
 
-function AnchorOverlay({ type, highlightZone }) {
-  const atTop = !highlightZone || highlightZone.top > 350
+function AnchorOverlay({ type, highlightZone, forceTop }) {
+  const s = useOverlayStyles()
+  const atTop = forceTop || !highlightZone || highlightZone.top > 350
   const cfg = ANCHOR_CONFIGS[type]
   if (!cfg) return null
   return (
     <div style={{ position: 'absolute', top: atTop ? 10 : 'auto', bottom: atTop ? 'auto' : 10, left: 10, right: 10, zIndex: 10 }}>
-      <div style={CARD_STYLE}>
-        <div style={TAG_ORANGE}>{cfg.tag}</div>
-        <p style={{ fontFamily: 'Nunito, sans-serif', fontSize: '15px', fontWeight: 700, color: '#1A1A1A', margin: '0 0 12px', lineHeight: 1.6 }}>
-          {cfg.text}
-        </p>
-        <div style={{ borderRadius: '10px', overflow: 'hidden', background: '#F8F8F8', padding: '10px' }}>
+      <div style={s.card}>
+        <div style={s.tagOrange}>{cfg.tag}</div>
+        <p style={s.bodyText}>{cfg.text}</p>
+        <div style={{ borderRadius: '10px', overflow: 'hidden', background: s.itemBg, padding: '10px' }}>
           {cfg.illustration}
         </div>
-        {REASSURANCE}
+        <div style={s.divider} />
+        <p style={s.reassureText}>Puoi sempre tornare indietro. Non puoi fare danni!</p>
       </div>
     </div>
   )
@@ -326,23 +335,22 @@ function AnchorOverlay({ type, highlightZone }) {
 
 // ── MECHANISM 2: MIRROR OVERLAY ───────────────────────────────────
 function MirrorOverlay({ title, items, cta }) {
+  const s = useOverlayStyles()
   return (
     <div style={{ position: 'absolute', top: 10, left: 10, right: 10, zIndex: 10 }}>
-      <div style={CARD_STYLE}>
-        <div style={TAG_GREEN}>
+      <div style={s.card}>
+        <div style={s.tagGreen}>
           <Check size={12} strokeWidth={3} />
           {title}
         </div>
         {items.map((item, i) => (
-          <div key={i} style={{ background: '#F0FDFB', border: '1.5px solid #A8DDD8', borderRadius: '12px', padding: '10px 14px', marginBottom: '8px' }}>
-            <span style={{ fontFamily: 'Nunito, sans-serif', fontSize: '11px', fontWeight: 700, color: '#5A9E8F', display: 'block', marginBottom: '3px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>{item.label}</span>
-            <span style={{ fontFamily: 'Nunito, sans-serif', fontSize: '18px', fontWeight: 900, color: '#1A1A1A', lineHeight: 1.2, wordBreak: 'break-all', display: 'block' }}>{item.value}</span>
+          <div key={i} style={{ background: s.itemBg, border: `1.5px solid ${s.itemBorder}`, borderRadius: '12px', padding: '10px 14px', marginBottom: '8px' }}>
+            <span style={s.itemLabel}>{item.label}</span>
+            <span style={s.itemValue}>{item.value}</span>
           </div>
         ))}
-        <div style={{ height: '1px', background: 'rgba(0,0,0,0.08)', margin: '10px 0' }} />
-        <p style={{ fontFamily: 'Nunito, sans-serif', fontSize: '15px', fontWeight: 700, color: '#1A1A1A', margin: 0, lineHeight: 1.5 }}>
-          ➜ {cta}
-        </p>
+        <div style={s.divider} />
+        <p style={{ ...s.bodyText, margin: 0 }}>➜ {cta}</p>
       </div>
     </div>
   )
@@ -350,28 +358,27 @@ function MirrorOverlay({ title, items, cta }) {
 
 // ── MECHANISM 5: NATURAL LANGUAGE SUMMARY ─────────────────────────
 function NaturalLangOverlay({ email, cardLast4 }) {
+  const s = useOverlayStyles()
   return (
     <div style={{ position: 'absolute', top: 10, left: 10, right: 10, zIndex: 10 }}>
-      <div style={CARD_STYLE}>
-        <div style={TAG_ORANGE}>🔍 Rileggiamo insieme</div>
-        <p style={{ fontFamily: 'Nunito, sans-serif', fontSize: '17px', fontWeight: 700, color: '#1A1A1A', lineHeight: 1.75, margin: '0 0 14px' }}>
+      <div style={s.card}>
+        <div style={s.tagOrange}>🔍 Rileggiamo insieme</div>
+        <p style={{ fontFamily: 'Nunito, sans-serif', fontSize: '17px', fontWeight: 700, color: s.bodyText.color, lineHeight: 1.75, margin: '0 0 14px' }}>
           Stai per pagare{' '}
           <strong style={{ color: '#1A9E8F', fontSize: '22px' }}>36,50 €</strong>
-          <br />
-          per un <strong>Ticket Sanitario</strong>
-          <br />
-          all'<strong>ASL Vercelli</strong>.
+          <br />per un <strong>Ticket Sanitario</strong>
+          <br />all'<strong>ASL Vercelli</strong>.
         </p>
-        <div style={{ background: '#F0FDFB', border: '1.5px solid #A8DDD8', borderRadius: '10px', padding: '10px 13px', marginBottom: '8px' }}>
-          <span style={{ fontFamily: 'Nunito, sans-serif', fontSize: '11px', fontWeight: 700, color: '#5A9E8F', display: 'block', marginBottom: '2px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Ricevuta inviata a</span>
-          <span style={{ fontFamily: 'Nunito, sans-serif', fontSize: '14px', fontWeight: 800, color: '#1A1A1A', wordBreak: 'break-all' }}>{email || '—'}</span>
+        <div style={{ background: s.itemBg, border: `1.5px solid ${s.itemBorder}`, borderRadius: '10px', padding: '10px 13px', marginBottom: '8px' }}>
+          <span style={s.itemLabel}>Ricevuta inviata a</span>
+          <span style={{ fontFamily: 'Nunito, sans-serif', fontSize: '14px', fontWeight: 800, color: s.itemValue.color, wordBreak: 'break-all' }}>{email || '—'}</span>
         </div>
-        <div style={{ background: '#F0FDFB', border: '1.5px solid #A8DDD8', borderRadius: '10px', padding: '10px 13px', marginBottom: '14px' }}>
-          <span style={{ fontFamily: 'Nunito, sans-serif', fontSize: '11px', fontWeight: 700, color: '#5A9E8F', display: 'block', marginBottom: '2px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Carta che finisce in</span>
-          <span style={{ fontFamily: 'Nunito, sans-serif', fontSize: '15px', fontWeight: 800, color: '#1A1A1A' }}>**** **** **** {cardLast4 || '????'}</span>
+        <div style={{ background: s.itemBg, border: `1.5px solid ${s.itemBorder}`, borderRadius: '10px', padding: '10px 13px', marginBottom: '14px' }}>
+          <span style={s.itemLabel}>Carta che finisce in</span>
+          <span style={{ fontFamily: 'Nunito, sans-serif', fontSize: '15px', fontWeight: 800, color: s.itemValue.color }}>**** **** **** {cardLast4 || '????'}</span>
         </div>
-        <div style={{ height: '1px', background: 'rgba(0,0,0,0.08)', marginBottom: '10px' }} />
-        <p style={{ fontFamily: 'Nunito, sans-serif', fontSize: '13px', fontWeight: 700, color: '#D4720A', margin: 0 }}>
+        <div style={s.divider} />
+        <p style={{ fontFamily: 'Nunito, sans-serif', fontSize: '13px', fontWeight: 700, color: s.tagOrange.color, margin: 0 }}>
           Va tutto bene? Tocca <strong>PAGA</strong> qui a fianco.
         </p>
       </div>
@@ -380,7 +387,10 @@ function NaturalLangOverlay({ email, cardLast4 }) {
 }
 
 // ── LEFT PANEL ─────────────────────────────────────────────────────
-function PanelLeft({ step, rightPanelContent, rightPanelRef, showGesture, overrideHighlightZone, leftPanelRef, forceTop, email, cardLast4 }) {
+function PanelLeft({ step, rightPanelContent, rightPanelRef, showGesture, overrideHighlightZone, leftPanelRef, forceTop, email, cardLast4, scrollVersion }) {
+  const theme = useTheme()
+  const zoom = useFontZoom()
+  const COACHING = getCoaching(theme)
   const selector = HIGHLIGHT_SELECTORS[step]
   const [highlightZone, setHighlightZone] = useState(null)
 
@@ -405,17 +415,32 @@ function PanelLeft({ step, rightPanelContent, rightPanelRef, showGesture, overri
         height: targetRect.height / scale,
       }
     }
+    
+    // Schedule calculation with requestAnimationFrame for accurate dimensions after reflow
+    const scheduleCompute = () => {
+      requestAnimationFrame(() => {
+        setTimeout(() => setHighlightZone(computeZone()), 100)
+      })
+    }
+    
     const timer = setTimeout(() => setHighlightZone(computeZone()), 150)
-    const ro = new ResizeObserver(() => setHighlightZone(computeZone()))
-    if (rightPanelRef?.current) ro.observe(rightPanelRef.current)
+    const ro = new ResizeObserver(scheduleCompute)
+    if (rightPanelRef?.current) {
+      ro.observe(rightPanelRef.current)
+      // Also observe the target element if it exists
+      if (selector) {
+        const target = rightPanelRef.current.querySelector(selector)
+        if (target) ro.observe(target)
+      }
+    }
     return () => { clearTimeout(timer); ro.disconnect() }
-  }, [selector, rightPanelRef, overrideHighlightZone])
+  }, [selector, rightPanelRef, overrideHighlightZone, zoom, scrollVersion])
 
   const renderOverlay = () => {
     if (step === 5)  return <MirrorOverlay title="Email inserita!" items={[{ label: 'La tua email', value: email || '—' }]} cta="Ora tocca CONTINUA qui a fianco" />
     if (step === 12) return <MirrorOverlay title="Dati carta inseriti!" items={[{ label: 'Carta (ultime 4 cifre)', value: `**** **** **** ${cardLast4 || '????'}` }]} cta="Ora tocca CONTINUA per proseguire" />
     if (step === 13) return <NaturalLangOverlay email={email} cardLast4={cardLast4} />
-    if (step === 1)  return <AnchorOverlay type="bollettino" highlightZone={highlightZone} />
+    if (step === 1)  return <AnchorOverlay type="bollettino" highlightZone={highlightZone} forceTop />
     if (step === 8)  return <AnchorOverlay type="card-number" highlightZone={highlightZone} />
     if (step === 9)  return <AnchorOverlay type="card-expiry" highlightZone={highlightZone} />
     if (step === 10) return <AnchorOverlay type="card-cvv" highlightZone={highlightZone} />
@@ -431,9 +456,6 @@ function PanelLeft({ step, rightPanelContent, rightPanelRef, showGesture, overri
       />
     )
   }
-
-  const theme = useTheme()
-  const zoom = useFontZoom()
 
   return (
     <div ref={leftPanelRef} style={{ width: '390px', height: '740px', flexShrink: 0, position: 'relative', overflow: 'hidden', background: theme.bg }}>
@@ -538,7 +560,7 @@ function StepInquadraQR({ onNext, onBack }) {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100%', padding: '28px 24px 24px', background: '#FFF8F0' }}>
       <div style={{ marginBottom: '18px' }}>
-        <p style={{ fontFamily: 'Nunito, sans-serif', fontSize: '13px', fontWeight: 700, color: '#1A9E8F', letterSpacing: '0.8px', textTransform: 'uppercase', marginBottom: '6px' }}>PagoPA</p>
+        <p style={{ fontFamily: 'Nunito, sans-serif', fontSize: '13px', fontWeight: 700, color: '#1A9E8F', letterSpacing: '0.8px', textTransform: 'uppercase', marginBottom: '6px' }}>PagoPA · Pagamento</p>
         <JourneyMap step={1} />
         <h1 style={{ fontFamily: 'Nunito, sans-serif', fontSize: '24px', fontWeight: 900, color: '#1A1A1A', letterSpacing: '-0.5px', lineHeight: 1.2, marginBottom: '6px' }}>Inquadra il<br />codice QR</h1>
         <p style={{ fontSize: '15px', color: '#5A5755', lineHeight: 1.6, fontWeight: 600 }}>Tieni il bollettino davanti alla fotocamera</p>
@@ -578,7 +600,7 @@ function StepDatiPagamento({ onBack, onNext }) {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100%', padding: '28px 24px 24px', background: '#FFF8F0', overflow: 'hidden' }}>
       <div style={{ marginBottom: '14px' }}>
-        <p style={{ fontFamily: 'Nunito, sans-serif', fontSize: '13px', fontWeight: 700, color: '#1A9E8F', letterSpacing: '0.8px', textTransform: 'uppercase', marginBottom: '6px' }}>PagoPA</p>
+        <p style={{ fontFamily: 'Nunito, sans-serif', fontSize: '13px', fontWeight: 700, color: '#1A9E8F', letterSpacing: '0.8px', textTransform: 'uppercase', marginBottom: '6px' }}>PagoPA · Pagamento</p>
         <JourneyMap step={2} />
         <h1 style={{ fontFamily: 'Nunito, sans-serif', fontSize: '24px', fontWeight: 900, color: '#1A1A1A', letterSpacing: '-0.5px', lineHeight: 1.2 }}>Dati del<br />pagamento</h1>
       </div>
@@ -614,9 +636,9 @@ function StepDatiPagamento({ onBack, onNext }) {
 const isValidEmail = val => val.includes('@') && val.includes('.') && val.length > 5
 
 function StepInserisciEmail({ onBack, onNext, onStepChange, onEmailChange }) {
-  const { setState: setAppState } = useApp()
-  const [email, setEmail] = useState('')
-  const [emailConfirm, setEmailConfirm] = useState('')
+  const { state, setState: setAppState } = useApp()
+  const [email, setEmail] = useState(state.pagopaForm?.email || '')
+  const [emailConfirm, setEmailConfirm] = useState(state.pagopaForm?.emailConfirm || '')
   const [isFocused, setIsFocused] = useState(false)
   const [isConfirmFocused, setIsConfirmFocused] = useState(false)
   const [email1Touched, setEmail1Touched] = useState(false)
@@ -626,11 +648,19 @@ function StepInserisciEmail({ onBack, onNext, onStepChange, onEmailChange }) {
   const email1Error = email1Touched && !isValidEmail(email)
   const confirmError = confirmTouched && emailConfirm !== email
 
+  useEffect(() => {
+    setAppState(s => ({ ...s, pagopaForm: { ...s.pagopaForm, email, emailConfirm } }))
+  }, [email, emailConfirm, setAppState])
+
+  useEffect(() => {
+    setAppState(s => ({ ...s, buttonState: { ...s.buttonState, pagopaEmailReady: isValid } }))
+  }, [isValid, setAppState])
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100%', padding: '28px 24px 24px', background: '#FFF8F0' }}>
       <style>{`input::placeholder { color: #B0ADA8; font-weight: 400; }`}</style>
       <div style={{ marginBottom: '20px' }}>
-        <p style={{ fontFamily: 'Nunito, sans-serif', fontSize: '13px', fontWeight: 700, color: '#1A9E8F', letterSpacing: '0.8px', textTransform: 'uppercase', marginBottom: '6px' }}>PagoPA</p>
+        <p style={{ fontFamily: 'Nunito, sans-serif', fontSize: '13px', fontWeight: 700, color: '#1A9E8F', letterSpacing: '0.8px', textTransform: 'uppercase', marginBottom: '6px' }}>PagoPA · Pagamento</p>
         <JourneyMap step={3} />
         <h1 style={{ fontFamily: 'Nunito, sans-serif', fontSize: '24px', fontWeight: 900, color: '#1A1A1A', letterSpacing: '-0.5px', lineHeight: 1.2, marginBottom: '6px' }}>La tua email</h1>
         <p style={{ fontSize: '15px', color: '#5A5755', lineHeight: 1.6, fontWeight: 600 }}>Riceverai qui la ricevuta di pagamento</p>
@@ -719,10 +749,11 @@ function StepSceltaPagamento({ onBack, onNext, onScrollDetected, onListScroll, i
 
   const listItems = paymentMethods.map(m => {
     const isCarta = m.id === 'carta'
+    const shouldHighlight = isCarta && !isReplica
     return (
-      <div key={m.id} ref={isCarta && !isReplica ? cartaRef : null} data-highlight={isCarta ? 'carta-credito' : undefined}
-        onClick={isCarta && !isReplica ? onNext : undefined}
-        style={{ display: 'flex', alignItems: 'center', gap: '16px', padding: '16px 14px', borderRadius: '16px', marginBottom: '8px', border: isCarta ? '2.5px solid #1A9E8F' : '1.5px solid #E8E8E8', background: isCarta ? '#F0FDFB' : 'white', cursor: isCarta && !isReplica ? 'pointer' : 'default', opacity: isCarta ? 1 : 0.65, minHeight: '64px' }}>
+      <div key={m.id} ref={isCarta && !isReplica ? cartaRef : null} data-highlight={shouldHighlight ? 'carta-credito' : undefined}
+        onClick={!isReplica ? onNext : undefined}
+        style={{ display: 'flex', alignItems: 'center', gap: '16px', padding: '16px 14px', borderRadius: '16px', marginBottom: '8px', border: shouldHighlight ? '2.5px solid #1A9E8F' : '1.5px solid #E8E8E8', background: shouldHighlight ? '#F0FDFB' : 'white', cursor: !isReplica ? 'pointer' : 'default', minHeight: '64px' }}>
         <div style={{ width: '46px', height: '46px', borderRadius: '12px', background: m.iconBg, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
           {isCarta ? (
             <svg width="26" height="20" viewBox="0 0 26 20" fill="none">
@@ -742,7 +773,7 @@ function StepSceltaPagamento({ onBack, onNext, onScrollDetected, onListScroll, i
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100%', padding: '28px 24px 24px', background: '#FFF8F0' }}>
       <div style={{ marginBottom: '14px' }}>
-        <p style={{ fontFamily: 'Nunito, sans-serif', fontSize: '13px', fontWeight: 700, color: '#1A9E8F', letterSpacing: '0.8px', textTransform: 'uppercase', marginBottom: '6px' }}>PagoPA</p>
+        <p style={{ fontFamily: 'Nunito, sans-serif', fontSize: '13px', fontWeight: 700, color: '#1A9E8F', letterSpacing: '0.8px', textTransform: 'uppercase', marginBottom: '6px' }}>PagoPA · Pagamento</p>
         <JourneyMap step={6} />
         <h1 style={{ fontFamily: 'Nunito, sans-serif', fontSize: '24px', fontWeight: 900, color: '#1A1A1A', letterSpacing: '-0.5px', lineHeight: 1.2, marginBottom: '4px' }}>Come vuoi<br />pagare?</h1>
         <p style={{ fontSize: '14px', color: '#5A5755', lineHeight: 1.6, fontWeight: 600 }}>Scorri e scegli il metodo di pagamento</p>
@@ -767,15 +798,33 @@ function StepSceltaPagamento({ onBack, onNext, onScrollDetected, onListScroll, i
 
 // ── STEP 8-12: DATI CARTA ──────────────────────────────────────────
 function StepDatiCarta({ onBack, onNext, onFieldChange, onCardLast4Change }) {
-  const [cardNumber, setCardNumber] = useState('')
-  const [expiry, setExpiry] = useState('')
-  const [cvv, setCvv] = useState('')
-  const [name, setName] = useState('')
+  const { state, setState } = useApp()
+  const [cardNumber, setCardNumber] = useState(state.pagopaForm?.cardNumber || '')
+  const [expiry, setExpiry] = useState(state.pagopaForm?.expiry || '')
+  const [cvv, setCvv] = useState(state.pagopaForm?.cvv || '')
+  const [name, setName] = useState(state.pagopaForm?.cardName || '')
   const [activeField, setActiveField] = useState(null)
 
   const isValid = cardNumber.length === 19 && expiry.length === 5 && cvv.length === 3 && name.trim().length >= 2
 
   useEffect(() => { if (isValid) onFieldChange?.('continua') }, [isValid])
+
+  useEffect(() => {
+    setState(s => ({
+      ...s,
+      pagopaForm: {
+        ...s.pagopaForm,
+        cardNumber,
+        expiry,
+        cvv,
+        cardName: name,
+      },
+    }))
+  }, [cardNumber, expiry, cvv, name, setState])
+
+  useEffect(() => {
+    setState(s => ({ ...s, buttonState: { ...s.buttonState, pagopaCardReady: isValid } }))
+  }, [isValid, setState])
 
   const handleCardNumber = (e) => {
     const digits = e.target.value.replace(/\D/g, '').slice(0, 16)
@@ -793,7 +842,7 @@ function StepDatiCarta({ onBack, onNext, onFieldChange, onCardLast4Change }) {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100%', padding: '28px 24px 24px', background: '#FFF8F0' }}>
       <style>{`input::placeholder { color: #B0ADA8; font-weight: 400; }`}</style>
-      <p style={{ fontFamily: 'Nunito, sans-serif', fontSize: '13px', fontWeight: 700, color: '#1A9E8F', letterSpacing: '0.8px', textTransform: 'uppercase', marginBottom: '6px' }}>PagoPA</p>
+      <p style={{ fontFamily: 'Nunito, sans-serif', fontSize: '13px', fontWeight: 700, color: '#1A9E8F', letterSpacing: '0.8px', textTransform: 'uppercase', marginBottom: '6px' }}>PagoPA · Pagamento</p>
       <JourneyMap step={8} />
       <h1 style={{ fontFamily: 'Nunito, sans-serif', fontSize: '22px', fontWeight: 900, color: '#1A1A1A', letterSpacing: '-0.5px', lineHeight: 1.2, marginBottom: '16px' }}>Dati della carta</h1>
       <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', flex: 1 }}>
@@ -845,7 +894,7 @@ function StepConfermaPagemento({ onBack, onNext }) {
           { icon: <CreditCard size={18} color="#6B7280" />, label: 'Metodo', value: 'Carta di credito (**** 3456)' },
           { icon: <Tag size={18} color="#6B7280" />, label: 'Ente creditore', value: 'ASL VERCELLI' },
         ].map((row, i) => (
-          <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '14px', padding: '13px 0', borderBottom: '1px solid #EEECEA' }}>
+          <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '14px', padding: '13px 0', borderBottom: '1px solid #EEECEA', justifyContent: 'center', textAlign: 'center' }}>
             <div style={{ width: '38px', height: '38px', borderRadius: '10px', background: '#F5F5F5', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>{row.icon}</div>
             <div style={{ flex: 1 }}>
               <span style={{ fontSize: '12px', color: '#9CA3AF', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.5px', display: 'block', marginBottom: '2px' }}>{row.label}</span>
@@ -853,7 +902,7 @@ function StepConfermaPagemento({ onBack, onNext }) {
             </div>
           </div>
         ))}
-        <div style={{ padding: '13px 0', borderBottom: '1px solid #EEECEA' }}>
+        <div style={{ padding: '13px 0', borderBottom: '1px solid #EEECEA', textAlign: 'center' }}>
           <span style={{ fontSize: '12px', color: '#9CA3AF', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.5px', display: 'block', marginBottom: '4px' }}>Ricevuta inviata a</span>
           <span style={{ fontSize: '15px', fontWeight: 700, color: '#1A9E8F', fontFamily: 'Nunito, sans-serif' }}>{email}</span>
         </div>
@@ -924,7 +973,7 @@ export default function PagoPA() {
     if (step === 1) return <StepInquadraQR onNext={() => {}} onBack={() => {}} />
     if (step === 2) return <StepDatiPagamento onBack={() => {}} onNext={() => {}} />
     if (step >= 3 && step <= 5) return <StepInserisciEmail onBack={() => {}} onNext={() => {}} onStepChange={() => {}} onEmailChange={() => {}} />
-    if (step >= 6 && step <= 7) return <StepSceltaPagamento isReplica scrollTop={frozenScrollTop !== null ? frozenScrollTop : listScrollTop} onBack={() => {}} onNext={() => {}} onScrollDetected={() => {}} />
+    if (step >= 6 && step <= 7) return <StepSceltaPagamento isReplica={true} scrollTop={frozenScrollTop !== null ? frozenScrollTop : listScrollTop} onBack={() => {}} onNext={() => {}} onScrollDetected={() => {}} />
     if (step >= 8 && step <= 12) return <StepDatiCarta onBack={() => {}} onNext={() => {}} onFieldChange={() => {}} onCardLast4Change={() => {}} />
     if (step === 13) return <StepConfermaPagemento onBack={() => {}} onNext={() => {}} />
     if (step === 14) return <StepPagamentoEffettuato onDone={() => {}} />
@@ -943,6 +992,7 @@ export default function PagoPA() {
     )
     if (step >= 6 && step <= 7) return (
       <StepSceltaPagamento
+        isReplica={false}
         onBack={() => { setFrozenScrollTop(null); setListScrollTop(0); setFrozenHighlightZone(null); listScrollTopRef.current = 0; setStep(5) }}
         onNext={() => setStep(8)}
         onScrollDetected={(cartaRect) => {
@@ -981,7 +1031,7 @@ export default function PagoPA() {
   }
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '40px', height: '820px' }}>
+    <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '80px', height: '820px' }}>
       <PhoneFrame>
         <PanelLeft
           step={step} rightPanelContent={rightPanelContent()} rightPanelRef={rightPanelRef}
@@ -991,11 +1041,12 @@ export default function PagoPA() {
           forceTop={step === 6 || step === 7}
           email={currentEmail}
           cardLast4={cardLast4}
+          scrollVersion={listScrollTop + (frozenScrollTop || 0)}
         />
       </PhoneFrame>
       <TotemFrame>
         <div ref={rightPanelRef} style={{ width: '390px', height: '740px', flexShrink: 0, overflow: 'hidden', position: 'relative' }}>
-          <div style={{ width: `${390/zoom}px`, height: `${740/zoom}px`, zoom, filter: theme.isHC ? 'invert(1)' : 'none', overflowY: 'auto', overflowX: 'hidden' }}>
+          <div onScroll={e => setListScrollTop(e.currentTarget.scrollTop)} style={{ width: `${390/zoom}px`, height: `${740/zoom}px`, zoom, filter: theme.isHC ? 'invert(1)' : 'none', overflowY: 'auto', overflowX: 'hidden' }}>
             {rightPanelInteractive()}
           </div>
           <button

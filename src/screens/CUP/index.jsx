@@ -9,25 +9,42 @@ import AssistantOverlay from '../../components/AssistantOverlay'
 import AccessibilityPanel from '../../components/phone/AccessibilityPanel'
 
 // ── ASSISTANT STEPS CONFIG ─────────────────────────────────────────
-const assistantSteps = [
+function getAssistantSteps(theme) {
+  const c = theme.primary
+  return [
   {
     tag: '👆 Fai così',
-    text: (<>Clicca su <strong style={{ color: '#1A9E8F' }}>PRENOTAZIONI</strong> per iniziare!</>),
+    text: (<>Clicca su <strong style={{ color: c }}>PRENOTAZIONI</strong> per iniziare!</>),
     highlightSelector: '[data-highlight="prenotazioni"]',
   },
   {
     tag: '👆 Fai così',
-    text: (<>Fai CLICK su <strong style={{ color: '#1A9E8F' }}>AGGIUNGI PRENOTAZIONE</strong>!</>),
+    text: (<>Fai CLICK su <strong style={{ color: c }}>AGGIUNGI PRENOTAZIONE</strong>!</>),
     highlightSelector: '[data-highlight="aggiungi"]',
   },
   {
-    tag: '📖 Tutorial',
+    tag: '📖 Come compilare il form',
     isTutorialMode: true,
     text: (
-      <div style={{ textAlign: 'left', fontSize: '13px', lineHeight: '1.4' }}>
-        Adesso scopriamo insieme IL <strong>FORM</strong>, lo strumento che serve per INVIARE I TUOI DATI ALLE APP.<br /><br />
-        Per prima cosa <strong>LEGGI LE ETICHETTE</strong> che ti spiegano cosa inserire, poi <strong>TOCCA I RETTANGOLI BIANCHI</strong> PER SCRIVERE quello che serve.<br /><br />
-        Quando hai finito, <strong>PREMI IL BOTTONE IN FONDO</strong>: serve a spedire le tue informazioni e concludere l'operazione!
+      <div style={{ textAlign: 'left' }}>
+        {[
+          { n: '1', title: 'Leggi le etichette', desc: 'Le scritte sopra i rettangoli ti dicono cosa inserire', color: '#E0F5F3', accent: '#1A9E8F' },
+          { n: '2', title: 'Tocca i rettangoli bianchi', desc: 'Clicca sul campo e scrivi le informazioni richieste', color: '#FFF0E0', accent: '#D4720A' },
+          { n: '3', title: 'Premi il pulsante in fondo', desc: 'Quando hai finito, premi il bottone per inviare', color: '#EEF0FF', accent: '#5C60C0' },
+        ].map(s => (
+          <div key={s.n} style={{ display: 'flex', gap: '12px', alignItems: 'flex-start', padding: '10px 12px', background: s.color, borderRadius: '12px', marginBottom: '8px' }}>
+            <div style={{ width: '28px', height: '28px', background: s.accent, borderRadius: '7px', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+              <span style={{ fontFamily: 'Nunito, sans-serif', fontSize: '14px', fontWeight: 900, color: 'white' }}>{s.n}</span>
+            </div>
+            <div>
+              <p style={{ fontFamily: 'Nunito, sans-serif', fontSize: '14px', fontWeight: 800, color: '#1A1A1A', marginBottom: '2px' }}>{s.title}</p>
+              <p style={{ fontFamily: 'Nunito, sans-serif', fontSize: '12px', fontWeight: 600, color: '#4B5563', lineHeight: 1.4 }}>{s.desc}</p>
+            </div>
+          </div>
+        ))}
+        <p style={{ fontFamily: 'Nunito, sans-serif', fontSize: '13px', fontWeight: 700, color: c, marginTop: '6px', marginBottom: 0 }}>
+          Poi premi <strong>HO CAPITO</strong> sul totem per iniziare →
+        </p>
       </div>
     ),
     highlightSelector: '[data-highlight="continua"]',
@@ -67,28 +84,82 @@ const assistantSteps = [
     text: (<><strong>GRANDE!</strong><br />Prenotazione effettuata! Ora puoi tornare alla schermata principale.</>),
     highlightSelector: '[data-highlight="home-back"]',
   },
+  ]
+}
+
+// ── JOURNEY MAP ────────────────────────────────────────────────────
+const CUP_PHASES = [
+  { label: 'Menu' },
+  { label: 'Dati' },
+  { label: 'Sede' },
+  { label: 'Fine' },
 ]
 
+function getCupPhase(step) {
+  if (step <= 1) return 0
+  if (step <= 6) return 1
+  if (step <= 8) return 2
+  return 3
+}
+
+function CupJourneyMap({ step }) {
+  const theme = useTheme()
+  if (step === 0 || step === 9) return null
+  const current = getCupPhase(step)
+  const p = theme.primary
+  const pLight = theme.isHC ? '#1A2A1A' : '#E0F5F3'
+  const pBorder = theme.isHC ? '#2A4A2A' : '#A8DDD8'
+  return (
+    <div style={{ display: 'flex', alignItems: 'flex-start', marginBottom: '14px' }}>
+      {CUP_PHASES.map((phase, i) => (
+        <div key={i} style={{ display: 'flex', alignItems: 'center', flex: i < CUP_PHASES.length - 1 ? '1 1 0' : 'none' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '3px' }}>
+            <div style={{
+              width: i === current ? '44px' : '34px', height: i === current ? '44px' : '34px',
+              borderRadius: '11px',
+              background: i === current ? p : i < current ? pLight : theme.isHC ? '#2A2A2A' : '#F0F0F0',
+              border: `2px solid ${i === current ? theme.primaryDark : i < current ? pBorder : theme.isHC ? '#444' : '#E0E0E0'}`,
+              display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
+              transition: 'all 0.3s',
+              boxShadow: i === current ? `0 4px 12px ${p}44` : 'none',
+            }}>
+              {i < current
+                ? <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7 L6 11 L12 3" stroke={p} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                : <span style={{ fontFamily: 'Nunito, sans-serif', fontSize: i === current ? '12px' : '10px', fontWeight: 800, color: i === current ? theme.isHC ? '#000' : 'white' : theme.isHC ? '#888' : '#B0B0B0' }}>{i + 1}</span>
+              }
+            </div>
+            <span style={{ fontSize: i === current ? '10px' : '9px', fontWeight: i === current ? 800 : 600, color: i === current ? p : i < current ? p : theme.isHC ? '#666' : '#B0B0B0', fontFamily: 'Nunito, sans-serif', whiteSpace: 'nowrap' }}>{phase.label}</span>
+          </div>
+          {i < CUP_PHASES.length - 1 && (
+            <div style={{ flex: 1, height: '2px', marginBottom: '16px', minWidth: '6px', background: i < current ? p : theme.isHC ? '#333' : '#E8E8E8', transition: 'background 0.4s' }} />
+          )}
+        </div>
+      ))}
+    </div>
+  )
+}
+
 // ── BACK BUTTON ────────────────────────────────────────────────────
-const CustomBackButton = ({ onBack }) => (
+const BackButton = ({ onBack }) => (
   <button
     onClick={onBack}
     style={{
-      flex: 1, padding: '14px', borderRadius: '14px',
-      border: '2px solid #E8E8E8', background: 'white',
-      fontFamily: 'Nunito, sans-serif', fontSize: '14px', fontWeight: 700,
-      color: '#6B7280', cursor: 'pointer',
-      display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px',
+      flex: 1, padding: '16px 12px', borderRadius: '14px',
+      border: '2px solid #E0E0E0', background: 'white',
+      fontFamily: 'Nunito, sans-serif', fontSize: '15px', fontWeight: 700,
+      color: '#6B7280', cursor: 'pointer', minHeight: '58px',
+      display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px',
     }}
   >
-    <ArrowLeft size={16} />
+    <ArrowLeft size={17} /> Indietro
   </button>
 )
 
 // ── LEFT PANEL (phone coaching overlay) ───────────────────────────
-function PanelLeft({ step, rightPanelContent, rightPanelRef }) {
+function PanelLeft({ step, rightPanelContent, rightPanelRef, panelScroll }) {
   const theme = useTheme()
   const zoom = useFontZoom()
+  const assistantSteps = getAssistantSteps(theme)
   const currentStep = assistantSteps[step] || assistantSteps[0]
   const [highlightZone, setHighlightZone] = useState(null)
 
@@ -109,11 +180,28 @@ function PanelLeft({ step, rightPanelContent, rightPanelRef }) {
         height: targetRect.height / outerScale,
       })
     }
-    const timer = setTimeout(calculate, 50)
-    const observer = new ResizeObserver(calculate)
-    if (rightPanelRef?.current) observer.observe(rightPanelRef.current)
+    
+    // Schedule calculation with requestAnimationFrame for accurate dimensions after reflow
+    const scheduleCalculate = () => {
+      requestAnimationFrame(() => {
+        setTimeout(calculate, 100)
+      })
+    }
+    
+    // Initial calculation
+    const timer = setTimeout(calculate, 150)
+    
+    // ResizeObserver to catch text reflow when zoom changes
+    const observer = new ResizeObserver(scheduleCalculate)
+    if (rightPanelRef?.current) {
+      observer.observe(rightPanelRef.current)
+      // Also observe the target element if it exists
+      const target = rightPanelRef.current.querySelector(currentStep.highlightSelector)
+      if (target) observer.observe(target)
+    }
+    
     return () => { clearTimeout(timer); observer.disconnect() }
-  }, [step, currentStep.highlightSelector, rightPanelRef])
+  }, [step, currentStep.highlightSelector, rightPanelRef, zoom, panelScroll])
 
   return (
     <div style={{ width: '390px', height: '740px', flexShrink: 0, position: 'relative', overflow: 'hidden', background: theme.bg }}>
@@ -154,6 +242,7 @@ function PanelLeft({ step, rightPanelContent, rightPanelRef }) {
 // ── STEP COMPONENTS (partner's CUP flow) ──────────────────────────
 
 function StepMenu({ onPrenotazioni, onBack }) {
+  const theme = useTheme()
   const voci = [
     { icon: <CalendarDays size={38} />, label: 'Prenotazioni', highlight: true },
     { icon: <Building2 size={38} />, label: 'Strutture' },
@@ -163,70 +252,103 @@ function StepMenu({ onPrenotazioni, onBack }) {
     { icon: <svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>, label: 'Modulistica' },
   ]
   return (
-    <div style={{ height: '100%', background: 'white', display: 'flex', flexDirection: 'column', textAlign: 'center', padding: '0 20px 20px' }}>
-      <h1 style={{ padding: '40px 0 20px', fontSize: '28px', fontWeight: 900, color: '#2D2D2D', fontFamily: 'Nunito, sans-serif' }}>Sanità pubblica</h1>
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', flex: 1 }}>
+    <div style={{ height: '100%', background: theme.bg, display: 'flex', flexDirection: 'column', textAlign: 'center', padding: '0 20px 20px' }}>
+      <h1 style={{ padding: '32px 0 16px', fontSize: '26px', fontWeight: 900, color: theme.text, fontFamily: 'Nunito, sans-serif' }}>Sanità pubblica</h1>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', flex: 1 }}>
         {voci.map((v, i) => (
           <div
             key={i}
             data-highlight={v.highlight ? 'prenotazioni' : null}
             onClick={v.highlight ? onPrenotazioni : null}
-            style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px', cursor: v.highlight ? 'pointer' : 'default' }}
+            style={{
+              display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px',
+              cursor: v.highlight ? 'pointer' : 'default',
+              padding: '14px 8px', borderRadius: '14px',
+              background: v.highlight ? theme.primaryLight : theme.surface,
+              border: `2px solid ${v.highlight ? theme.primary + '44' : theme.border}`,
+              color: v.highlight ? theme.primary : theme.textSecondary,
+            }}
           >
-            <div style={{ color: '#2D2D2D' }}>{v.icon}</div>
-            <span style={{ fontWeight: 700, fontFamily: 'Nunito, sans-serif' }}>{v.label}</span>
+            {v.icon}
+            <span style={{ fontWeight: 700, fontFamily: 'Nunito, sans-serif', fontSize: '13px', color: v.highlight ? theme.primary : theme.text }}>{v.label}</span>
           </div>
         ))}
       </div>
-      <div style={{ display: 'flex', gap: '10px', marginTop: 'auto', paddingTop: '20px' }}>
-        <CustomBackButton onBack={onBack} />
+      <div style={{ display: 'flex', gap: '10px', marginTop: '16px', paddingTop: '4px' }}>
+        <BackButton onBack={onBack} />
       </div>
     </div>
   )
 }
 
 function StepOptions({ onNext, onBack }) {
+  const theme = useTheme()
   return (
-    <div style={{ height: '100%', background: 'white', padding: '20px', display: 'flex', flexDirection: 'column' }}>
-      <div style={{ display: 'flex', alignItems: 'center', marginBottom: '40px' }}>
-        <h2 style={{ flex: 1, textAlign: 'center', fontWeight: 800, color: '#2D2D2D', fontFamily: 'Nunito, sans-serif' }}>Prenotazioni</h2>
-      </div>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '15px', flex: 1 }}>
-        <button data-highlight="aggiungi" onClick={onNext} style={{ display: 'flex', alignItems: 'center', gap: '15px', padding: '18px', border: '2px solid black', borderRadius: '12px', background: 'white', fontWeight: 800, textAlign: 'left', cursor: 'pointer', fontFamily: 'Nunito, sans-serif' }}>
-          <PlusCircle /> Aggiungi Prenotazione
+    <div style={{ height: '100%', background: theme.bg, padding: '24px 20px 20px', display: 'flex', flexDirection: 'column' }}>
+      <p style={{ fontFamily: 'Nunito, sans-serif', fontSize: '13px', fontWeight: 700, color: theme.primary, letterSpacing: '0.8px', textTransform: 'uppercase', marginBottom: '6px' }}>CUP · Prenotazioni</p>
+      <CupJourneyMap step={1} />
+      <h2 style={{ fontFamily: 'Nunito, sans-serif', fontSize: '24px', fontWeight: 900, color: theme.text, marginBottom: '20px' }}>Prenotazioni</h2>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', flex: 1 }}>
+        <button data-highlight="aggiungi" onClick={onNext} style={{ display: 'flex', alignItems: 'center', gap: '15px', padding: '18px', border: `2.5px solid ${theme.primary}`, borderRadius: '14px', background: theme.primaryLight, fontWeight: 800, textAlign: 'left', cursor: 'pointer', fontFamily: 'Nunito, sans-serif', color: theme.text, minHeight: '64px' }}>
+          <PlusCircle color={theme.primary} /> <span>Aggiungi Prenotazione</span>
         </button>
-        <button disabled style={{ display: 'flex', alignItems: 'center', gap: '15px', padding: '18px', border: '1px solid #E8E8E8', borderRadius: '12px', background: 'white', color: '#ccc', textAlign: 'left', fontFamily: 'Nunito, sans-serif' }}>
+        <button disabled style={{ display: 'flex', alignItems: 'center', gap: '15px', padding: '18px', border: `1.5px solid ${theme.border}`, borderRadius: '14px', background: theme.surface, color: theme.muted, textAlign: 'left', fontFamily: 'Nunito, sans-serif', minHeight: '64px', opacity: 0.5 }}>
           <Download /> Recupera Prenotazione
         </button>
-        <button disabled style={{ display: 'flex', alignItems: 'center', gap: '15px', padding: '18px', border: '1px solid #E8E8E8', borderRadius: '12px', background: 'white', color: '#ccc', textAlign: 'left', fontFamily: 'Nunito, sans-serif' }}>
+        <button disabled style={{ display: 'flex', alignItems: 'center', gap: '15px', padding: '18px', border: `1.5px solid ${theme.border}`, borderRadius: '14px', background: theme.surface, color: theme.muted, textAlign: 'left', fontFamily: 'Nunito, sans-serif', minHeight: '64px', opacity: 0.5 }}>
           <List /> Elenca prenotazioni
         </button>
       </div>
-      <div style={{ display: 'flex', gap: '10px', marginTop: 'auto', paddingTop: '20px' }}>
-        <CustomBackButton onBack={onBack} />
+      <div style={{ display: 'flex', gap: '10px', marginTop: 'auto', paddingTop: '16px' }}>
+        <BackButton onBack={onBack} />
       </div>
     </div>
   )
 }
 
-function StepTutorialScreen({ onNext }) {
+function StepTutorialScreen({ onNext, onBack }) {
+  const theme = useTheme()
   return (
-    <div style={{ height: '100%', background: '#999', display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '60px 20px 40px', color: 'white', textAlign: 'center' }}>
-      <h1 style={{ fontSize: '42px', fontWeight: 900, lineHeight: 1.1, fontFamily: 'Nunito, sans-serif' }}>Leggi<br />il tutorial!</h1>
-      <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        <div style={{ fontSize: '100px' }}>👇</div>
+    <div style={{ height: '100%', background: theme.bg, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '40px 28px 28px', textAlign: 'center' }}>
+      <div style={{ width: '72px', height: '72px', background: theme.primaryLight, borderRadius: '18px', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '20px' }}>
+        <svg viewBox="0 0 36 36" fill="none" width="40" height="40">
+          <rect x="6" y="2" width="18" height="28" rx="4" stroke={theme.primary} strokeWidth="2" fill="none"/>
+          <rect x="10" y="8" width="10" height="2.5" rx="1.25" fill={theme.primary} opacity="0.5"/>
+          <rect x="10" y="13" width="10" height="2.5" rx="1.25" fill={theme.primary} opacity="0.5"/>
+          <rect x="10" y="18" width="7" height="2.5" rx="1.25" fill={theme.primary} opacity="0.5"/>
+          <path d="M26 20 L34 20 M30 16 L34 20 L30 24" stroke={theme.primary} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+        </svg>
       </div>
-      <button data-highlight="continua" onClick={onNext} style={{ width: '100%', padding: '18px', background: '#1A1A1A', color: 'white', border: 'none', borderRadius: '14px', fontWeight: 900, fontSize: '16px', cursor: 'pointer', fontFamily: 'Nunito, sans-serif' }}>
-        CONTINUA
-      </button>
+      <h2 style={{ fontFamily: 'Nunito, sans-serif', fontSize: '24px', fontWeight: 900, color: theme.text, lineHeight: 1.25, marginBottom: '10px' }}>
+        Leggi il tutorial<br />sul telefono
+      </h2>
+      <p style={{ fontFamily: 'Nunito, sans-serif', fontSize: '15px', fontWeight: 600, color: theme.textSecondary, lineHeight: 1.6, maxWidth: '260px', marginBottom: '32px' }}>
+        Il tuo assistente ti spiega come compilare il form. Leggilo e poi torna qui.
+      </p>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '32px', background: theme.primaryLight, border: `1.5px solid ${theme.borderStrong}`, borderRadius: '12px', padding: '10px 16px' }}>
+        <span style={{ fontSize: '20px' }}>📱</span>
+        <span style={{ fontFamily: 'Nunito, sans-serif', fontSize: '13px', fontWeight: 700, color: theme.primary }}>Guarda lo schermo dell'assistente →</span>
+      </div>
+      <div style={{ display: 'flex', gap: '10px', width: '100%' }}>
+        <BackButton onBack={onBack} />
+        <button data-highlight="continua" onClick={onNext} style={{ flex: 1, padding: '18px', background: `linear-gradient(135deg, ${theme.primary} 0%, ${theme.primaryDark} 100%)`, color: theme.primaryText, border: 'none', borderRadius: '14px', fontWeight: 900, fontSize: '16px', cursor: 'pointer', fontFamily: 'Nunito, sans-serif', boxShadow: `0 4px 16px ${theme.primary}5C` }}>
+          Ho capito, inizia! →
+        </button>
+      </div>
     </div>
   )
 }
 
 function StepFormScreen({ currentStep, setStep, onNext, onBack }) {
-  const [valSx, setValSx] = useState('')
-  const [valDx, setValDx] = useState('')
-  const [valCf, setValCf] = useState('')
+  const theme = useTheme()
+  const { state, setState } = useApp()
+  const valSx = state.cupForm?.nreSx || ''
+  const valDx = state.cupForm?.nreDx || ''
+  const valCf = state.cupForm?.cf || ''
+
+  const setValSx = (value) => setState(s => ({ ...s, cupForm: { ...s.cupForm, nreSx: value } }))
+  const setValDx = (value) => setState(s => ({ ...s, cupForm: { ...s.cupForm, nreDx: value } }))
+  const setValCf = (value) => setState(s => ({ ...s, cupForm: { ...s.cupForm, cf: value } }))
 
   useEffect(() => {
     if (valSx.length === 5 && currentStep === 3) setStep(4)
@@ -234,47 +356,51 @@ function StepFormScreen({ currentStep, setStep, onNext, onBack }) {
     if (valCf.length === 16 && currentStep === 5) setStep(6)
   }, [valSx, valDx, valCf, currentStep, setStep])
 
-  const fieldStyle = (active) => ({
-    border: active ? '2px solid #1A9E8F' : '2px solid #E8E8E8',
-    padding: '15px', borderRadius: '12px', background: 'white',
-    transition: 'all 0.3s ease', opacity: active ? 1 : 0.6, textAlign: 'left',
+  useEffect(() => {
+    setState(s => ({ ...s, buttonState: { ...s.buttonState, cupReady: valCf.length === 16 } }))
+  }, [valCf.length, setState])
+
+  const fieldWrap = (active) => ({
+    border: active ? `2px solid ${theme.primary}` : `2px solid ${theme.border}`,
+    padding: '14px 16px', borderRadius: '14px', background: 'white',
+    transition: 'all 0.3s ease', opacity: active ? 1 : 0.65,
   })
+  const inputStyle = { width: '100%', border: 'none', fontSize: '18px', outline: 'none', fontWeight: 700, fontFamily: 'Nunito, sans-serif', background: 'white', color: '#1A1A1A', boxSizing: 'border-box' }
 
   return (
-    <div style={{ height: '100%', background: 'white', padding: '20px', display: 'flex', flexDirection: 'column' }}>
-      <div style={{ display: 'flex', alignItems: 'center', marginBottom: '30px', position: 'relative' }}>
-        <button onClick={onBack} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '5px', color: '#6B7280', position: 'absolute', left: 0 }}>
-          <ArrowLeft size={20} />
-        </button>
-        <h3 style={{ flex: 1, textAlign: 'center', fontWeight: 800, margin: 0, color: '#2D2D2D', fontFamily: 'Nunito, sans-serif' }}>Aggiungi Prenotazione</h3>
-      </div>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '15px', flex: 1 }}>
-        <div data-highlight="nre-sx" style={fieldStyle(currentStep === 3)}>
-          <label style={{ fontSize: '11px', fontWeight: 800, color: '#666', display: 'block', marginBottom: '5px', fontFamily: 'Nunito, sans-serif' }}>CODICE NRE SINISTRA</label>
-          <input value={valSx} onChange={(e) => setValSx(e.target.value.toUpperCase())} maxLength={5} placeholder="xxxxx" style={{ width: '100%', border: 'none', fontSize: '18px', outline: 'none', fontWeight: 700, fontFamily: 'Nunito, sans-serif' }} />
+    <div style={{ height: '100%', background: theme.bg, padding: '24px 20px 20px', display: 'flex', flexDirection: 'column' }}>
+      <p style={{ fontFamily: 'Nunito, sans-serif', fontSize: '13px', fontWeight: 700, color: theme.primary, letterSpacing: '0.8px', textTransform: 'uppercase', marginBottom: '6px' }}>CUP · Prenotazioni</p>
+      <CupJourneyMap step={currentStep} />
+      <h3 style={{ fontFamily: 'Nunito, sans-serif', fontWeight: 900, margin: '0 0 16px', color: theme.text, fontSize: '22px' }}>Aggiungi Prenotazione</h3>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', flex: 1 }}>
+        <div data-highlight="nre-sx" style={fieldWrap(currentStep === 3)}>
+          <label style={{ fontSize: '11px', fontWeight: 800, color: theme.muted, display: 'block', marginBottom: '6px', fontFamily: 'Nunito, sans-serif', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Codice NRE Sinistra</label>
+          <input value={valSx} onChange={(e) => setValSx(e.target.value.toUpperCase())} maxLength={5} placeholder="xxxxx" style={inputStyle} />
         </div>
-        <div data-highlight="nre-dx" style={fieldStyle(currentStep === 4)}>
-          <label style={{ fontSize: '11px', fontWeight: 800, color: '#666', display: 'block', marginBottom: '5px', fontFamily: 'Nunito, sans-serif' }}>CODICE NRE DESTRA</label>
-          <input value={valDx} onChange={(e) => setValDx(e.target.value)} maxLength={10} placeholder="xxxxxxxxxx" style={{ width: '100%', border: 'none', fontSize: '18px', outline: 'none', fontWeight: 700, fontFamily: 'Nunito, sans-serif' }} />
+        <div data-highlight="nre-dx" style={fieldWrap(currentStep === 4)}>
+          <label style={{ fontSize: '11px', fontWeight: 800, color: theme.muted, display: 'block', marginBottom: '6px', fontFamily: 'Nunito, sans-serif', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Codice NRE Destra</label>
+          <input value={valDx} onChange={(e) => setValDx(e.target.value)} maxLength={10} placeholder="xxxxxxxxxx" style={inputStyle} />
         </div>
-        <div data-highlight="cf" style={fieldStyle(currentStep === 5)}>
-          <label style={{ fontSize: '11px', fontWeight: 800, color: '#666', display: 'block', marginBottom: '5px', fontFamily: 'Nunito, sans-serif' }}>CODICE FISCALE</label>
-          <input value={valCf} onChange={(e) => setValCf(e.target.value.toUpperCase())} maxLength={16} placeholder="XXXXX..." style={{ width: '100%', border: 'none', fontSize: '18px', outline: 'none', fontWeight: 700, fontFamily: 'Nunito, sans-serif' }} />
+        <div data-highlight="cf" style={fieldWrap(currentStep === 5)}>
+          <label style={{ fontSize: '11px', fontWeight: 800, color: theme.muted, display: 'block', marginBottom: '6px', fontFamily: 'Nunito, sans-serif', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Codice Fiscale</label>
+          <input value={valCf} onChange={(e) => setValCf(e.target.value.toUpperCase())} maxLength={16} placeholder="XXXXX..." style={inputStyle} />
         </div>
       </div>
-      <div style={{ marginTop: 'auto', paddingTop: '20px' }}>
+      <div style={{ display: 'flex', gap: '10px', marginTop: 'auto', paddingTop: '16px' }}>
+        <BackButton onBack={onBack} />
         <button
           data-highlight="richiedi-btn"
           onClick={valCf.length === 16 ? onNext : undefined}
           style={{
-            width: '100%', padding: '16px', borderRadius: '14px', border: 'none',
-            background: valCf.length === 16 ? '#1A1A1A' : '#E8E8E8',
-            color: valCf.length === 16 ? 'white' : '#9CA3AF',
+            flex: 2, padding: '16px', borderRadius: '14px', border: 'none', minHeight: '58px',
+            background: valCf.length === 16 ? `linear-gradient(135deg, ${theme.primary} 0%, ${theme.primaryDark} 100%)` : theme.border,
+            color: valCf.length === 16 ? theme.primaryText : theme.muted,
             fontWeight: 800, cursor: valCf.length === 16 ? 'pointer' : 'default',
             fontFamily: 'Nunito, sans-serif', fontSize: '15px',
+            boxShadow: valCf.length === 16 ? `0 4px 16px ${theme.primary}55` : 'none',
           }}
         >
-          Richiedi
+          {valCf.length === 16 ? 'Richiedi →' : 'Completa i campi'}
         </button>
       </div>
     </div>
@@ -282,6 +408,7 @@ function StepFormScreen({ currentStep, setStep, onNext, onBack }) {
 }
 
 function StepResults({ onNext, onBack }) {
+  const theme = useTheme()
   const sedi = [
     { h: 'Ospedale Molinette', s: 'Via San Maurizio - Torino', d: '11/07/2026 - 12:30' },
     { h: 'Ospedale Santa Maria', s: 'Corso Vercelli - Torino', d: '29/06/2026 - 18:30' },
@@ -289,61 +416,67 @@ function StepResults({ onNext, onBack }) {
     { h: 'Ospedale Santa Agata', s: 'Via Verdi - Vercelli', d: '13/07/2026 - 09:30' },
   ]
   return (
-    <div style={{ height: '100%', background: 'white', display: 'flex', flexDirection: 'column', padding: '0 0 20px 0' }}>
-      <h3 style={{ textAlign: 'center', padding: '20px', fontWeight: 800, color: '#2D2D2D', fontFamily: 'Nunito, sans-serif' }}>Prime Disponibilità</h3>
-      <div style={{ overflowY: 'auto', flex: 1 }}>
+    <div style={{ height: '100%', background: theme.bg, display: 'flex', flexDirection: 'column' }}>
+      <div style={{ padding: '24px 20px 0' }}>
+        <p style={{ fontFamily: 'Nunito, sans-serif', fontSize: '13px', fontWeight: 700, color: theme.primary, letterSpacing: '0.8px', textTransform: 'uppercase', marginBottom: '6px' }}>CUP · Prenotazioni</p>
+        <CupJourneyMap step={7} />
+        <h3 style={{ fontFamily: 'Nunito, sans-serif', fontWeight: 900, fontSize: '22px', color: theme.text, marginBottom: '12px' }}>Prime Disponibilità</h3>
+      </div>
+      <div style={{ overflowY: 'auto', flex: 1, display: 'flex', flexDirection: 'column', width: '100%' }}>
         {sedi.map((s, i) => (
           <div
             key={i}
             data-highlight={s.target ? 'target-hospital' : null}
             onClick={onNext}
-            style={{ display: 'flex', alignItems: 'center', padding: '20px', borderBottom: '1px solid #F0F0F0', cursor: 'pointer' }}
+            style={{
+              display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', 
+              padding: '24px 20px', borderBottom: `1px solid ${theme.border}`, cursor: 'pointer',
+              background: 'transparent', textAlign: 'center', minHeight: '140px', width: '100%',
+            }}
           >
-            <CalendarDays style={{ marginRight: '15px', color: '#2D2D2D' }} size={28} />
-            <div style={{ flex: 1, textAlign: 'left' }}>
-              <div style={{ fontWeight: 800, fontSize: '15px', fontFamily: 'Nunito, sans-serif' }}>{s.h}</div>
-              <div style={{ fontSize: '12px', color: '#6B7280', fontFamily: 'Nunito, sans-serif' }}>{s.s}</div>
-              <div style={{ fontSize: '12px', fontWeight: 700, color: '#1A9E8F', marginTop: '2px', fontFamily: 'Nunito, sans-serif' }}>{s.d}</div>
+            <CalendarDays style={{ marginBottom: '12px', color: theme.primary, flexShrink: 0 }} size={36} />
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '0' }}>
+              <div style={{ fontWeight: 800, fontSize: '16px', fontFamily: 'Nunito, sans-serif', color: theme.text, marginBottom: '6px' }}>{s.h}</div>
+              <div style={{ fontSize: '12px', color: theme.textSecondary, fontFamily: 'Nunito, sans-serif', marginBottom: '8px' }}>{s.s}</div>
+              <div style={{ fontSize: '13px', fontWeight: 700, color: theme.primary, fontFamily: 'Nunito, sans-serif' }}>{s.d}</div>
             </div>
-            <ChevronRight size={18} color="#9CA3AF" />
           </div>
         ))}
       </div>
-      <div style={{ display: 'flex', gap: '10px', padding: '0 20px' }}>
-        <CustomBackButton onBack={onBack} />
+      <div style={{ display: 'flex', gap: '10px', padding: '12px 20px' }}>
+        <BackButton onBack={onBack} />
       </div>
     </div>
   )
 }
 
 function StepConfirm({ onNext, onBack }) {
+  const theme = useTheme()
   return (
-    <div style={{ height: '100%', background: 'white', padding: '32px 28px 20px', display: 'flex', flexDirection: 'column' }}>
-      <h3 style={{ textAlign: 'center', marginBottom: '40px', fontWeight: 900, fontSize: '24px', color: '#2D2D2D', fontFamily: 'Nunito, sans-serif' }}>Dettaglio</h3>
-      <div style={{ flex: 1, textAlign: 'left' }}>
-        <div style={{ display: 'flex', gap: '15px', marginBottom: '25px' }}>
-          <div style={{ width: '40px', height: '40px', background: '#E0F5F3', borderRadius: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <Building2 size={20} color="#1A9E8F" />
+    <div style={{ height: '100%', background: theme.bg, padding: '24px 24px 20px', display: 'flex', flexDirection: 'column' }}>
+      <p style={{ fontFamily: 'Nunito, sans-serif', fontSize: '13px', fontWeight: 700, color: theme.primary, letterSpacing: '0.8px', textTransform: 'uppercase', marginBottom: '6px' }}>CUP · Conferma</p>
+      <CupJourneyMap step={8} />
+      <h3 style={{ fontFamily: 'Nunito, sans-serif', fontWeight: 900, fontSize: '22px', color: theme.text, marginBottom: '20px' }}>Dettaglio prenotazione</h3>
+      <div style={{ flex: 1 }}>
+        {[
+          { icon: <Building2 size={20} color={theme.primary} />, label: 'Sede', value: 'Ospedale San Pietro, Corso Ottomano - Torino' },
+          { icon: <CalendarDays size={20} color={theme.primary} />, label: 'Data e ora', value: '21/07/2026 - 14:00' },
+        ].map((row, i) => (
+          <div key={i} style={{ display: 'flex', gap: '14px', marginBottom: '18px', padding: '14px', background: theme.surface, borderRadius: '14px', border: `1.5px solid ${theme.border}`, alignItems: 'center', justifyContent: 'center', textAlign: 'center' }}>
+            <div style={{ width: '40px', height: '40px', background: theme.primaryLight, borderRadius: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+              {row.icon}
+            </div>
+            <div style={{ flex: 1 }}>
+              <div style={{ fontWeight: 800, fontSize: '13px', color: theme.muted, textTransform: 'uppercase', letterSpacing: '0.5px', fontFamily: 'Nunito, sans-serif', marginBottom: '3px' }}>{row.label}</div>
+              <div style={{ fontWeight: 700, fontSize: '15px', color: theme.text, fontFamily: 'Nunito, sans-serif' }}>{row.value}</div>
+            </div>
           </div>
-          <div>
-            <div style={{ fontWeight: 800, fontSize: '16px', fontFamily: 'Nunito, sans-serif' }}>Sede</div>
-            <div style={{ color: '#4B5563', fontSize: '14px', fontFamily: 'Nunito, sans-serif' }}>Ospedale San Pietro, Corso Ottomano - Torino</div>
-          </div>
-        </div>
-        <div style={{ display: 'flex', gap: '15px', marginBottom: '25px' }}>
-          <div style={{ width: '40px', height: '40px', background: '#E0F5F3', borderRadius: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <CalendarDays size={20} color="#1A9E8F" />
-          </div>
-          <div>
-            <div style={{ fontWeight: 800, fontSize: '16px', fontFamily: 'Nunito, sans-serif' }}>Data e ora</div>
-            <div style={{ color: '#4B5563', fontSize: '14px', fontFamily: 'Nunito, sans-serif' }}>21/07/2026 - 14:00</div>
-          </div>
-        </div>
+        ))}
       </div>
       <div style={{ display: 'flex', gap: '10px', marginTop: 'auto' }}>
-        <CustomBackButton onBack={onBack} />
-        <button data-highlight="conferma-btn" onClick={onNext} style={{ flex: 2, padding: '18px', background: '#1A1A1A', color: 'white', borderRadius: '12px', fontWeight: 900, border: 'none', cursor: 'pointer', fontSize: '15px', fontFamily: 'Nunito, sans-serif' }}>
-          Conferma
+        <BackButton onBack={onBack} />
+        <button data-highlight="conferma-btn" onClick={onNext} style={{ flex: 2, padding: '16px', background: `linear-gradient(135deg, ${theme.primary} 0%, ${theme.primaryDark} 100%)`, color: theme.primaryText, borderRadius: '14px', fontWeight: 900, border: 'none', cursor: 'pointer', fontSize: '15px', fontFamily: 'Nunito, sans-serif', minHeight: '58px', boxShadow: `0 4px 16px ${theme.primary}55` }}>
+          Conferma prenotazione →
         </button>
       </div>
     </div>
@@ -351,14 +484,15 @@ function StepConfirm({ onNext, onBack }) {
 }
 
 function StepSuccess({ onHome }) {
+  const theme = useTheme()
   return (
-    <div style={{ height: '100%', background: 'white', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '40px', textAlign: 'center' }}>
-      <div style={{ width: '90px', height: '90px', borderRadius: '50%', border: '3px solid #1A9E8F', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '30px', color: '#1A9E8F' }}>
-        <CheckCircle2 size={50} />
+    <div style={{ height: '100%', background: theme.bg, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '40px', textAlign: 'center' }}>
+      <div style={{ width: '90px', height: '90px', borderRadius: '50%', background: theme.primaryLight, border: `3px solid ${theme.primary}`, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '24px' }}>
+        <CheckCircle2 size={48} color={theme.primary} />
       </div>
-      <h1 style={{ fontSize: '30px', fontWeight: 900, marginBottom: '10px', color: '#2D2D2D', fontFamily: 'Nunito, sans-serif' }}>Prenotazione Effettuata!</h1>
-      <p style={{ color: '#6B7280', fontFamily: 'Nunito, sans-serif' }}>Ospedale San Pietro<br /><strong>21/07/2026 - 14:00</strong></p>
-      <button data-highlight="home-back" onClick={onHome} style={{ marginTop: 'auto', width: '100%', padding: '18px', background: '#1A1A1A', color: 'white', borderRadius: '12px', fontWeight: 800, cursor: 'pointer', border: 'none', fontFamily: 'Nunito, sans-serif', fontSize: '15px' }}>
+      <h1 style={{ fontSize: '28px', fontWeight: 900, marginBottom: '8px', color: theme.text, fontFamily: 'Nunito, sans-serif' }}>Prenotazione<br />Effettuata!</h1>
+      <p style={{ color: theme.textSecondary, fontFamily: 'Nunito, sans-serif', lineHeight: 1.6 }}>Ospedale San Pietro<br /><strong style={{ color: theme.primary }}>21/07/2026 - 14:00</strong></p>
+      <button data-highlight="home-back" onClick={onHome} style={{ marginTop: 'auto', width: '100%', padding: '18px', background: `linear-gradient(135deg, ${theme.primary} 0%, ${theme.primaryDark} 100%)`, color: theme.primaryText, borderRadius: '14px', fontWeight: 800, cursor: 'pointer', border: 'none', fontFamily: 'Nunito, sans-serif', fontSize: '15px', minHeight: '58px', boxShadow: `0 4px 16px ${theme.primary}55` }}>
         Torna alla schermata principale
       </button>
     </div>
@@ -368,6 +502,7 @@ function StepSuccess({ onHome }) {
 // ── MAIN EXPORT ────────────────────────────────────────────────────
 export default function CUP() {
   const [step, setStep] = useState(0)
+  const [panelScroll, setPanelScroll] = useState(0)
   const { setState } = useApp()
   const rightPanelRef = useRef(null)
   const zoom = useFontZoom()
@@ -397,13 +532,16 @@ export default function CUP() {
   }
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '40px', height: '820px' }}>
+    <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '80px', height: '820px' }}>
       <PhoneFrame>
-        <PanelLeft step={step} rightPanelContent={renderContent(false)} rightPanelRef={rightPanelRef} />
+        <PanelLeft step={step} rightPanelContent={renderContent(false)} rightPanelRef={rightPanelRef} panelScroll={panelScroll} />
       </PhoneFrame>
       <TotemFrame>
         <div ref={rightPanelRef} style={{ width: '390px', height: '740px', flexShrink: 0, overflow: 'hidden', position: 'relative' }}>
-          <div style={{ width: `${390/zoom}px`, height: `${740/zoom}px`, zoom, filter: theme.isHC ? 'invert(1)' : 'none', overflowY: 'auto', overflowX: 'hidden' }}>
+          <div
+            onScroll={(e) => setPanelScroll(e.currentTarget.scrollTop)}
+            style={{ width: `${390/zoom}px`, height: `${740/zoom}px`, zoom, overflowY: 'auto', overflowX: 'hidden' }}
+          >
             {renderContent(true)}
           </div>
           <button

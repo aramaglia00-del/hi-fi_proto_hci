@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)",
+      "Bash(netstat -ano)",
+      "Bash(npx vite *)",
+      "Bash(git merge *)",
+      "Bash(ls vercel.json)",
+      "Bash(ls .vercel/)",
+      "Bash(git push *)"
+    ]
+  }
+}

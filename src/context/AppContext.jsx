@@ -4,13 +4,30 @@ const AppContext = createContext(null)
 
 export function AppProvider({ children }) {
   const [state, setState] = useState({
-    currentScreen: 'pairing',
+    currentScreen: 'accessibility',
     currentStep: 0,
     email: '',
     paired: false,
     accessibility: {
-      fontSize: 'normal',   // 'normal' | 'large' | 'xlarge'
-      colorMode: 'normal',  // 'normal' | 'highContrast'
+      fontSize: 'normal',
+    },
+    cupForm: {
+      nreSx: '',
+      nreDx: '',
+      cf: '',
+    },
+    pagopaForm: {
+      email: '',
+      emailConfirm: '',
+      cardNumber: '',
+      expiry: '',
+      cvv: '',
+      cardName: '',
+    },
+    buttonState: {
+      cupReady: false,
+      pagopaEmailReady: false,
+      pagopaCardReady: false,
     },
   })
 
@@ -27,26 +44,32 @@ export function useApp() {
 }
 
 export function useTheme() {
-  const { state } = useContext(AppContext)
-  const hc = state.accessibility?.colorMode === 'highContrast'
+  useContext(AppContext)
   return {
-    bg:           hc ? '#0A0A0A' : '#FFF8F0',
-    surface:      hc ? '#1A1A1A' : '#FFFFFF',
-    cardBg:       hc ? '#111111' : '#FFFFFF',
-    primary:      hc ? '#FFD700' : '#1A9E8F',
-    primaryDark:  hc ? '#E6C200' : '#147A6E',
-    primaryText:  hc ? '#000000' : '#FFFFFF',
-    primaryLight: hc ? '#2A2A00' : '#E0F5F3',
-    text:         hc ? '#FFFFFF' : '#1A1A1A',
-    textSecondary: hc ? '#DDDDDD' : '#6B7280',
-    border:       hc ? 'rgba(255,255,255,0.2)' : '#E8E8E8',
-    borderStrong: hc ? '#FFD700' : '#1A9E8F',
-    muted:        hc ? '#AAAAAA' : '#9CA3AF',
-    tagBg:        hc ? '#1A1A00' : '#FFF0E0',
-    tagText:      hc ? '#FFD700' : '#D4720A',
-    divider:      hc ? 'rgba(255,255,255,0.12)' : 'rgba(0,0,0,0.07)',
-    navBg:        hc ? 'rgba(0,0,0,0.95)' : 'rgba(255,248,240,0.95)',
-    isHC:         hc,
+    bg: '#FFF8F0',
+    surface: '#FFFFFF',
+    cardBg: '#FFFFFF',
+    primary: '#1A9E8F',
+    primaryDark: '#147A6E',
+    primaryText: '#FFFFFF',
+    primaryLight: '#E0F5F3',
+    text: '#1A1A1A',
+    textSecondary: '#6B7280',
+    secondary: '#1A9E8F',
+    accent: '#D4720A',
+    border: '#E8E8E8',
+    borderStrong: '#1A9E8F',
+    borderWeak: '#E8E8E8',
+    muted: '#9CA3AF',
+    tagBg: '#FFF0E0',
+    tagText: '#D4720A',
+    divider: 'rgba(0,0,0,0.07)',
+    navBg: 'rgba(255,248,240,0.95)',
+    error: '#DC2626',
+    errorBg: '#FEE2E2',
+    success: '#10B981',
+    successBg: '#ECFDF5',
+    isHC: false,
   }
 }
 

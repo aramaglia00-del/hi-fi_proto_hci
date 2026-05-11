@@ -100,7 +100,7 @@ function SlideWelcome({ onNext, onAccessibility }) {
   return (
     <div style={{
       width: '390px', height: '740px', overflow: 'hidden',
-      background: theme.isHC ? '#0A0A0A' : 'linear-gradient(160deg, #FFF0D6 0%, #FFF5E8 50%, #E8F7F5 100%)',
+      background: theme.bg,
       position: 'relative',
     }}>
       <style>{`@keyframes floatM{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}`}</style>
@@ -167,15 +167,13 @@ function SlideAccessibility({ onNext }) {
   const theme = useTheme()
   const zoom = useFontZoom()
   const fs = state.accessibility?.fontSize || 'normal'
-  const cm = state.accessibility?.colorMode || 'normal'
 
   const setFs = v => setState(s => ({ ...s, accessibility: { ...s.accessibility, fontSize: v } }))
-  const setCm = v => setState(s => ({ ...s, accessibility: { ...s.accessibility, colorMode: v } }))
 
   return (
     <div style={{
       width: '390px', height: '740px', overflow: 'hidden',
-      background: theme.isHC ? '#0A0A0A' : 'linear-gradient(160deg, #FFF0D6 0%, #FFF5E8 50%, #E8F7F5 100%)',
+      background: theme.bg,
       position: 'relative',
     }}>
       <div style={{
@@ -196,7 +194,7 @@ function SlideAccessibility({ onNext }) {
         <p style={{ fontFamily: 'Nunito, sans-serif', fontSize: '11px', fontWeight: 800, color: theme.muted, textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '10px' }}>
           Dimensione testo
         </p>
-        <div style={{ display: 'flex', gap: '10px', marginBottom: '24px' }}>
+        <div style={{ display: 'flex', gap: '10px', marginBottom: 'auto' }}>
           {[{id:'normal',l:'Normale',d:'A'},{id:'large',l:'Grande',d:'AA'},{id:'xlarge',l:'Più grande',d:'AAA'}].map(o => (
             <button key={o.id} onClick={() => setFs(o.id)} style={{
               flex: 1, padding: '14px 8px', borderRadius: '16px',
@@ -206,27 +204,6 @@ function SlideAccessibility({ onNext }) {
             }}>
               <span style={{ fontFamily: 'Nunito, sans-serif', fontSize: '24px', fontWeight: 900, color: fs === o.id ? theme.primary : theme.text }}>{o.d}</span>
               <span style={{ fontFamily: 'Nunito, sans-serif', fontSize: '11px', fontWeight: 700, color: fs === o.id ? theme.primary : theme.muted }}>{o.l}</span>
-            </button>
-          ))}
-        </div>
-
-        <p style={{ fontFamily: 'Nunito, sans-serif', fontSize: '11px', fontWeight: 800, color: theme.muted, textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '10px' }}>
-          Contrasto colori
-        </p>
-        <div style={{ display: 'flex', gap: '10px', marginBottom: 'auto' }}>
-          {[
-            { id: 'normal',       l: 'Normale',        bg: 'white',  fg: '#1A1A1A', a: '#1A9E8F' },
-            { id: 'highContrast', l: 'Alto contrasto', bg: '#0A0A0A', fg: 'white',  a: '#FFD700' },
-          ].map(o => (
-            <button key={o.id} onClick={() => setCm(o.id)} style={{
-              flex: 1, padding: '14px 8px', borderRadius: '16px',
-              border: cm === o.id ? `2.5px solid ${theme.primary}` : `2px solid ${theme.border}`,
-              background: o.bg, cursor: 'pointer',
-              display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px',
-            }}>
-              <div style={{ width: '28px', height: '16px', borderRadius: '4px', background: o.a }} />
-              <span style={{ fontFamily: 'Nunito, sans-serif', fontSize: '12px', fontWeight: 800, color: o.fg }}>{o.l}</span>
-              {cm === o.id && <span style={{ fontSize: '12px', color: o.a }}>✓</span>}
             </button>
           ))}
         </div>
@@ -300,7 +277,7 @@ function SlideHow({ onNext }) {
   return (
     <div style={{
       width: '390px', height: '740px', overflow: 'hidden',
-      background: theme.isHC ? '#0A0A0A' : 'linear-gradient(160deg, #FFF0D6 0%, #FFF5E8 50%, #E8F7F5 100%)',
+      background: theme.bg,
       position: 'relative',
     }}>
       <style>{`
@@ -371,7 +348,7 @@ function SlideScanQR({ onPaired }) {
     return (
       <div style={{
         width: '390px', height: '740px', overflow: 'hidden',
-        background: theme.isHC ? '#0A0A0A' : 'linear-gradient(160deg, #E8F7F5 0%, #F0FDFB 100%)',
+        background: theme.bg,
         position: 'relative',
       }}>
         <div style={{
@@ -399,7 +376,7 @@ function SlideScanQR({ onPaired }) {
   return (
     <div style={{
       width: '390px', height: '740px', overflow: 'hidden',
-      background: theme.isHC ? '#0A0A0A' : 'linear-gradient(160deg, #FFF0D6 0%, #FFF5E8 50%, #E8F7F5 100%)',
+      background: theme.bg,
       position: 'relative',
     }}>
       <div style={{
@@ -451,7 +428,7 @@ function SlideScanQR({ onPaired }) {
               </div>
             </div>
           ) : (
-            <div style={{ textAlign: 'center' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
               <svg width="56" height="56" viewBox="0 0 56 56" fill="none" opacity="0.45">
                 <rect x="14" y="18" width="28" height="24" rx="5" fill="none" stroke="white" strokeWidth="2"/>
                 <circle cx="28" cy="30" r="7" fill="none" stroke="white" strokeWidth="2"/>
@@ -482,78 +459,148 @@ function SlideScanQR({ onPaired }) {
   )
 }
 
-// ── TOTEM PAIRING SIDE ─────────────────────────────────────────────
-function TotemPairingContent() {
+// ── TOTEM CONNECT SLIDE (slide 2 — all interaction on totem) ───────
+function TotemConnectSlide({ onPaired }) {
   const theme = useTheme()
   const zoom = useFontZoom()
+  const [connecting, setConnecting] = useState(false)
+  const [done, setDone] = useState(false)
+
+  const handleConnect = () => {
+    setConnecting(true)
+    setTimeout(() => { setDone(true); setTimeout(() => onPaired(), 800) }, 1600)
+  }
 
   return (
     <div style={{
       width: '390px', height: '740px',
-      background: theme.isHC ? '#000' : '#0D1B2A',
+      background: theme.bg,
       position: 'relative', overflow: 'hidden',
     }}>
       <style>{`
-        @keyframes qrPulse{0%,100%{opacity:0.75;transform:scale(1)}50%{opacity:1;transform:scale(1.04)}}
-        @keyframes wDot1{0%,80%,100%{opacity:0.2}40%{opacity:1}}
-        @keyframes wDot2{0%,100%{opacity:0.2}50%{opacity:1}}
-        @keyframes wDot3{0%,30%,100%{opacity:0.2}65%{opacity:1}}
+        @keyframes qrPulse{0%,100%{opacity:0.8;transform:scale(1)}50%{opacity:1;transform:scale(1.03)}}
+        @keyframes scanL2{0%{top:8%}100%{top:88%}}
       `}</style>
+      <div style={{
+        width: `${390/zoom}px`, height: `${740/zoom}px`, zoom,
+        display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+        padding: '32px 28px',
+        overflowY: 'auto', overflowX: 'hidden',
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '24px' }}>
+          <div style={{ width: '30px', height: '30px', background: theme.primary, borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <path d="M4 8h8M8 4v8" stroke={theme.primaryText} strokeWidth="2" strokeLinecap="round"/>
+            </svg>
+          </div>
+          <span style={{ fontFamily: 'Nunito, sans-serif', fontSize: '17px', fontWeight: 900, color: theme.text, letterSpacing: '-0.3px' }}>
+            ServizioPA
+          </span>
+        </div>
+
+        {done ? (
+          <>
+            <div style={{ width: '88px', height: '88px', borderRadius: '50%', background: `${theme.primary}22`, border: `3px solid ${theme.primary}`, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '20px' }}>
+              <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+                <path d="M7 20 L16 29 L33 11" stroke={theme.primary} strokeWidth="4" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </div>
+            <h2 style={{ fontFamily: 'Nunito, sans-serif', fontSize: '26px', fontWeight: 900, color: theme.text, textAlign: 'center' }}>
+              Connesso! 🎉
+            </h2>
+          </>
+        ) : (
+          <>
+            <div style={{
+              animation: connecting ? 'none' : 'qrPulse 2.8s ease-in-out infinite',
+              marginBottom: '22px', padding: '14px', background: 'white',
+              borderRadius: '18px',
+              boxShadow: `0 0 0 3px ${theme.primary}72, 0 10px 40px rgba(0,0,0,0.5)`,
+              position: 'relative', overflow: 'hidden',
+            }}>
+              <QRCode size={168} primaryColor={theme.primary} />
+              {connecting && (
+                <div style={{ position: 'absolute', left: 14, right: 14, height: '2px', background: `linear-gradient(to right, transparent, ${theme.primary}, transparent)`, animation: 'scanL2 1s ease-in-out infinite alternate' }} />
+              )}
+            </div>
+
+            <h2 style={{ fontFamily: 'Nunito, sans-serif', fontSize: '21px', fontWeight: 900, color: theme.text, textAlign: 'center', lineHeight: 1.25, marginBottom: '8px' }}>
+              {connecting ? 'Connessione in corso…' : 'Premi per connetterti'}
+            </h2>
+            <p style={{ fontFamily: 'Nunito, sans-serif', fontSize: '13px', fontWeight: 600, color: theme.textSecondary, textAlign: 'center', lineHeight: 1.6, marginBottom: '22px', maxWidth: '250px' }}>
+              {connecting ? 'Sincronizzazione telefono…' : 'Il tuo telefono si connetterà automaticamente al totem'}
+            </p>
+
+            <button onClick={connecting ? undefined : handleConnect} style={{
+              width: '100%', minHeight: '58px', borderRadius: '16px', border: 'none',
+              background: connecting ? `${theme.primary}44` : `linear-gradient(135deg, ${theme.primary} 0%, ${theme.primaryDark} 100%)`,
+              color: connecting ? theme.primary : theme.primaryText,
+              fontFamily: 'Nunito, sans-serif', fontSize: '18px', fontWeight: 900,
+              cursor: connecting ? 'default' : 'pointer',
+              boxShadow: connecting ? 'none' : `0 5px 18px ${theme.primary}5C`,
+            }}>
+              {connecting ? '⏳ In connessione…' : '📲 Connetti il telefono →'}
+            </button>
+            <SlideDots count={3} current={2} color={theme.primary} />
+          </>
+        )}
+      </div>
+    </div>
+  )
+}
+
+// ── PHONE COMPANION (passive while totem drives the flow) ──────────
+function PhoneCompanion({ slide, showA11y }) {
+  const theme = useTheme()
+  const zoom = useFontZoom()
+  const dotIndex = showA11y ? 0 : slide
+
+  return (
+    <div style={{
+      width: '390px', height: '740px', overflow: 'hidden',
+      background: theme.bg,
+      position: 'relative',
+    }}>
       <div style={{
         width: `${390/zoom}px`, height: `${740/zoom}px`, zoom,
         display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
         padding: '36px 28px',
         overflowY: 'auto', overflowX: 'hidden',
       }}>
-        {/* Brand header */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '28px' }}>
-          <div style={{ width: '30px', height: '30px', background: theme.primary, borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-              <path d="M4 8h8M8 4v8" stroke={theme.primaryText} strokeWidth="2" strokeLinecap="round"/>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '36px' }}>
+          <div style={{ width: '28px', height: '28px', background: theme.primary, borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+              <path d="M3 7h8M7 3v8" stroke={theme.primaryText} strokeWidth="2" strokeLinecap="round"/>
             </svg>
           </div>
-          <span style={{ fontFamily: 'Nunito, sans-serif', fontSize: '17px', fontWeight: 900, color: theme.isHC ? theme.primary : 'white', letterSpacing: '-0.3px' }}>
+          <span style={{ fontFamily: 'Nunito, sans-serif', fontSize: '16px', fontWeight: 900, color: theme.text, letterSpacing: '-0.2px' }}>
             ServizioPA
           </span>
         </div>
 
-        {/* QR with glow */}
-        <div style={{
-          animation: 'qrPulse 2.8s ease-in-out infinite',
-          marginBottom: '24px',
-          padding: '14px',
-          background: 'white',
-          borderRadius: '18px',
-          boxShadow: `0 0 0 3px ${theme.primary}72, 0 10px 40px rgba(0,0,0,0.5)`,
-        }}>
-          <QRCode size={180} primaryColor={theme.primary} />
+        <div style={{ marginBottom: '22px' }}>
+          <svg width="72" height="72" viewBox="0 0 72 72" fill="none">
+            <circle cx="36" cy="36" r="33" fill={`${theme.primary}1A`} stroke={`${theme.primary}40`} strokeWidth="1.5"/>
+            <path d="M22 36 H50 M42 26 L50 36 L42 46" stroke={theme.primary} strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
         </div>
 
         <h2 style={{
-          fontFamily: 'Nunito, sans-serif', fontSize: '22px', fontWeight: 900,
-          color: theme.isHC ? theme.primary : 'white',
-          textAlign: 'center', lineHeight: 1.25, marginBottom: '10px', letterSpacing: '-0.4px',
+          fontFamily: 'Nunito, sans-serif', fontSize: '23px', fontWeight: 900,
+          color: theme.text,
+          textAlign: 'center', lineHeight: 1.3, marginBottom: '10px',
         }}>
-          Scansiona con il telefono
+          Guarda il totem
         </h2>
         <p style={{
           fontFamily: 'Nunito, sans-serif', fontSize: '14px', fontWeight: 600,
-          color: theme.isHC ? 'rgba(255,255,255,0.8)' : 'rgba(255,255,255,0.6)',
-          textAlign: 'center', lineHeight: 1.6,
-          marginBottom: '24px', maxWidth: '260px',
+          color: theme.textSecondary,
+          textAlign: 'center', lineHeight: 1.65, maxWidth: '230px',
         }}>
-          Apri l'app ServizioPA sul tuo telefono e inquadra questo codice
+          Segui le istruzioni sullo schermo grande accanto a te
         </p>
 
-        {/* Waiting indicator */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <span style={{ fontFamily: 'Nunito, sans-serif', fontSize: '12px', fontWeight: 700, color: theme.isHC ? 'rgba(255,255,255,0.6)' : 'rgba(255,255,255,0.38)', letterSpacing: '0.8px', textTransform: 'uppercase' }}>
-            In attesa
-          </span>
-          {[1, 2, 3].map(n => (
-            <div key={n} style={{ width: 7, height: 7, borderRadius: '50%', background: theme.primary, animation: `wDot${n} 1.3s ease-in-out infinite` }} />
-          ))}
-        </div>
+        <SlideDots count={3} current={dotIndex} color={theme.primary} />
       </div>
     </div>
   )
@@ -567,20 +614,23 @@ export default function Pairing() {
 
   const handlePaired = () => setState(s => ({ ...s, currentScreen: 'home', paired: true }))
 
-  const phoneContent = showA11y ? (
+  // Totem drives the entire slide flow — all interaction here
+  const totemContent = showA11y ? (
     <SlideAccessibility onNext={() => { setShowA11y(false); setSlide(1) }} />
   ) : slide === 0 ? (
     <SlideWelcome onNext={() => setSlide(1)} onAccessibility={() => setShowA11y(true)} />
   ) : slide === 1 ? (
     <SlideHow onNext={() => setSlide(2)} />
   ) : (
-    <SlideScanQR onPaired={handlePaired} />
+    <TotemConnectSlide onPaired={handlePaired} />
   )
 
+  const phoneContent = <PhoneCompanion slide={slide} showA11y={showA11y} />
+
   return (
-    <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '40px', height: '820px' }}>
+    <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '80px', height: '820px' }}>
       <PhoneFrame>{phoneContent}</PhoneFrame>
-      <TotemFrame><TotemPairingContent /></TotemFrame>
+      <TotemFrame>{totemContent}</TotemFrame>
     </div>
   )
 }
