@@ -1,16 +1,54 @@
-# React + Vite
+# HI-FI Prototype — HCI Project
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+An interactive hi-fi prototype built with React + Vite, simulating a tablet-based assistant interface for Italian public health services (Sanità pubblica). The prototype features a dual-panel layout: the left panel shows a guided assistant with contextual highlights, and the right panel is the interactive screen.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Requirements
 
-## React Compiler
+- [Node.js](https://nodejs.org/) v18 or higher
+- npm (comes with Node.js)
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+---
 
-## Expanding the ESLint configuration
+## How to Run
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+1. Open a terminal and navigate to the project folder:
+
+```bash
+cd hi-fi_proto_hci
+```
+
+2. Install dependencies (only needed the first time):
+
+```bash
+npm install
+```
+
+3. Start the development server:
+
+```bash
+npm run dev
+```
+
+4. Open your browser and go to the local URL shown in the terminal (usually `http://localhost:5173`).
+
+
+
+---
+
+## Tech Stack
+
+| Tool | Purpose |
+|------|---------|
+| React 18 | UI framework |
+| Vite | Dev server & bundler |
+| Lucide React | Icons |
+| CSS-in-JS (inline styles) | Styling |
+
+---
+
+## Notes
+
+- No backend is required — all data is mocked locally.
+- The prototype is designed for a **tablet screen** (1180×820px) and scales automatically to fit the browser window.
