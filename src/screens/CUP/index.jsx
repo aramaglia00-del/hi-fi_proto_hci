@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import {
   CalendarDays, Building2, ArrowLeft,
-  PlusCircle, Download, List, ChevronRight, CheckCircle2,
+  PlusCircle, Download, List, CheckCircle2,
 } from 'lucide-react'
 import { useApp, useTheme, useFontZoom } from '../../context/AppContext'
 import { PhoneFrame, TotemFrame } from '../../components/layout/DeviceFrames'
@@ -173,7 +173,9 @@ function PanelLeft({ step, rightPanelContent, rightPanelRef, panelScroll }) {
       if (!target) { setHighlightZone(null); return }
       const targetRect = target.getBoundingClientRect()
       const panelRect = rightPanelRef.current.getBoundingClientRect()
-      const outerScale = Math.min(window.innerWidth / 1180, window.innerHeight / 820)
+      const vw = window.visualViewport?.width ?? window.innerWidth
+      const vh = window.visualViewport?.height ?? window.innerHeight
+      const outerScale = Math.min(vw / 1180, vh / 820)
       setHighlightZone({
         top: (targetRect.top - panelRect.top) / outerScale,
         left: (targetRect.left - panelRect.left) / outerScale,
@@ -182,26 +184,34 @@ function PanelLeft({ step, rightPanelContent, rightPanelRef, panelScroll }) {
       })
     }
     
-    // Schedule calculation with requestAnimationFrame for accurate dimensions after reflow
     const scheduleCalculate = () => {
       requestAnimationFrame(() => {
         setTimeout(calculate, 100)
       })
     }
-    
-    // Initial calculation
+
     const timer = setTimeout(calculate, 150)
-    
-    // ResizeObserver to catch text reflow when zoom changes
+
     const observer = new ResizeObserver(scheduleCalculate)
     if (rightPanelRef?.current) {
       observer.observe(rightPanelRef.current)
-      // Also observe the target element if it exists
       const target = rightPanelRef.current.querySelector(currentStep.highlightSelector)
       if (target) observer.observe(target)
     }
-    
-    return () => { clearTimeout(timer); observer.disconnect() }
+
+    // Keyboard open/close on Android changes window.innerHeight → rescale needed
+    window.addEventListener('resize', calculate)
+    // Keyboard open/close on iOS 15+ changes visualViewport but not window.innerHeight
+    window.visualViewport?.addEventListener('resize', calculate)
+    window.visualViewport?.addEventListener('scroll', calculate)
+
+    return () => {
+      clearTimeout(timer)
+      observer.disconnect()
+      window.removeEventListener('resize', calculate)
+      window.visualViewport?.removeEventListener('resize', calculate)
+      window.visualViewport?.removeEventListener('scroll', calculate)
+    }
   }, [step, currentStep.highlightSelector, rightPanelRef, zoom, panelScroll])
 
   return (
@@ -401,15 +411,15 @@ function StepFormScreen({ currentStep, setStep, onNext, onBack }) {
       <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', flex: 1 }}>
         <div data-highlight="nre-sx" style={fieldWrap(currentStep === 3)}>
           <label style={{ fontSize: '11px', fontWeight: 800, color: theme.muted, display: 'block', marginBottom: '6px', fontFamily: 'Nunito, sans-serif', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Codice NRE Sinistra</label>
-          <input value={valSx} onChange={(e) => setValSx(e.target.value.toUpperCase())} maxLength={5} placeholder="xxxxx" style={inputStyle} />
+          <input value={valSx} onChange={(e) => setValSx(e.target.value.toUpperCase())} onFocus={() => setStep(3)} maxLength={5} placeholder="xxxxx" style={inputStyle} />
         </div>
         <div data-highlight="nre-dx" style={fieldWrap(currentStep === 4)}>
           <label style={{ fontSize: '11px', fontWeight: 800, color: theme.muted, display: 'block', marginBottom: '6px', fontFamily: 'Nunito, sans-serif', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Codice NRE Destra</label>
-          <input value={valDx} onChange={(e) => setValDx(e.target.value)} maxLength={10} placeholder="xxxxxxxxxx" style={inputStyle} />
+          <input value={valDx} onChange={(e) => setValDx(e.target.value)} onFocus={() => setStep(4)} maxLength={10} placeholder="xxxxxxxxxx" style={inputStyle} />
         </div>
         <div data-highlight="cf" style={fieldWrap(currentStep === 5)}>
           <label style={{ fontSize: '11px', fontWeight: 800, color: theme.muted, display: 'block', marginBottom: '6px', fontFamily: 'Nunito, sans-serif', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Codice Fiscale</label>
-          <input value={valCf} onChange={(e) => setValCf(e.target.value.toUpperCase())} maxLength={16} placeholder="XXXXX..." style={inputStyle} />
+          <input value={valCf} onChange={(e) => setValCf(e.target.value.toUpperCase())} onFocus={() => setStep(5)} maxLength={16} placeholder="XXXXX..." style={inputStyle} />
         </div>
       </div>
       <div style={{ display: 'flex', gap: '10px', marginTop: 'auto', paddingTop: '16px' }}>
