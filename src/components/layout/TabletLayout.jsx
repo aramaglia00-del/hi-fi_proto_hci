@@ -17,7 +17,7 @@ export default function TabletLayout() {
   const [scale, setScale] = useState(1)
 
   useEffect(() => {
-    const update = () => {
+     const update = () => {
       const vw = window.visualViewport?.width ?? window.innerWidth
       const vh = window.visualViewport?.height ?? window.innerHeight
       setScale(Math.min(vw / DESIGN_W, vh / DESIGN_H))
