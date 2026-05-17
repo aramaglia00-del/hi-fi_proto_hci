@@ -674,7 +674,7 @@ function StepInserisciEmail({ onBack, onNext, onStepChange, onEmailChange, isRep
         <div>
           {fieldLabel('Indirizzo email')}
           <input
-            data-highlight="email" type="email" placeholder="mario.rossi@email.it"
+            data-highlight="email" type="email" inputMode="email" placeholder="mario.rossi@email.it"
             value={email}
             onChange={e => { setEmail(e.target.value); onEmailChange?.(e.target.value); onStepChange?.(3) }}
             onFocus={(e) => { setIsFocused(true); scrollOnFocus(e) }}
@@ -689,7 +689,7 @@ function StepInserisciEmail({ onBack, onNext, onStepChange, onEmailChange, isRep
         <div>
           {fieldLabel('Ripeti la stessa email')}
           <input
-            data-highlight="email-confirm" type="email" placeholder="Riscrivi la tua email"
+            data-highlight="email-confirm" type="email" inputMode="email" placeholder="Riscrivi la tua email"
             value={emailConfirm}
             onChange={e => {
               const val = e.target.value
@@ -860,7 +860,7 @@ function StepDatiCarta({ onBack, onNext, onFieldChange, onCardLast4Change, isRep
         </div>
         <div>
           {fieldLabel('Nome del titolare (come sulla carta)')}
-          <input data-highlight="card-name" type="text" placeholder="MARIO ROSSI" value={name} onChange={e => setName(e.target.value.toUpperCase())} onFocus={(e) => handleFocus('name', e)} onBlur={() => setActiveField(null)} style={{ ...inputBase, ...border('name'), width: '100%' }} />
+          <input data-highlight="card-name" type="text" inputMode="text" autoCapitalize="characters" placeholder="MARIO ROSSI" value={name} onChange={e => setName(e.target.value.toUpperCase())} onFocus={(e) => handleFocus('name', e)} onBlur={() => setActiveField(null)} style={{ ...inputBase, ...border('name'), width: '100%' }} />
         </div>
       </div>
       <div style={{ flexShrink: 0, display: 'flex', gap: '10px', paddingTop: '14px' }}>

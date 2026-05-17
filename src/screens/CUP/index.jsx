@@ -52,13 +52,13 @@ function getAssistantSteps(theme) {
   },
   {
     tag: 'Passo 1',
-    text: (<>COMPILA IL FORM! Inserisci i dati che trovi sul documento, iniziamo con il <strong>NRE di SINISTRA</strong>!</>),
-    highlightSelector: '[data-highlight="nre-sx"]',
+    text: (<>COMPILA IL FORM! Inserisci i dati che trovi sul documento, iniziamo con il <strong>NRE</strong>!</>),
+    highlightSelector: '[data-highlight="nre"]',
   },
   {
     tag: 'Passo 2',
-    text: (<>Ottimo! Ora inserisci il <strong>NRE di DESTRA</strong>.</>),
-    highlightSelector: '[data-highlight="nre-dx"]',
+    text: (<>Ottimo! Ora inserisci il <strong>NUP</strong>.</>),
+    highlightSelector: '[data-highlight="nup"]',
   },
   {
     tag: 'Passo 3',
@@ -412,17 +412,17 @@ function StepFormScreen({ currentStep, setStep, onNext, onBack }) {
       <CupJourneyMap step={currentStep} />
       <h3 style={{ fontFamily: 'Nunito, sans-serif', fontWeight: 900, margin: '0 0 16px', color: theme.text, fontSize: '22px' }}>Aggiungi Prenotazione</h3>
       <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', flex: 1 }}>
-        <div data-highlight="nre-sx" style={fieldWrap(currentStep === 3)}>
-          <label style={{ fontSize: '11px', fontWeight: 800, color: theme.muted, display: 'block', marginBottom: '6px', fontFamily: 'Nunito, sans-serif', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Codice NRE Sinistra</label>
-          <input value={valSx} onChange={(e) => setValSx(e.target.value.toUpperCase())} onFocus={(e) => { setStep(3); scrollOnFocus(e) }} maxLength={5} placeholder="xxxxx" style={inputStyle} />
+        <div data-highlight="nre" style={fieldWrap(currentStep === 3)}>
+          <label style={{ fontSize: '11px', fontWeight: 800, color: theme.muted, display: 'block', marginBottom: '6px', fontFamily: 'Nunito, sans-serif', textTransform: 'uppercase', letterSpacing: '0.5px' }}>NRE</label>
+          <input value={valSx} onChange={(e) => setValSx(e.target.value.toUpperCase())} onFocus={(e) => { setStep(3); scrollOnFocus(e) }} maxLength={5} placeholder="xxxxx" inputMode="text" autoCapitalize="characters" style={inputStyle} />
         </div>
-        <div data-highlight="nre-dx" style={fieldWrap(currentStep === 4)}>
-          <label style={{ fontSize: '11px', fontWeight: 800, color: theme.muted, display: 'block', marginBottom: '6px', fontFamily: 'Nunito, sans-serif', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Codice NRE Destra</label>
-          <input value={valDx} onChange={(e) => setValDx(e.target.value)} onFocus={(e) => { setStep(4); scrollOnFocus(e) }} maxLength={10} placeholder="xxxxxxxxxx" style={inputStyle} />
+        <div data-highlight="nup" style={fieldWrap(currentStep === 4)}>
+          <label style={{ fontSize: '11px', fontWeight: 800, color: theme.muted, display: 'block', marginBottom: '6px', fontFamily: 'Nunito, sans-serif', textTransform: 'uppercase', letterSpacing: '0.5px' }}>NUP</label>
+          <input value={valDx} onChange={(e) => setValDx(e.target.value)} onFocus={(e) => { setStep(4); scrollOnFocus(e) }} maxLength={10} placeholder="xxxxxxxxxx" inputMode="numeric" style={inputStyle} />
         </div>
         <div data-highlight="cf" style={fieldWrap(currentStep === 5)}>
           <label style={{ fontSize: '11px', fontWeight: 800, color: theme.muted, display: 'block', marginBottom: '6px', fontFamily: 'Nunito, sans-serif', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Codice Fiscale</label>
-          <input value={valCf} onChange={(e) => setValCf(e.target.value.toUpperCase())} onFocus={(e) => { setStep(5); scrollOnFocus(e) }} maxLength={16} placeholder="XXXXX..." style={inputStyle} />
+          <input value={valCf} onChange={(e) => setValCf(e.target.value.toUpperCase())} onFocus={(e) => { setStep(5); scrollOnFocus(e) }} maxLength={16} placeholder="XXXXX..." inputMode="text" autoCapitalize="characters" style={inputStyle} />
         </div>
       </div>
       <div style={{ display: 'flex', gap: '10px', marginTop: 'auto', paddingTop: '16px' }}>
