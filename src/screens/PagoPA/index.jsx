@@ -408,7 +408,7 @@ function PanelLeft({ step, rightPanelContent, rightPanelRef, showGesture, overri
       if (!target) return null
       const targetRect = target.getBoundingClientRect()
       const panelRect = rightPanelRef.current.getBoundingClientRect()
-      const scale = Math.min(window.innerWidth / 1180, window.innerHeight / 820)
+      const scale = panelRect.width > 0 ? panelRect.width / 390 : Math.min(window.innerWidth / 1180, window.innerHeight / 820)
       return {
         top: (targetRect.top - panelRect.top) / scale,
         left: (targetRect.left - panelRect.left) / scale,
@@ -636,6 +636,11 @@ function StepDatiPagamento({ onBack, onNext }) {
 // ── STEP 3-5: EMAIL ────────────────────────────────────────────────
 const isValidEmail = val => val.includes('@') && val.includes('.') && val.length > 5
 
+const scrollOnFocus = (e) => {
+  const el = e.currentTarget
+  setTimeout(() => el.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 380)
+}
+
 function StepInserisciEmail({ onBack, onNext, onStepChange, onEmailChange, isReplica }) {
   const { state, setState: setAppState } = useApp()
   const email = state.pagopaForm?.email || ''
@@ -672,7 +677,7 @@ function StepInserisciEmail({ onBack, onNext, onStepChange, onEmailChange, isRep
             data-highlight="email" type="email" placeholder="mario.rossi@email.it"
             value={email}
             onChange={e => { setEmail(e.target.value); onEmailChange?.(e.target.value); onStepChange?.(3) }}
-            onFocus={() => setIsFocused(true)}
+            onFocus={(e) => { setIsFocused(true); scrollOnFocus(e) }}
             onBlur={() => { setIsFocused(false); setEmail1Touched(true); if (isValidEmail(email)) onStepChange?.(4) }}
             style={{ ...inputBase, border: isFocused ? '2px solid #1A9E8F' : email1Error ? '2px solid #C0392B' : '2px solid #D9D6D1' }}
           />
@@ -692,7 +697,7 @@ function StepInserisciEmail({ onBack, onNext, onStepChange, onEmailChange, isRep
               if (isValidEmail(email) && val === email) onStepChange?.(5)
               else if (isValidEmail(email)) onStepChange?.(4)
             }}
-            onFocus={() => setIsConfirmFocused(true)}
+            onFocus={(e) => { setIsConfirmFocused(true); scrollOnFocus(e) }}
             onBlur={() => setIsConfirmFocused(false)}
             style={{ ...inputBase, border: isConfirmFocused ? '2px solid #1A9E8F' : confirmError ? '2px solid #C0392B' : '2px solid #D9D6D1' }}
           />
@@ -827,7 +832,7 @@ function StepDatiCarta({ onBack, onNext, onFieldChange, onCardLast4Change, isRep
     const digits = e.target.value.replace(/\D/g, '').slice(0, 4)
     setExpiry(digits.length >= 3 ? digits.slice(0, 2) + '/' + digits.slice(2) : digits)
   }
-  const handleFocus = (field) => { setActiveField(field); onFieldChange?.(field) }
+  const handleFocus = (field, e) => { setActiveField(field); onFieldChange?.(field); if (e) scrollOnFocus(e) }
   const border = (field) => ({ border: activeField === field ? '2px solid #1A9E8F' : '2px solid #D9D6D1' })
 
   return (
@@ -841,21 +846,21 @@ function StepDatiCarta({ onBack, onNext, onFieldChange, onCardLast4Change, isRep
       <div style={{ flex: 1, minHeight: 0, overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '12px' }}>
         <div>
           {fieldLabel('Numero carta (16 cifre sul fronte)')}
-          <input data-highlight="card-number" inputMode="numeric" placeholder="0000 0000 0000 0000" value={cardNumber} onChange={handleCardNumber} onFocus={() => handleFocus('number')} onBlur={() => setActiveField(null)} style={{ ...inputBase, ...border('number'), width: '100%' }} />
+          <input data-highlight="card-number" inputMode="numeric" placeholder="0000 0000 0000 0000" value={cardNumber} onChange={handleCardNumber} onFocus={(e) => handleFocus('number', e)} onBlur={() => setActiveField(null)} style={{ ...inputBase, ...border('number'), width: '100%' }} />
         </div>
         <div style={{ display: 'flex', gap: '12px' }}>
           <div style={{ flex: 1, minWidth: 0 }}>
             {fieldLabel('Scadenza (sul fronte)')}
-            <input data-highlight="card-expiry" inputMode="numeric" placeholder="MM/AA" value={expiry} onChange={handleExpiry} onFocus={() => handleFocus('expiry')} onBlur={() => setActiveField(null)} style={{ ...inputBase, ...border('expiry'), width: '100%' }} />
+            <input data-highlight="card-expiry" inputMode="numeric" placeholder="MM/AA" value={expiry} onChange={handleExpiry} onFocus={(e) => handleFocus('expiry', e)} onBlur={() => setActiveField(null)} style={{ ...inputBase, ...border('expiry'), width: '100%' }} />
           </div>
           <div style={{ flex: 1, minWidth: 0 }}>
             {fieldLabel('CVV (3 cifre retro)')}
-            <input data-highlight="card-cvv" type="password" inputMode="numeric" placeholder="···" maxLength={3} value={cvv} onChange={e => setCvv(e.target.value.replace(/\D/g, '').slice(0, 3))} onFocus={() => handleFocus('cvv')} onBlur={() => setActiveField(null)} style={{ ...inputBase, ...border('cvv'), width: '100%' }} />
+            <input data-highlight="card-cvv" type="password" inputMode="numeric" placeholder="···" maxLength={3} value={cvv} onChange={e => setCvv(e.target.value.replace(/\D/g, '').slice(0, 3))} onFocus={(e) => handleFocus('cvv', e)} onBlur={() => setActiveField(null)} style={{ ...inputBase, ...border('cvv'), width: '100%' }} />
           </div>
         </div>
         <div>
           {fieldLabel('Nome del titolare (come sulla carta)')}
-          <input data-highlight="card-name" type="text" placeholder="MARIO ROSSI" value={name} onChange={e => setName(e.target.value.toUpperCase())} onFocus={() => handleFocus('name')} onBlur={() => setActiveField(null)} style={{ ...inputBase, ...border('name'), width: '100%' }} />
+          <input data-highlight="card-name" type="text" placeholder="MARIO ROSSI" value={name} onChange={e => setName(e.target.value.toUpperCase())} onFocus={(e) => handleFocus('name', e)} onBlur={() => setActiveField(null)} style={{ ...inputBase, ...border('name'), width: '100%' }} />
         </div>
       </div>
       <div style={{ flexShrink: 0, display: 'flex', gap: '10px', paddingTop: '14px' }}>

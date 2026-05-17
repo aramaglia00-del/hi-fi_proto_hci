@@ -173,9 +173,7 @@ function PanelLeft({ step, rightPanelContent, rightPanelRef, panelScroll }) {
       if (!target) { setHighlightZone(null); return }
       const targetRect = target.getBoundingClientRect()
       const panelRect = rightPanelRef.current.getBoundingClientRect()
-      const vw = window.visualViewport?.width ?? window.innerWidth
-      const vh = window.visualViewport?.height ?? window.innerHeight
-      const outerScale = Math.min(vw / 1180, vh / 820)
+      const outerScale = panelRect.width > 0 ? panelRect.width / 390 : 1
       setHighlightZone({
         top: (targetRect.top - panelRect.top) / outerScale,
         left: (targetRect.left - panelRect.left) / outerScale,
@@ -375,6 +373,11 @@ function StepTutorialScreen({ onNext, onBack }) {
   )
 }
 
+const scrollOnFocus = (e) => {
+  const el = e.currentTarget
+  setTimeout(() => el.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 380)
+}
+
 function StepFormScreen({ currentStep, setStep, onNext, onBack }) {
   const theme = useTheme()
   const { state, setState } = useApp()
@@ -411,15 +414,15 @@ function StepFormScreen({ currentStep, setStep, onNext, onBack }) {
       <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', flex: 1 }}>
         <div data-highlight="nre-sx" style={fieldWrap(currentStep === 3)}>
           <label style={{ fontSize: '11px', fontWeight: 800, color: theme.muted, display: 'block', marginBottom: '6px', fontFamily: 'Nunito, sans-serif', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Codice NRE Sinistra</label>
-          <input value={valSx} onChange={(e) => setValSx(e.target.value.toUpperCase())} onFocus={() => setStep(3)} maxLength={5} placeholder="xxxxx" style={inputStyle} />
+          <input value={valSx} onChange={(e) => setValSx(e.target.value.toUpperCase())} onFocus={(e) => { setStep(3); scrollOnFocus(e) }} maxLength={5} placeholder="xxxxx" style={inputStyle} />
         </div>
         <div data-highlight="nre-dx" style={fieldWrap(currentStep === 4)}>
           <label style={{ fontSize: '11px', fontWeight: 800, color: theme.muted, display: 'block', marginBottom: '6px', fontFamily: 'Nunito, sans-serif', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Codice NRE Destra</label>
-          <input value={valDx} onChange={(e) => setValDx(e.target.value)} onFocus={() => setStep(4)} maxLength={10} placeholder="xxxxxxxxxx" style={inputStyle} />
+          <input value={valDx} onChange={(e) => setValDx(e.target.value)} onFocus={(e) => { setStep(4); scrollOnFocus(e) }} maxLength={10} placeholder="xxxxxxxxxx" style={inputStyle} />
         </div>
         <div data-highlight="cf" style={fieldWrap(currentStep === 5)}>
           <label style={{ fontSize: '11px', fontWeight: 800, color: theme.muted, display: 'block', marginBottom: '6px', fontFamily: 'Nunito, sans-serif', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Codice Fiscale</label>
-          <input value={valCf} onChange={(e) => setValCf(e.target.value.toUpperCase())} onFocus={() => setStep(5)} maxLength={16} placeholder="XXXXX..." style={inputStyle} />
+          <input value={valCf} onChange={(e) => setValCf(e.target.value.toUpperCase())} onFocus={(e) => { setStep(5); scrollOnFocus(e) }} maxLength={16} placeholder="XXXXX..." style={inputStyle} />
         </div>
       </div>
       <div style={{ display: 'flex', gap: '10px', marginTop: 'auto', paddingTop: '16px' }}>

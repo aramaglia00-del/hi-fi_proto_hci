@@ -126,7 +126,7 @@ code {
 }
 
 /* ── FULLSCREEN OVERRIDE ───────────────────────────────────────── */
-html, body { width: 100%; height: 100%; overflow: hidden; }
+html, body { width: 100%; height: 100%; overflow: hidden; position: fixed; }
 #root {
   width: 100vw !important; max-width: 100vw !important; height: 100vh !important;
   min-height: unset !important; border: none !important; margin: 0 !important;

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useApp } from '../../context/AppContext'
 import ScreenLeft from './ScreenLeft'
 import ScreenRight from './ScreenRight'
@@ -15,12 +15,19 @@ const DESIGN_H = 820
 export default function TabletLayout() {
   const { state } = useApp()
   const [scale, setScale] = useState(1)
+  const maxVhRef = useRef(0)
 
   useEffect(() => {
-     const update = () => {
+    const update = () => {
       const vw = window.visualViewport?.width ?? window.innerWidth
       const vh = window.visualViewport?.height ?? window.innerHeight
-      setScale(Math.min(vw / DESIGN_W, vh / DESIGN_H))
+      // Track the largest height seen (= no-keyboard state)
+      if (vh > maxVhRef.current) maxVhRef.current = vh
+      // If height dropped >20%, keyboard is open — keep scale from stable height
+      const effectiveVh = (maxVhRef.current > 0 && vh < maxVhRef.current * 0.8)
+        ? maxVhRef.current
+        : vh
+      setScale(Math.min(vw / DESIGN_W, effectiveVh / DESIGN_H))
     }
     update()
     window.addEventListener('resize', update)
@@ -62,6 +69,7 @@ export default function TabletLayout() {
 
   return (
     <div style={{
+      position: 'fixed', top: 0, left: 0,
       width: '100vw', height: '100vh',
       display: 'flex', alignItems: 'center', justifyContent: 'center',
       background: 'radial-gradient(circle at top, #2A3038 0%, #14181E 52%, #0B0E13 100%)', overflow: 'hidden',
