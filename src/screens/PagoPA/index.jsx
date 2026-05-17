@@ -846,16 +846,16 @@ function StepDatiCarta({ onBack, onNext, onFieldChange, onCardLast4Change, isRep
       <div style={{ flex: 1, minHeight: 0, overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '12px' }}>
         <div>
           {fieldLabel('Numero carta (16 cifre sul fronte)')}
-          <input data-highlight="card-number" inputMode="numeric" placeholder="0000 0000 0000 0000" value={cardNumber} onChange={handleCardNumber} onFocus={(e) => handleFocus('number', e)} onBlur={() => setActiveField(null)} style={{ ...inputBase, ...border('number'), width: '100%' }} />
+          <input data-highlight="card-number" inputMode="tel" placeholder="0000 0000 0000 0000" value={cardNumber} onChange={handleCardNumber} onFocus={(e) => handleFocus('number', e)} onBlur={() => setActiveField(null)} style={{ ...inputBase, ...border('number'), width: '100%' }} />
         </div>
         <div style={{ display: 'flex', gap: '12px' }}>
           <div style={{ flex: 1, minWidth: 0 }}>
             {fieldLabel('Scadenza (sul fronte)')}
-            <input data-highlight="card-expiry" inputMode="numeric" placeholder="MM/AA" value={expiry} onChange={handleExpiry} onFocus={(e) => handleFocus('expiry', e)} onBlur={() => setActiveField(null)} style={{ ...inputBase, ...border('expiry'), width: '100%' }} />
+            <input data-highlight="card-expiry" inputMode="tel" placeholder="MM/AA" value={expiry} onChange={handleExpiry} onFocus={(e) => handleFocus('expiry', e)} onBlur={() => setActiveField(null)} style={{ ...inputBase, ...border('expiry'), width: '100%' }} />
           </div>
           <div style={{ flex: 1, minWidth: 0 }}>
             {fieldLabel('CVV (3 cifre retro)')}
-            <input data-highlight="card-cvv" type="password" inputMode="numeric" placeholder="···" maxLength={3} value={cvv} onChange={e => setCvv(e.target.value.replace(/\D/g, '').slice(0, 3))} onFocus={(e) => handleFocus('cvv', e)} onBlur={() => setActiveField(null)} style={{ ...inputBase, ...border('cvv'), width: '100%' }} />
+            <input data-highlight="card-cvv" type="password" inputMode="tel" placeholder="···" maxLength={3} value={cvv} onChange={e => setCvv(e.target.value.replace(/\D/g, '').slice(0, 3))} onFocus={(e) => handleFocus('cvv', e)} onBlur={() => setActiveField(null)} style={{ ...inputBase, ...border('cvv'), width: '100%' }} />
           </div>
         </div>
         <div>

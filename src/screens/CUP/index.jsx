@@ -414,15 +414,15 @@ function StepFormScreen({ currentStep, setStep, onNext, onBack }) {
       <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', flex: 1 }}>
         <div data-highlight="nre" style={fieldWrap(currentStep === 3)}>
           <label style={{ fontSize: '11px', fontWeight: 800, color: theme.muted, display: 'block', marginBottom: '6px', fontFamily: 'Nunito, sans-serif', textTransform: 'uppercase', letterSpacing: '0.5px' }}>NRE</label>
-          <input value={valSx} onChange={(e) => setValSx(e.target.value.toUpperCase())} onFocus={(e) => { setStep(3); scrollOnFocus(e) }} maxLength={5} placeholder="xxxxx" inputMode="text" autoCapitalize="characters" style={inputStyle} />
+          <input type="text" value={valSx} onChange={(e) => setValSx(e.target.value.toUpperCase())} onFocus={(e) => { setStep(3); scrollOnFocus(e) }} maxLength={5} placeholder="xxxxx" inputMode="text" autoCapitalize="characters" style={inputStyle} />
         </div>
         <div data-highlight="nup" style={fieldWrap(currentStep === 4)}>
           <label style={{ fontSize: '11px', fontWeight: 800, color: theme.muted, display: 'block', marginBottom: '6px', fontFamily: 'Nunito, sans-serif', textTransform: 'uppercase', letterSpacing: '0.5px' }}>NUP</label>
-          <input value={valDx} onChange={(e) => setValDx(e.target.value)} onFocus={(e) => { setStep(4); scrollOnFocus(e) }} maxLength={10} placeholder="xxxxxxxxxx" inputMode="numeric" style={inputStyle} />
+          <input type="tel" value={valDx} onChange={(e) => setValDx(e.target.value.replace(/\D/g, ''))} onFocus={(e) => { setStep(4); scrollOnFocus(e) }} maxLength={10} placeholder="xxxxxxxxxx" inputMode="tel" style={inputStyle} />
         </div>
         <div data-highlight="cf" style={fieldWrap(currentStep === 5)}>
           <label style={{ fontSize: '11px', fontWeight: 800, color: theme.muted, display: 'block', marginBottom: '6px', fontFamily: 'Nunito, sans-serif', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Codice Fiscale</label>
-          <input value={valCf} onChange={(e) => setValCf(e.target.value.toUpperCase())} onFocus={(e) => { setStep(5); scrollOnFocus(e) }} maxLength={16} placeholder="XXXXX..." inputMode="text" autoCapitalize="characters" style={inputStyle} />
+          <input type="text" value={valCf} onChange={(e) => setValCf(e.target.value.toUpperCase())} onFocus={(e) => { setStep(5); scrollOnFocus(e) }} maxLength={16} placeholder="XXXXX..." inputMode="text" autoCapitalize="characters" style={inputStyle} />
         </div>
       </div>
       <div style={{ display: 'flex', gap: '10px', marginTop: 'auto', paddingTop: '16px' }}>
